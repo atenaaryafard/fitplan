@@ -1454,15 +1454,41 @@ button {
     }
 
 
-    .delete-exercise {
+.exercise-actions {
 
-        width: 100%;
+    display: flex;
 
-        grid-column:
-            1 / -1;
+    align-items: center;
 
-    }
+    gap: 6px;
 
+    width: 100%;
+
+    grid-column: 1 / -1;
+
+}
+
+.exercise-actions .delete-exercise {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+}
+
+.exercise-actions .add-exercise-row {
+
+    flex: 1;
+
+    width: auto;
+
+    height: 42px;
+
+    white-space: nowrap;
+
+}
 
     .bottom-actions {
 
