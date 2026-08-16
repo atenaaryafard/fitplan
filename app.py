@@ -467,7 +467,7 @@ def export_program_pdf():
             css_content = f.read()
 
         # مسیر فونت
-        font_uri = FONT_PATH.replace("\\", "/")
+        font_uri = "file:///" + FONT_PATH.replace("\\", "/")
 
         # HTML کامل PDF
         full_html = f"""
@@ -483,6 +483,8 @@ def export_program_pdf():
                 @font-face {{
                     font-family: 'Vazirmatn';
                     src: url('{font_uri}');
+                    font-weight: normal;
+                    font-style: normal;
                 }}
 
                 {css_content}
