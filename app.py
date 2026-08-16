@@ -463,6 +463,10 @@ def export_program_pdf():
         with open(css_path, "r", encoding="utf-8") as f:
             css_content = f.read()
 
+        import re
+            css_content = re.sub(r'max\([^;]+\);?', '20px;', css_content)
+            css_content = re.sub(r'calc\([^;]+\);?', '20px;', css_content)
+
         font_uri = FONT_PATH.replace("\\", "/")
 
         full_html = f"""
