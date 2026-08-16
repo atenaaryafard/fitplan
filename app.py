@@ -22,6 +22,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from xhtml2pdf import pisa
 from io import BytesIO
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 
 
@@ -432,6 +434,29 @@ def delete_program(program_id):
 # PDF EXPORT
 # =========================================================
 
+def pdf_link_callback(uri, rel):
+    """
+    تبدیل مسیر فایل‌های محلی برای xhtml2pdf
+    """
+
+    if uri.startswith("file:///"):
+        path = uri[8:]
+
+    elif uri.startswith("file://"):
+        path = uri[7:]
+
+    else:
+        path = uri
+
+    path = path.replace("/", os.sep)
+
+    if os.path.exists(path):
+        return path
+
+    return uri
+
+
+
 @app.route("/api/program/pdf", methods=["POST"])
 @login_required
 def export_program_pdf():
@@ -459,6 +484,15 @@ def export_program_pdf():
             "font",
             "Vazirmatn-Regular.ttf"
         )
+
+        try:
+            pdfmetrics.registerFont(
+                TTFont("Vazirmatn", FONT_PATH)
+    )
+            print("Vazirmatn font registered successfully")
+
+        except Exception as e:
+            print("FONT REGISTER ERROR:", e)
 
         if not os.path.exists(font_path):
             return jsonify({
@@ -547,7 +581,8 @@ def export_program_pdf():
 
         pisa_status = pisa.CreatePDF(
             src=full_html,
-            dest=pdf_buffer
+            dest=pdf_buffer,
+            link_callback=pdf_link_callback
         )
 
         # ==========================================
