@@ -777,8 +777,7 @@ button {
         .9fr
         auto
         1.3fr
-        35px
-        .7f;     
+        35px,     
 
     gap: 8px;
 
@@ -804,6 +803,8 @@ button {
         minmax(0, .7fr)       /* استراحت */
         minmax(0, .8fr)       /* وزنه */
         35px;                 /* دکمه حذف */
+        minmax(0, .7fr);    /* افزودن حرکت */  
+        
 
     gap: 8px;
 
