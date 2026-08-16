@@ -22,7 +22,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from xhtml2pdf import pisa
 from io import BytesIO
-from xhtml2pdf.default import DEFAULT_FONT
+
 
 
 app = Flask(__name__)
@@ -431,6 +431,15 @@ def delete_program(program_id):
 # =========================================================
 # PDF EXPORT
 # =========================================================
+
+font_path = os.path.join(
+    os.path.dirname(__file__),
+        "static",
+        "font",
+        "font",
+        "Vazirmatn-Regular.ttf"
+)
+
 
 @app.route("/api/program/pdf", methods=["POST"])
 @login_required
