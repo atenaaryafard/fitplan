@@ -806,7 +806,7 @@ button {
         minmax(0, .7fr);    /* افزودن حرکت */  
         
 
-    gap: 8px;
+    gap: 6px;
 
     align-items: end;
 
