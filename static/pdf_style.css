@@ -1,71 +1,245 @@
 @page {
     size: A4;
-    margin: 12mm;
+    margin: 15mm 12mm 15mm 12mm;
+}
+
+html {
+    direction: rtl;
 }
 
 body {
     direction: rtl;
-    font-family: Vazirmatn;
+    font-family: "Vazirmatn";
     font-size: 10pt;
-    color: #222222;
+    color: #17202a;
     background: #ffffff;
     margin: 0;
     padding: 0;
 }
 
+/* =========================
+   عنوان اصلی
+========================= */
+
 h1 {
+    font-family: "Vazirmatn";
     font-size: 20pt;
+    font-weight: bold;
     text-align: center;
-    margin-bottom: 15px;
+    margin: 0 0 15px 0;
+    color: #111827;
 }
 
 h2 {
-    font-size: 15pt;
-    margin-top: 15px;
-    margin-bottom: 8px;
+    font-family: "Vazirmatn";
+    font-size: 16pt;
+    font-weight: bold;
+    margin: 15px 0 10px 0;
+    color: #111827;
 }
 
 h3 {
-    font-size: 12pt;
-    margin-top: 10px;
-    margin-bottom: 6px;
+    font-family: "Vazirmatn";
+    font-size: 13pt;
+    font-weight: bold;
+    margin: 12px 0 8px 0;
+    color: #111827;
 }
 
 p {
-    margin: 4px 0;
+    font-family: "Vazirmatn";
+    margin: 5px 0;
 }
 
-table {
+
+/* =========================
+   اطلاعات ورزشکار
+========================= */
+
+.preview-athlete {
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.preview-athlete table {
+    width: 100%;
+    border: none;
+}
+
+.preview-athlete td {
+    border: none;
+    padding: 5px 8px;
+    text-align: right;
+}
+
+
+/* =========================
+   هر روز تمرین
+========================= */
+
+.preview-day {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.preview-day h3 {
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    color: #111827;
+}
+
+
+/* =========================
+   جدول تمرین
+========================= */
+
+.preview-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
-    margin-bottom: 15px;
+    table-layout: fixed;
+    font-size: 9pt;
+    direction: rtl;
 }
 
-th {
-    background: #eeeeee;
+.preview-table th,
+.preview-table td {
+    border: 1px solid #fde0c2;
+    padding: 7px 5px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: "Vazirmatn";
+}
+
+.preview-table th {
+    background: #f59631;
+    color: #ffffff;
     font-weight: bold;
 }
 
-th,
-td {
-    border: 1px solid #999999;
-    padding: 6px;
-    text-align: center;
-    vertical-align: middle;
+/* عرض ستون‌ها */
+
+.preview-table th:nth-child(1),
+.preview-table td:nth-child(1) {
+    width: 22%;
 }
 
-.day-section {
-    margin-bottom: 20px;
+.preview-table th:nth-child(2),
+.preview-table td:nth-child(2) {
+    width: 17%;
 }
+
+.preview-table th:nth-child(3),
+.preview-table td:nth-child(3) {
+    width: 9%;
+}
+
+.preview-table th:nth-child(4),
+.preview-table td:nth-child(4) {
+    width: 10%;
+}
+
+.preview-table th:nth-child(5),
+.preview-table td:nth-child(5) {
+    width: 14%;
+}
+
+.preview-table th:nth-child(6),
+.preview-table td:nth-child(6) {
+    width: 10%;
+}
+
+.preview-table th:nth-child(7),
+.preview-table td:nth-child(7) {
+    width: 18%;
+}
+
+
+/* =========================
+   لینک اجرای حرکت
+========================= */
 
 .exercise-guide-link {
     color: #2563eb;
     text-decoration: underline;
+    font-weight: bold;
 }
 
-.notes {
+a {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+
+/* =========================
+   یادداشت‌ها
+========================= */
+
+.preview-notes {
+    font-family: "Vazirmatn";
+    font-size: 10pt;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    padding: 12px;
     margin-top: 15px;
-    padding: 10px;
-    border: 1px solid #cccccc;
+}
+
+.preview-notes p {
+    margin: 8px 0 0 0;
+    white-space: pre-wrap;
+}
+
+
+/* =========================
+   جلوگیری از شکستن جدول
+========================= */
+
+.preview-day {
+    page-break-inside: avoid;
+}
+
+.preview-table {
+    page-break-inside: auto;
+}
+
+.preview-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+
+
+/* =========================
+   لینک‌ها
+========================= */
+
+a:link,
+a:visited {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+
+/* =========================
+   حذف چیزهایی که برای سایت هستند
+========================= */
+
+button,
+input,
+select,
+textarea {
+    display: none;
+}
+
+.modal-close,
+.modal-footer,
+.pdf-button,
+.bottom-actions,
+.history-card,
+.day-accordion-controls,
+.add-exercise-main,
+.delete-exercise {
+    display: none;
 }
