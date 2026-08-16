@@ -376,25 +376,7 @@ function renderDayAccordion() {
                     isOpen
                     ? `
                     <div class="day-accordion-body">
-
-                        <div class="workout-toolbar">
-
-                            <span>
-                                حرکات ${def.label}
-                            </span>
-
-                            <button
-                                type="button"
-                                class="add-exercise-main"
-                                onclick="addExercise()">
-
-                                + افزودن حرکت
-
-                            </button>
-
-                        </div>
-
-
+                    
                         <div class="workout-area">
 
                             ${
@@ -691,6 +673,15 @@ function createExerciseHTML(
                 onclick="deleteExercise(${index})">
 
                 ×
+
+            </button>
+
+            <button
+                type="button"
+                class="add-exercise-main"
+                onclick="addExercise()">
+
+                    + افزودن حرکت
 
             </button>
 
