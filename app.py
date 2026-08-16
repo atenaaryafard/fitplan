@@ -19,8 +19,8 @@ from functools import wraps
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from playwright.sync_api import sync_playwright
-
+from xhtml2pdf import pisa
+from io import BytesIO
 
 
 app = Flask(__name__)
@@ -29,117 +29,71 @@ app.secret_key = os.environ.get("SECRET_KEY", "CHANGE_THIS_SECRET_KEY")
 
 DATABASE_URL = "postgresql://postgres.vubgomgwhgvjjuhpcxdc:atena.aryafard@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
 
-    # =========================================================
+# =========================================================
 # DATABASE
 # =========================================================
 
 class DBConnection:
 
     def __init__(self):
-
         self.conn = psycopg2.connect(DATABASE_URL)
 
     def execute(self, query, params=()):
-
         query = query.replace("?", "%s")
-
-        cur = self.conn.cursor(
-            cursor_factory=psycopg2.extras.RealDictCursor
-        )
-
+        cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cur.execute(query, params)
-
         return cur
 
     def commit(self):
-
         self.conn.commit()
 
     def rollback(self):
-
         self.conn.rollback()
 
     def close(self):
-
         self.conn.close()
 
 
 def get_db():
-
     return DBConnection()
 
 
 def init_db():
 
     conn = get_db()
-
     cursor = conn.conn.cursor()
-
-    # -------------------------
-    # Coaches
-    # -------------------------
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS coaches (
-
             id SERIAL PRIMARY KEY,
-
             name TEXT NOT NULL,
-
             email TEXT UNIQUE NOT NULL,
-
             password TEXT NOT NULL,
-
             monthly_limit INTEGER DEFAULT 30,
-
             monthly_used INTEGER DEFAULT 0,
-
             usage_month TEXT,
-
             created_at TEXT
-
         )
     """)
-
-
-    # -------------------------
-    # Programs
-    # -------------------------
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS programs (
-
             id SERIAL PRIMARY KEY,
-
             coach_id INTEGER NOT NULL,
-
             athlete_name TEXT,
-
             athlete_age TEXT,
-
             athlete_height TEXT,
-
             athlete_weight TEXT,
-
             athlete_goal TEXT,
-
             program_name TEXT,
-
             program_data TEXT,
-
             notes TEXT,
-
             created_at TEXT,
-
-            FOREIGN KEY(coach_id)
-            REFERENCES coaches(id)
-
+            FOREIGN KEY(coach_id) REFERENCES coaches(id)
         )
     """)
 
-
     conn.commit()
-
     conn.close()
 
 
@@ -151,11 +105,8 @@ def login_required(function):
 
     @wraps(function)
     def wrapper(*args, **kwargs):
-
         if "coach_id" not in session:
-
             return redirect(url_for("login"))
-
         return function(*args, **kwargs)
 
     return wrapper
@@ -169,40 +120,23 @@ def reset_monthly_usage(coach):
 
     current_month = datetime.now().strftime("%Y-%m")
 
-
     if coach["usage_month"] != current_month:
 
         conn = get_db()
 
         conn.execute("""
             UPDATE coaches
-
-            SET monthly_used = 0,
-                usage_month = ?
-
+            SET monthly_used = 0, usage_month = ?
             WHERE id = ?
-
-        """, (
-            current_month,
-            coach["id"]
-        ))
-
+        """, (current_month, coach["id"]))
 
         conn.commit()
 
-
         coach = conn.execute("""
-            SELECT *
-            FROM coaches
-            WHERE id = ?
-
-        """, (
-            coach["id"],
-        )).fetchone()
-
+            SELECT * FROM coaches WHERE id = ?
+        """, (coach["id"],)).fetchone()
 
         conn.close()
-
 
     return coach
 
@@ -213,16 +147,9 @@ def reset_monthly_usage(coach):
 
 @app.route("/")
 def home():
-
     if "coach_id" in session:
-
-        return redirect(
-            url_for("planner")
-        )
-
-    return redirect(
-        url_for("login")
-    )
+        return redirect(url_for("planner"))
+    return redirect(url_for("login"))
 
 
 # =========================================================
@@ -234,114 +161,52 @@ def register():
 
     error = None
 
-
     if request.method == "POST":
 
-        name = request.form.get(
-            "name",
-            ""
-        ).strip()
-
-
-        email = request.form.get(
-            "email",
-            ""
-        ).strip().lower()
-
-
-        password = request.form.get(
-            "password",
-            ""
-        )
-
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
 
         if not name or not email or not password:
-
             error = "همه فیلدها را تکمیل کنید."
-
-            return render_template(
-                "register.html",
-                error=error
-            )
-
+            return render_template("register.html", error=error)
 
         if len(password) < 8:
-
             error = "رمز عبور باید حداقل ۸ کاراکتر باشد."
-
-            return render_template(
-                "register.html",
-                error=error
-            )
-
+            return render_template("register.html", error=error)
 
         conn = get_db()
-
 
         try:
 
             conn.execute("""
                 INSERT INTO coaches
-                (
-                    name,
-                    email,
-                    password,
-                    monthly_limit,
-                    monthly_used,
-                    usage_month,
-                    created_at
-                )
-
+                (name, email, password, monthly_limit, monthly_used, usage_month, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-
             """, (
-
                 name,
-
                 email,
-
                 generate_password_hash(password),
-
                 30,
-
                 0,
-
                 datetime.now().strftime("%Y-%m"),
-
                 datetime.now().isoformat()
-
             ))
 
-
             conn.commit()
-
 
         except Exception:
 
             conn.rollback()
-
             conn.close()
-
             error = "این ایمیل قبلاً ثبت شده است."
-
-            return render_template(
-                "register.html",
-                error=error
-            )
-
+            return render_template("register.html", error=error)
 
         conn.close()
 
+        return redirect(url_for("login"))
 
-        return redirect(
-            url_for("login")
-        )
-
-
-    return render_template(
-        "register.html",
-        error=error
-    )
+    return render_template("register.html", error=error)
 
 
 # =========================================================
@@ -353,68 +218,29 @@ def login():
 
     error = None
 
-
     if request.method == "POST":
 
-        email = request.form.get(
-            "email",
-            ""
-        ).strip().lower()
-
-
-        password = request.form.get(
-            "password",
-            ""
-        )
-
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
 
         conn = get_db()
 
-
         coach = conn.execute("""
-            SELECT *
-            FROM coaches
-            WHERE email = ?
-
-        """, (
-            email,
-        )).fetchone()
-
+            SELECT * FROM coaches WHERE email = ?
+        """, (email,)).fetchone()
 
         conn.close()
 
-
-        if (
-            not coach
-            or
-            not check_password_hash(
-                coach["password"],
-                password
-            )
-        ):
-
+        if not coach or not check_password_hash(coach["password"], password):
             error = "ایمیل یا رمز عبور اشتباه است."
-
-            return render_template(
-                "login.html",
-                error=error
-            )
-
+            return render_template("login.html", error=error)
 
         session["coach_id"] = coach["id"]
-
         session["coach_name"] = coach["name"]
 
+        return redirect(url_for("planner"))
 
-        return redirect(
-            url_for("planner")
-        )
-
-
-    return render_template(
-        "login.html",
-        error=error
-    )
+    return render_template("login.html", error=error)
 
 
 # =========================================================
@@ -423,12 +249,8 @@ def login():
 
 @app.route("/logout")
 def logout():
-
     session.clear()
-
-    return redirect(
-        url_for("login")
-    )
+    return redirect(url_for("login"))
 
 
 # =========================================================
@@ -441,42 +263,17 @@ def planner():
 
     conn = get_db()
 
-
     coach = conn.execute("""
-        SELECT *
-        FROM coaches
-        WHERE id = ?
-
-    """, (
-        session["coach_id"],
-    )).fetchone()
-
+        SELECT * FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
 
     conn.close()
 
+    coach = reset_monthly_usage(coach)
 
-    coach = reset_monthly_usage(
-        coach
-    )
+    remaining = max(0, coach["monthly_limit"] - coach["monthly_used"])
 
-
-    remaining = max(
-        0,
-        coach["monthly_limit"]
-        -
-        coach["monthly_used"]
-    )
-
-
-    return render_template(
-
-        "planner.html",
-
-        coach=coach,
-
-        remaining=remaining
-
-    )
+    return render_template("planner.html", coach=coach, remaining=remaining)
 
 
 # =========================================================
@@ -489,371 +286,150 @@ def get_programs():
 
     conn = get_db()
 
-
     programs = conn.execute("""
-        SELECT
-            id,
-            athlete_name,
-            program_name,
-            created_at
-
+        SELECT id, athlete_name, program_name, created_at
         FROM programs
-
         WHERE coach_id = ?
-
         ORDER BY id DESC
-
-    """, (
-        session["coach_id"],
-    )).fetchall()
-
+    """, (session["coach_id"],)).fetchall()
 
     conn.close()
 
-
-    return jsonify([
-
-        dict(program)
-
-        for program in programs
-
-    ])
+    return jsonify([dict(program) for program in programs])
 
 
 # =========================================================
 # GET ONE PROGRAM
 # =========================================================
 
-@app.route(
-    "/api/program/<int:program_id>",
-    methods=["GET"]
-)
+@app.route("/api/program/<int:program_id>", methods=["GET"])
 @login_required
 def get_program(program_id):
 
     conn = get_db()
 
-
     program = conn.execute("""
-        SELECT *
-        FROM programs
-
-        WHERE id = ?
-
-        AND coach_id = ?
-
-    """, (
-
-        program_id,
-
-        session["coach_id"]
-
-    )).fetchone()
-
+        SELECT * FROM programs
+        WHERE id = ? AND coach_id = ?
+    """, (program_id, session["coach_id"])).fetchone()
 
     conn.close()
 
-
     if not program:
-
-        return jsonify({
-
-            "success": False,
-
-            "message": "برنامه پیدا نشد."
-
-        }), 404
-
+        return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
 
     data = dict(program)
 
-
     try:
-
-        data["program_data"] = json.loads(
-            data["program_data"]
-        )
-
+        data["program_data"] = json.loads(data["program_data"])
     except:
-
         data["program_data"] = []
 
-
-    return jsonify({
-
-        "success": True,
-
-        "program": data
-
-    })
+    return jsonify({"success": True, "program": data})
 
 
 # =========================================================
 # SAVE PROGRAM
 # =========================================================
 
-@app.route(
-    "/api/program",
-    methods=["POST"]
-)
+@app.route("/api/program", methods=["POST"])
 @login_required
 def save_program():
 
     conn = get_db()
 
-
     coach = conn.execute("""
-        SELECT *
-        FROM coaches
-
-        WHERE id = ?
-
-    """, (
-        session["coach_id"],
-    )).fetchone()
-
+        SELECT * FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
 
     conn.close()
 
+    coach = reset_monthly_usage(coach)
 
-    coach = reset_monthly_usage(
-        coach
-    )
-
-
-    remaining = (
-        coach["monthly_limit"]
-        -
-        coach["monthly_used"]
-    )
-
+    remaining = coach["monthly_limit"] - coach["monthly_used"]
 
     if remaining <= 0:
-
         return jsonify({
-
             "success": False,
-
-            "message":
-            "سهمیه ساخت برنامه این ماه شما تمام شده است."
-
+            "message": "سهمیه ساخت برنامه این ماه شما تمام شده است."
         }), 403
-
 
     data = request.get_json()
 
-
     if not data:
-
-        return jsonify({
-
-            "success": False,
-
-            "message":
-            "اطلاعات برنامه دریافت نشد."
-
-        }), 400
-
+        return jsonify({"success": False, "message": "اطلاعات برنامه دریافت نشد."}), 400
 
     if not data.get("athlete_name"):
-
-        return jsonify({
-
-            "success": False,
-
-            "message":
-            "نام ورزشکار را وارد کنید."
-
-        }), 400
-
+        return jsonify({"success": False, "message": "نام ورزشکار را وارد کنید."}), 400
 
     if not data.get("program_name"):
+        return jsonify({"success": False, "message": "نام برنامه را وارد کنید."}), 400
 
-        return jsonify({
-
-            "success": False,
-
-            "message":
-            "نام برنامه را وارد کنید."
-
-        }), 400
-
-
-    days = data.get(
-        "days",
-        []
-    )
-
+    days = data.get("days", [])
 
     if not days:
-
-        return jsonify({
-
-            "success": False,
-
-            "message":
-            "حداقل یک روز تمرین انتخاب کنید."
-
-        }), 400
-
+        return jsonify({"success": False, "message": "حداقل یک روز تمرین انتخاب کنید."}), 400
 
     conn = get_db()
 
-
     conn.execute("""
         INSERT INTO programs
-        (
-            coach_id,
-
-            athlete_name,
-            athlete_age,
-            athlete_height,
-            athlete_weight,
-            athlete_goal,
-
-            program_name,
-
-            program_data,
-
-            notes,
-
-            created_at
-        )
-
+        (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
+         athlete_goal, program_name, program_data, notes, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-
     """, (
-
         coach["id"],
-
-        data.get(
-            "athlete_name",
-            ""
-        ),
-
-        data.get(
-            "athlete_age",
-            ""
-        ),
-
-        data.get(
-            "athlete_height",
-            ""
-        ),
-
-        data.get(
-            "athlete_weight",
-            ""
-        ),
-
-        data.get(
-            "athlete_goal",
-            ""
-        ),
-
-        data.get(
-            "program_name",
-            ""
-        ),
-
-        json.dumps(
-            days,
-            ensure_ascii=False
-        ),
-
-        data.get(
-            "notes",
-            ""
-        ),
-
+        data.get("athlete_name", ""),
+        data.get("athlete_age", ""),
+        data.get("athlete_height", ""),
+        data.get("athlete_weight", ""),
+        data.get("athlete_goal", ""),
+        data.get("program_name", ""),
+        json.dumps(days, ensure_ascii=False),
+        data.get("notes", ""),
         datetime.now().isoformat()
-
     ))
-
 
     conn.execute("""
         UPDATE coaches
-
-        SET monthly_used =
-            monthly_used + 1
-
+        SET monthly_used = monthly_used + 1
         WHERE id = ?
-
-    """, (
-        coach["id"],
-    ))
-
+    """, (coach["id"],))
 
     conn.commit()
-
     conn.close()
 
-
-    return jsonify({
-
-        "success": True,
-
-        "remaining":
-        remaining - 1
-
-    })
+    return jsonify({"success": True, "remaining": remaining - 1})
 
 
 # =========================================================
 # DELETE PROGRAM
 # =========================================================
 
-@app.route(
-    "/api/program/<int:program_id>",
-    methods=["DELETE"]
-)
+@app.route("/api/program/<int:program_id>", methods=["DELETE"])
 @login_required
 def delete_program(program_id):
 
     conn = get_db()
 
-
     result = conn.execute("""
         DELETE FROM programs
-
-        WHERE id = ?
-
-        AND coach_id = ?
-
-    """, (
-
-        program_id,
-
-        session["coach_id"]
-
-    ))
-
+        WHERE id = ? AND coach_id = ?
+    """, (program_id, session["coach_id"]))
 
     conn.commit()
-
     conn.close()
 
-
     if result.rowcount == 0:
+        return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
 
-        return jsonify({
-
-            "success": False,
-
-            "message":
-            "برنامه پیدا نشد."
-
-        }), 404
+    return jsonify({"success": True, "message": "برنامه حذف شد."})
 
 
-    return jsonify({
+# =========================================================
+# PDF EXPORT
+# =========================================================
 
-        "success": True,
-
-        "message":
-        "برنامه حذف شد."
-
-    })
 FONT_PATH = os.path.join(
     os.path.dirname(__file__),
     "static",
@@ -862,202 +438,113 @@ FONT_PATH = os.path.join(
 )
 
 
-@app.route(
-    "/api/program/pdf",
-    methods=["POST"]
-)
+@app.route("/api/program/pdf", methods=["POST"])
 @login_required
 def export_program_pdf():
 
     data = request.get_json()
 
-
     if not data or not data.get("html"):
-
         return jsonify({
-
             "success": False,
-
-            "message":
-            "محتوایی برای تبدیل به PDF ارسال نشده است."
-
+            "message": "محتوایی برای تبدیل به PDF ارسال نشده است."
         }), 400
-        
+
     try:
 
         html_content = data["html"]
 
-        # CSS اصلی سایت
         css_path = os.path.join(
             os.path.dirname(__file__),
             "static",
             "style.css"
         )
 
-        with open(
-            css_path,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
+        with open(css_path, "r", encoding="utf-8") as f:
             css_content = f.read()
 
+        font_uri = FONT_PATH.replace("\\", "/")
 
         full_html = f"""
         <!DOCTYPE html>
-
         <html lang="fa" dir="rtl">
-
         <head>
-
             <meta charset="UTF-8">
-
-            <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0">
 
             <style>
 
-                {css_content}
+                @font-face {{
+                    font-family: 'Vazirmatn';
+                    src: url('{font_uri}');
+                }}
 
+                {css_content}
 
                 @page {{
                     size: A4;
                     margin: 12mm;
                 }}
 
-
                 body {{
-
                     background: white !important;
-
                     margin: 0;
-
                     padding: 0;
-
-                    font-family:
-                        Vazirmatn-Regular.ttf;
-
+                    font-family: 'Vazirmatn';
                 }}
-
 
                 .preview-table {{
-
                     width: 100%;
-
                     border-collapse: collapse;
-
                 }}
-
 
                 .preview-table th,
                 .preview-table td {{
-
                     border: 1px solid #ccc;
-
                     padding: 8px;
-
                     text-align: center;
-
                 }}
 
-
                 .exercise-guide-link {{
-
                     color: #2563eb;
-
                     text-decoration: underline;
-
                     font-weight: 600;
-
                 }}
 
             </style>
-
         </head>
-
         <body>
-
             {html_content}
-
         </body>
-
         </html>
         """
 
+        pdf_buffer = BytesIO()
 
-        with sync_playwright() as p:
+        pisa_status = pisa.CreatePDF(full_html, dest=pdf_buffer)
 
-            browser = p.chromium.launch(
-                headless=True
-            )
+        if pisa_status.err:
+            return jsonify({
+                "success": False,
+                "message": "خطا در تولید فایل PDF."
+            }), 500
 
-            page = browser.new_page(
-                viewport={
-                    "width": 1200,
-                    "height": 1600
-                }
-            )
-
-
-            page.set_content(
-                full_html,
-                wait_until="networkidle"
-            )
-
-
-            pdf_bytes = page.pdf(
-
-                format="A4",
-
-                print_background=True,
-
-                margin={
-                    "top": "12mm",
-                    "right": "12mm",
-                    "bottom": "12mm",
-                    "left": "12mm"
-                },
-
-                prefer_css_page_size=True
-
-            )
-
-
-            browser.close()
-
-
-        from io import BytesIO
+        pdf_bytes = pdf_buffer.getvalue()
 
         return send_file(
-
             BytesIO(pdf_bytes),
-
             mimetype="application/pdf",
-
             as_attachment=True,
-
-            download_name=f"برنامه تمرینی.pdf"
-
+            download_name="برنامه تمرینی.pdf"
         )
-
 
     except Exception as e:
 
-        print(
-            "PDF ERROR:",
-            e
-        )
+        print("PDF ERROR:", e)
 
         return jsonify({
-
             "success": False,
-
-            "message":
-            f"خطا در ساخت PDF: {str(e)}"
-
+            "message": f"خطا در ساخت PDF: {str(e)}"
         }), 500
-    
 
 
 # =========================================================
@@ -1065,20 +552,5 @@ def export_program_pdf():
 # =========================================================
 
 if __name__ == "__main__":
-
     init_db()
-
-    app.run(
-        debug=True,
-        host="127.0.0.1",
-        port=5000
-    )
-
-
-
-
-
-
-
-
-    
+    app.run(debug=True, host="127.0.0.1", port=5000)
