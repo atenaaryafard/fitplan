@@ -22,6 +22,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from xhtml2pdf import pisa
 from io import BytesIO
+from xhtml2pdf.default import DEFAULT_FONT
 
 
 app = Flask(__name__)
@@ -455,23 +456,55 @@ def export_program_pdf():
 
         html_content = data["html"]
 
+        # ==========================================
+        # مسیر فونت
+        # ==========================================
+
+        font_path = os.path.join(
+            os.path.dirname(__file__),
+            "static",
+            "font",
+            "Vazirmatn-Regular.ttf"
+        )
+
+        if not os.path.exists(font_path):
+            return jsonify({
+                "success": False,
+                "message": f"فونت پیدا نشد: {font_path}"
+            }), 500
+
+        # ==========================================
         # مسیر CSS مخصوص PDF
+        # ==========================================
+
         pdf_css_path = os.path.join(
             os.path.dirname(__file__),
             "static",
             "pdf_style.css"
         )
 
-        # خواندن CSS مخصوص PDF
+        if not os.path.exists(pdf_css_path):
+            return jsonify({
+                "success": False,
+                "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
+            }), 500
+
         with open(pdf_css_path, "r", encoding="utf-8") as f:
             css_content = f.read()
 
-        # مسیر فونت
-        font_uri = "file:///" + FONT_PATH.replace("\\", "/")
+        # ==========================================
+        # تبدیل مسیر فونت به مسیر قابل استفاده
+        # ==========================================
 
-        # HTML کامل PDF
+        font_uri = "file:///" + font_path.replace("\\", "/")
+
+        # ==========================================
+        # HTML نهایی PDF
+        # ==========================================
+
         full_html = f"""
         <!DOCTYPE html>
+
         <html lang="fa" dir="rtl">
 
         <head>
@@ -481,10 +514,19 @@ def export_program_pdf():
             <style>
 
                 @font-face {{
-                    font-family: 'Vazirmatn';
-                    src: url('{font_uri}');
+                    font-family: "Vazirmatn";
+                    src: url("{font_uri}");
                     font-weight: normal;
                     font-style: normal;
+                }}
+
+                html {{
+                    direction: rtl;
+                }}
+
+                body {{
+                    direction: rtl;
+                    font-family: "Vazirmatn";
                 }}
 
                 {css_content}
@@ -495,6 +537,8 @@ def export_program_pdf():
 
         <body>
 
+            <pdf:language name="persian"/>
+
             {html_content}
 
         </body>
@@ -502,35 +546,46 @@ def export_program_pdf():
         </html>
         """
 
+        # ==========================================
         # ساخت PDF
+        # ==========================================
+
         pdf_buffer = BytesIO()
 
         pisa_status = pisa.CreatePDF(
-            full_html,
+            src=full_html,
             dest=pdf_buffer
         )
 
+        # ==========================================
         # بررسی خطا
+        # ==========================================
+
         if pisa_status.err:
+
+            print("PDF ERROR: xhtml2pdf returned error")
 
             return jsonify({
                 "success": False,
-                "message": "خطا در تولید فایل PDF."
+                "message": "خطا در تولید PDF."
             }), 500
 
-        # دریافت فایل
-        pdf_bytes = pdf_buffer.getvalue()
+        # ==========================================
+        # خروجی
+        # ==========================================
+
+        pdf_buffer.seek(0)
 
         return send_file(
-            BytesIO(pdf_bytes),
+            pdf_buffer,
             mimetype="application/pdf",
             as_attachment=True,
-            download_name="برنامه تمرینی.pdf"
+            download_name="program.pdf"
         )
 
     except Exception as e:
 
-        print("PDF ERROR:", e)
+        print("PDF ERROR:", repr(e))
 
         return jsonify({
             "success": False,
