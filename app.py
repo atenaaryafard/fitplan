@@ -622,12 +622,6 @@ def export_program_pdf():
 
         pdf_bytes = pdf_buffer.getvalue()
 
-        return send_file(
-            BytesIO(pdf_bytes),
-            mimetype="application/pdf",
-            as_attachment=True,
-            download_name="برنامه تمرینی.pdf"
-        )
 
     except Exception as e:
 
