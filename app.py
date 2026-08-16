@@ -432,15 +432,6 @@ def delete_program(program_id):
 # PDF EXPORT
 # =========================================================
 
-font_path = os.path.join(
-    os.path.dirname(__file__),
-        "static",
-        "font",
-        "font",
-        "Vazirmatn-Regular.ttf"
-)
-
-
 @app.route("/api/program/pdf", methods=["POST"])
 @login_required
 def export_program_pdf():
