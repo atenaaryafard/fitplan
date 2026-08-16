@@ -777,7 +777,8 @@ button {
         .9fr
         auto
         1.3fr
-        35px;
+        35px
+        .7f);     
 
     gap: 8px;
 
