@@ -1,6 +1,6 @@
 @page {
     size: A4;
-    margin: 15mm 12mm 15mm 12mm;
+    margin:12mm;
 }
 
 html {
@@ -108,7 +108,7 @@ p {
 .preview-table th,
 .preview-table td {
     border: 1px solid #fde0c2;
-    padding: 7px 5px;
+    padding: 7px 8px;
     text-align: center;
     vertical-align: middle;
     font-family: "Vazirmatn";
