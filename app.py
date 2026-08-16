@@ -435,7 +435,7 @@ def delete_program(program_id):
 FONT_PATH = os.path.join(
     os.path.dirname(__file__),
     "static",
-    "font",
+    "font/font",
     "Vazirmatn-Regular.ttf"
 )
 
