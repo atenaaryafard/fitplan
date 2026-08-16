@@ -455,22 +455,27 @@ def export_program_pdf():
 
         html_content = data["html"]
 
-        css_path = os.path.join(
+        # مسیر CSS مخصوص PDF
+        pdf_css_path = os.path.join(
             os.path.dirname(__file__),
             "static",
-            "style.css"
+            "pdf_style.css"
         )
 
-        with open(css_path, "r", encoding="utf-8") as f:
+        # خواندن CSS مخصوص PDF
+        with open(pdf_css_path, "r", encoding="utf-8") as f:
             css_content = f.read()
-        
 
+        # مسیر فونت
         font_uri = FONT_PATH.replace("\\", "/")
 
+        # HTML کامل PDF
         full_html = f"""
         <!DOCTYPE html>
         <html lang="fa" dir="rtl">
+
         <head>
+
             <meta charset="UTF-8">
 
             <style>
@@ -482,53 +487,53 @@ def export_program_pdf():
 
                 {css_content}
 
-                @page {{
-                    size: A4;
-                    margin: 12mm;
-                }}
-
-                body {{
-                    background: white !important;
-                    margin: 0;
-                    padding: 0;
-                    font-family: 'Vazirmatn';
-                }}
-
-                .preview-table {{
-                    width: 100%;
-                    border-collapse: collapse;
-                }}
-
-                .preview-table th,
-                .preview-table td {{
-                    border: 1px solid #ccc;
-                    padding: 8px;
-                    text-align: center;
-                }}
-
-                .exercise-guide-link {{
-                    color: #2563eb;
-                    text-decoration: underline;
-                    font-weight: 600;
-                }}
-
             </style>
+
         </head>
+
         <body>
+
             {html_content}
+
         </body>
+
         </html>
         """
 
+        # ساخت PDF
         pdf_buffer = BytesIO()
 
-        pisa_status = pisa.CreatePDF(full_html, dest=pdf_buffer)
+        pisa_status = pisa.CreatePDF(
+            full_html,
+            dest=pdf_buffer
+        )
 
+        # بررسی خطا
         if pisa_status.err:
+
             return jsonify({
                 "success": False,
                 "message": "خطا در تولید فایل PDF."
             }), 500
+
+        # دریافت فایل
+        pdf_bytes = pdf_buffer.getvalue()
+
+        return send_file(
+            BytesIO(pdf_bytes),
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name="برنامه تمرینی.pdf"
+        )
+
+    except Exception as e:
+
+        print("PDF ERROR:", e)
+
+        return jsonify({
+            "success": False,
+            "message": f"خطا در ساخت PDF: {str(e)}"
+        }), 500
 
         pdf_bytes = pdf_buffer.getvalue()
 
