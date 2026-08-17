@@ -384,7 +384,7 @@ def save_program():
     conn.execute("""
         INSERT INTO programs
         (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
-         athlete_goal,athlete_goal, program_name, program_data, notes, created_at)
+         athlete_goal,athlete_gender, program_name, program_data, notes, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         coach["id"],
