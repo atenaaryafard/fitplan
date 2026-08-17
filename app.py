@@ -235,8 +235,8 @@ def login():
 
     error = None
 
-        if "coach_id" in session:
-            return redirect(url_for("planner"))
+    if "coach_id" in session:
+        return redirect(url_for("planner"))
 
     if request.method == "POST":
 
