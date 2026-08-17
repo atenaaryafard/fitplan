@@ -1,3 +1,10 @@
+
+function sanitizeNameInput(input) {
+    input.value = input.value.replace(/[^\u0600-\u06FF\s]/g, "");
+}
+
+
+
 /* =====================================================
    GLOBAL
 ===================================================== */
@@ -1057,6 +1064,16 @@ async function saveProgram() {
 
         alert(
             "حداقل یک روز تمرین انتخاب کنید."
+        );
+
+        return;
+
+    }
+
+     if (!namePattern.test(data.athlete_name)) {
+
+        alert(
+            "نام شاگرد باید فقط شامل حروف فارسی باشد و نباید عدد یا کاراکتر دیگری داشته باشد."
         );
 
         return;
