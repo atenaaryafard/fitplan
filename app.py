@@ -489,7 +489,7 @@ def export_program_pdf():
 
         try:
             pdfmetrics.registerFont(
-                TTFont("Vazirmatn", FONT_PATH)
+                TTFont("Vazirmatn", font_path)
     )
             print("Vazirmatn font registered successfully")
 
