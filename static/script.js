@@ -1212,12 +1212,6 @@ async function loadHistory() {
                             )}
                         </strong>
 
-                        <span>
-                            ${escapeHTML(
-                                program.program_name
-                            )}
-                        </span>
-
                         <small>
                             ${dateText}
                         </small>
