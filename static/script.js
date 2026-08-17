@@ -1,9 +1,6 @@
 
 function sanitizeNameInput(input) {
-   input.value = input.value
-        .replace(/[\u0660-\u0669\u06F0-\u06F9]/g, "")
-        .replace(/[^\u0600-\u06FF\s]/g, "");
-}
+  input.value = input.value.replace(/[^\u0600-\u06FF\s]/g, "");
 
 
 
@@ -1061,18 +1058,17 @@ async function saveProgram() {
 
     }
 
-   const namePattern = /^[\u0600-\u06FF\s]+$/;
-   const hasDigits = /[\u0660-\u0669\u06F0-\u06F9]/;
+      const namePattern = /^[\u0600-\u06FF\s]+$/;
 
-   if (hasDigits.test(data.athlete_name)) {
+    if (!namePattern.test(data.athlete_name)) {
 
-     alert(
-        "نام شاگرد باید فقط شامل حروف فارسی باشد و نباید عدد یا کاراکتر دیگری داشته باشد."
-    );
+        alert(
+            "نام شاگرد باید فقط شامل حروف فارسی باشد و نباید عدد یا کاراکتر دیگری داشته باشد."
+        );
 
-     return;
+        return;
 
-}
+    }
 
 
     if (data.days.length === 0) {
