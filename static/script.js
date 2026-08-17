@@ -1009,6 +1009,10 @@ function collectProgram() {
             document.getElementById(
                 "athleteGoal"
             ).value,
+       athlete_gender:
+            document.getElementById(
+               "athleteGender"
+            ).value,
 
         program_name:
             generateProgramName(),
@@ -1447,6 +1451,10 @@ function resetProgramForm() {
         "athleteGoal"
     ).value = "";
 
+   document.getElementById(
+       "athleteGender"
+    ).value = "";
+
 
     document.getElementById(
         "programNotes"
@@ -1482,6 +1490,7 @@ function buildProgramPreviewHTML(program) {
             <div><strong>قد:</strong> ${escapeHTML(program.athlete_height) || "-"}</div>
             <div><strong>وزن:</strong> ${escapeHTML(program.athlete_weight) || "-"}</div>
             <div><strong>هدف:</strong> ${escapeHTML(program.athlete_goal) || "-"}</div>
+            <div><strong>جنسیت:</strong> ${escapeHTML(program.athlete_gender) || "-"}</div>
 
         </div>
 
