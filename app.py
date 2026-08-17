@@ -31,11 +31,13 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY", "CHANGE_THIS_SECRET_KEY")
 
+
 @app.after_request
 def add_no_cache_headers(response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     response.headers["Pragma"] = "no-cache"
     return response
+
 
 DATABASE_URL = "postgresql://postgres.vubgomgwhgvjjuhpcxdc:atena.aryafard@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
 
