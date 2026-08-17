@@ -89,6 +89,7 @@ def init_db():
             athlete_height TEXT,
             athlete_weight TEXT,
             athlete_goal TEXT,
+            athlete_gender TEXT,
             program_name TEXT,
             program_data TEXT,
             notes TEXT,
@@ -379,7 +380,7 @@ def save_program():
     conn.execute("""
         INSERT INTO programs
         (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
-         athlete_goal, program_name, program_data, notes, created_at)
+         athlete_goal,athlete_goal, program_name, program_data, notes, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         coach["id"],
@@ -388,6 +389,7 @@ def save_program():
         data.get("athlete_height", ""),
         data.get("athlete_weight", ""),
         data.get("athlete_goal", ""),
+        data.get("athlete_gender", ""),
         data.get("program_name", ""),
         json.dumps(days, ensure_ascii=False),
         data.get("notes", ""),
