@@ -1061,7 +1061,8 @@ async function saveProgram() {
 
     }
 
-    const namePattern = /^[\u0600-\u06FF\s]+$/;
+    
+      const namePattern = /^[\u0600-\u06FF\s]+$/;
 
     if (!namePattern.test(data.athlete_name)) {
 
