@@ -1,8 +1,6 @@
 
 function sanitizeNameInput(input) {
-    input.value = input.value
-        .replace(/[\u0660-\u0669\u06F0-\u06F9]/g, "")
-        .replace(/[^\u0600-\u06FF\s]/g, "");
+   input.value = input.value.replace(/[^\u0600-\u06FF\s]/g, "");
 }
 
 
