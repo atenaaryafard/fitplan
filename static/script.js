@@ -1082,6 +1082,7 @@ async function saveProgram() {
         );
 
         return;
+      }
 
 
     try {
