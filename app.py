@@ -98,6 +98,10 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+    ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT
+    """)
+
     conn.commit()
     conn.close()
 
