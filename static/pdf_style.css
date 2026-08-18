@@ -77,7 +77,7 @@ p {
 }
 
 .preview-day h3 {
-    font-size: 16pt;
+    font-size: 14pt;
     font-weight: bold;
     margin: 0 0 10px 0;
     color: #111827;
@@ -116,11 +116,13 @@ p {
 .preview-table th:nth-child(1),
 .preview-table td:nth-child(1) {
     width: 30%;
+    white-space: nowrap;
 }
 
 .preview-table th:nth-child(2),
 .preview-table td:nth-child(2) {
     width: 20%;
+    white-space: nowrap;
 }
 
 .preview-table th:nth-child(3),
@@ -146,6 +148,7 @@ p {
 .preview-table th:nth-child(7),
 .preview-table td:nth-child(7) {
     width: 16%;
+    white-space: nowrap;
 }
 
 
