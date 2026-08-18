@@ -60,6 +60,7 @@ p {
     width: 100%;
     background: #f8fafc;
     border: 1px solid #e5e7eb;
+    border-radius: 10px;
     padding: 12px;
     margin-bottom: 20px;
     text-align: right;
@@ -95,6 +96,19 @@ p {
     table-layout: fixed;
     font-size: 12pt;
     direction: rtl;
+}
+
+.preview-athlete table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+}
+
+.preview-athlete td {
+    border: none;
+    padding: 6px 8px;
+    text-align: right;
+    vertical-align: middle;
 }
 
 .preview-table th,
