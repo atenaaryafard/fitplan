@@ -40,7 +40,7 @@ h2 {
 
 h3 {
     font-family: "Vazirmatn";
-    font-size: 13pt;
+    font-size: 14pt;
     font-weight: bold;
     margin: 12px 0 8px 0;
     color: #111827;
@@ -62,18 +62,9 @@ p {
     border: 1px solid #e5e7eb;
     padding: 12px;
     margin-bottom: 20px;
-}
-
-.preview-athlete table {
-    width: 100%;
-    border: none;
-}
-
-.preview-athlete td {
-    border: none;
-    padding: 5px 8px;
     text-align: right;
 }
+
 
 
 /* =========================
@@ -86,7 +77,7 @@ p {
 }
 
 .preview-day h3 {
-    font-size: 14pt;
+    font-size: 16pt;
     font-weight: bold;
     margin: 0 0 10px 0;
     color: #111827;
@@ -124,37 +115,37 @@ p {
 
 .preview-table th:nth-child(1),
 .preview-table td:nth-child(1) {
-    width: 22%;
+    width: 30%;
 }
 
 .preview-table th:nth-child(2),
 .preview-table td:nth-child(2) {
-    width: 17%;
+    width: 20%;
 }
 
 .preview-table th:nth-child(3),
 .preview-table td:nth-child(3) {
-    width: 9%;
+    width: 8%;
 }
 
 .preview-table th:nth-child(4),
 .preview-table td:nth-child(4) {
-    width: 10%;
+    width: 8%;
 }
 
 .preview-table th:nth-child(5),
 .preview-table td:nth-child(5) {
-    width: 14%;
+    width: 10%;
 }
 
 .preview-table th:nth-child(6),
 .preview-table td:nth-child(6) {
-    width: 10%;
+    width: 8%;
 }
 
 .preview-table th:nth-child(7),
 .preview-table td:nth-child(7) {
-    width: 18%;
+    width: 16%;
 }
 
 
