@@ -57,6 +57,9 @@ p {
 
 .preview-athlete {
     display: flex;
+    flex-wrap: wrap;
+    direction: rtl;
+    text-align: right;
     width: 100%;
     box-sizing: border-box;
     background: #f8fafc;
