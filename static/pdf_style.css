@@ -127,7 +127,7 @@ p {
 
 /* ستون حرکت - سمت راست جدول */
 .preview-table .col-exercise {
-    width: 40%;
+    width: 60%;
     text-align: right;
     white-space: nowrap;
     padding-right: 7px;
@@ -135,37 +135,37 @@ p {
 
 /* عضله هدف */
 .preview-table .col-muscle {
-    width: 15%;
+    width: 10%;
     white-space: nowrap;
 }
 
 /* ست */
 .preview-table .col-sets {
-    width: 7%;
+    width: 5%;
     white-space: nowrap;
 }
 
 /* تکرار */
 .preview-table .col-reps {
-    width: 7%;
+    width: 5%;
     white-space: nowrap;
 }
 
 /* استراحت */
 .preview-table .col-rest {
-    width: 12%;
+    width: 8%;
     white-space: nowrap;
 }
 
 /* وزنه */
 .preview-table .col-weight {
-    width: 7%;
+    width: 5%;
     white-space: nowrap;
 }
 
 /* اجرای حرکت */
 .preview-table .col-guide {
-    width: 12%;
+    width: 7%;
     white-space: nowrap;
 }
 
