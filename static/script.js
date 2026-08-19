@@ -1500,8 +1500,8 @@ function buildProgramPreviewHTML(program) {
 
         <div class="preview-athlete">
 
-            <div><strong>ورزشکار:</strong> ${escapeHTML(program.athlete_name) || "-"}</div>
-            <div><strong>سن:</strong> ${escapeHTML(program.athlete_age) || "-"}</div>
+            <div>${escapeHTML(program.athlete_name) || "-"} <strong>ورزشکار:</strong></div>
+            <div>${escapeHTML(program.athlete_age) || "-"} <strong>سن:</strong></div>
             <div><strong>قد:</strong> ${escapeHTML(program.athlete_height) || "-"}</div>
             <div><strong>وزن:</strong> ${escapeHTML(program.athlete_weight) || "-"}</div>
             <div><strong>هدف:</strong> ${escapeHTML(program.athlete_goal) || "-"}</div>
