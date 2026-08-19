@@ -640,7 +640,7 @@ def export_program_pdf():
         pdf_bytes = pdf_buffer.getvalue()
 
 
-    except Exception as e:
+    
 
         print("PDF ERROR:", e)
 
