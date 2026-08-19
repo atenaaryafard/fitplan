@@ -55,18 +55,16 @@ p {
    یک کادر واحد
 ========================= */
 
-/* .preview-athlete {
+.preview-athlete {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     box-sizing: border-box;
-    background: #f8fafc;
-    border: 1px solid #d9d9d9;
+    background: #999999;
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 10px;
     margin-bottom: 18px;
-    direction: rtl;
-} */
+}
 
 /* .preview-athlete div {
     width: 33.33%;
@@ -262,24 +260,18 @@ a {
 ========================= */
 
 .preview-notes {
-    /* width: 100%;
+    width: 100%;
     box-sizing: border-box;
     background: #f8fafc;
     border-radius: 8px;
-    padding: 10px 14px;
-    margin-bottom: 18px;
-    direction: rtl; */
-
-    margin-top: 15px;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 8px;
+    margin-bottom: 10px;
+    direction: rtl;
 }
 
 .preview-notes p {
-    margin-top: 15px;
+    margin-top: 5px;
     padding: 10px;
-    border: 1px solid #cccccc;
+    background: #999999;
     border-radius: 8px;
 }
 
