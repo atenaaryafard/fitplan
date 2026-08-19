@@ -6,7 +6,7 @@
 body {
     direction: rtl;
     font-family: "Vazirmatn";
-    font-size: 10pt;
+    font-size: 9pt;
     color: #17202a;
     background: #ffffff;
     margin: 0;
@@ -20,7 +20,7 @@ body {
 
 h1 {
     font-family: "Vazirmatn";
-    font-size: 18pt;
+    font-size: 16pt;
     font-weight: bold;
     text-align: center;
     margin-bottom: 15px;
@@ -29,7 +29,7 @@ h1 {
 
 h2 {
     font-family: "Vazirmatn";
-    font-size: 15pt;
+    font-size: 14pt;
     font-weight: bold;
     margin-bottom: 8px;
     color: #111827;
@@ -56,23 +56,22 @@ p {
 ========================= */
 
 .preview-athlete {
-    /* display: flex; */
+    display: flex;
     width: 100%;
-    /* box-sizing: border-box; */
-    background: #999999;
+    box-sizing: border-box;
+    background: #f8fafc;
     border-radius: 8px;
-    padding: 10px;
     margin-bottom: 18px;
 }
 
-/* .preview-athlete div {
+.preview-athlete div {
     width: 33.33%;
     box-sizing: border-box;
     padding: 5px 8px;
     font-size: 9pt;
-    line-height: 1.6;
+    /* line-height: 1.6; */
     white-space: nowrap;
-} */
+}
 
 /* .preview-athlete strong {
     font-weight: bold;
@@ -84,22 +83,22 @@ p {
     border-collapse: collapse;
     border: none;
     margin: 0;
-}
+} */
 
 .preview-athlete td {
     border: none;
-    padding: 5px 8px;
+    padding: 5px 5px;
     text-align: right;
     vertical-align: middle;
     font-size: 9pt;
-    line-height: 1.6;
-} */
+    /* line-height: 1.6; */
+} 
 
 /* عنوان اطلاعات */
-/* .preview-athlete td:nth-child(odd) {
+.preview-athlete td:nth-child(odd) {
     font-weight: bold;
     white-space: nowrap;
-} */
+}
 
 /* مقدار اطلاعات */
 .preview-athlete td:nth-child(even) {
@@ -131,9 +130,9 @@ p {
 .preview-table {
     width: 100%;
     border-collapse: collapse;
-    /* table-layout: fixed; */
-    /* font-size: 8pt; */
-    /* direction: rtl; */
+    table-layout: fixed;
+    font-size: 9pt;
+    direction: rtl;
     margin-top: 10px;
     margin-bottom: 15px;
 }
@@ -152,7 +151,7 @@ p {
 .preview-table th {
     background: #f59631;
     /* color: #ffffff; */
-    font-size: 8.5pt;
+    font-size: 9pt;
     font-weight: bold;
     /* white-space: nowrap; */
 }
@@ -263,7 +262,6 @@ a {
     padding: 10px;
     background: #f8fafc;
     border-radius: 10px;
-    margin-bottom: 10px;
 }
 
 /* .preview-notes p {
