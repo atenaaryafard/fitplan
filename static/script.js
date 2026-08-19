@@ -1591,6 +1591,7 @@ function buildProgramPreviewHTML(program) {
                                                     `
                                                 }
                                             </td>
+                                        </tr>  
                                        
                                     `;
 
