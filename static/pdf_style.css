@@ -132,20 +132,13 @@ p {
    جدول تمرین
 ========================= */
 
-/* =========================
-   جدول تمرین
-========================= */
-
-/* =========================
-   جدول تمرین - A4
-========================= */
 
 .preview-table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
     font-size: 9pt;
-    direction: rtl;
+    direction: ltr;
     margin-top: 10px;
     margin-bottom: 15px;
 }
