@@ -262,15 +262,16 @@ a {
 ========================= */
 
 .preview-notes {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
     box-sizing: border-box;
-    font-family: "Vazirmatn";
-    font-size: 9pt;
     background: #f8fafc;
     border: 1px solid #d9d9d9;
     border-radius: 8px;
-    padding: 12px 14px;
-    margin-top: 16px;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    direction: rtl;
 }
 
 .preview-notes p {
