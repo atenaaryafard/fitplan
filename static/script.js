@@ -309,18 +309,7 @@ function renderDayAccordion() {
         );
 
 
-    let html = "
-        <div class="preview-athlete">
-
-        <div class="athlete-field"><span class="athlete-label">ورزشکار:</span><span class="athlete-value">${escapeHTML(program.athlete_name) || "-"}</span></div>
-        <div class="athlete-field"><span class="athlete-label">سن:</span><span class="athlete-value">${escapeHTML(program.athlete_age) || "-"}</span></div>
-        <div class="athlete-field"><span class="athlete-label">قد:</span><span class="athlete-value">${escapeHTML(program.athlete_height) || "-"}</span></div>
-        <div class="athlete-field"><span class="athlete-label">وزن:</span><span class="athlete-value">${escapeHTML(program.athlete_weight) || "-"}</span></div>
-        <div class="athlete-field"><span class="athlete-label">هدف:</span><span class="athlete-value">${escapeHTML(program.athlete_goal) || "-"}</span></div>
-        <div class="athlete-field"><span class="athlete-label">جنسیت:</span><span class="athlete-value">${escapeHTML(program.athlete_gender) || "-"}</span></div>
-
-    </div>
-      ";
+    let html = "";
 
 
     DAY_DEFS.forEach(def => {
