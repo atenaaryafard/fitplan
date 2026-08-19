@@ -132,111 +132,120 @@ p {
    جدول تمرین
 ========================= */
 
+/* =========================
+   جدول تمرین
+========================= */
+
 .preview-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto;
     font-size: 9pt;
     direction: rtl;
     margin-top: 10px;
     margin-bottom: 15px;
 }
 
+/* سلول‌های جدول */
 .preview-table th,
 .preview-table td {
     border: 1px solid #d9d9d9;
-    padding: 6px;
+    padding: 6px 7px;
     text-align: center;
     vertical-align: middle;
-    /* font-family: "Vazirmatn";
-    line-height: 1.5; */
+    white-space: nowrap;
 }
 
-/* عنوان ستون‌ها */
+/* =========================
+   عنوان ستون‌ها
+========================= */
+
 .preview-table th {
     background: #f59631;
-    /* color: #ffffff; */
+    color: #17202a;
     font-size: 9pt;
     font-weight: bold;
-    /* white-space: nowrap; */
+    white-space: nowrap;
 }
-
 
 /* =========================
-   عرض ستون‌ها
-   ترتیب واقعی جدول:
-
-   # | حرکت | عضله هدف | ست |
-   تکرار | استراحت | وزنه | اجرای حرکت
+   ستون حرکت
+   اولین ستون = سمت راست
 ========================= */
 
-
-/* =========================
-   عرض ستون‌ها
-   ترتیب واقعی جدول:
-
-   حرکت | عضله هدف | ست |
-   تکرار | استراحت | وزنه | اجرای حرکت
-========================= */
-
-/* اجرای حرکت */
-.preview-table th:nth-child(7),
-.preview-table td:nth-child(7) {
-    width: 10%;
-    white-space: nowrap;
-}
-
-
-
-/* عضله هدف */
-.preview-table th:nth-child(2),
-.preview-table td:nth-child(2) {
-    width: 20%;
-    white-space: nowrap;
-}
-
-
-/* ست */
-.preview-table th:nth-child(3),
-.preview-table td:nth-child(3) {
-    width: 8%;
-    white-space: nowrap;
-}
-
-
-/* تکرار */
-.preview-table th:nth-child(4),
-.preview-table td:nth-child(4) {
-    width: 10%;
-    white-space: nowrap;
-}
-
-
-/* استراحت */
-.preview-table th:nth-child(5),
-.preview-table td:nth-child(5) {
-    width: 13%;
-    white-space: nowrap;
-}
-
-
-/* وزنه */
-.preview-table th:nth-child(6),
-.preview-table td:nth-child(6) {
-    width: 9%;
-    white-space: nowrap;
-}
-
-/* حرکت */
 .preview-table th:nth-child(1),
 .preview-table td:nth-child(1) {
     width: 30%;
-    white-space: nowrap;
+    min-width: 150px;
     text-align: right;
+    white-space: nowrap;
 }
 
+/* =========================
+   عضله هدف
+========================= */
 
+.preview-table th:nth-child(2),
+.preview-table td:nth-child(2) {
+    width: 20%;
+    min-width: 100px;
+    white-space: nowrap;
+}
 
+/* =========================
+   ست
+========================= */
+
+.preview-table th:nth-child(3),
+.preview-table td:nth-child(3) {
+    width: 8%;
+    min-width: 45px;
+    white-space: nowrap;
+}
+
+/* =========================
+   تکرار
+========================= */
+
+.preview-table th:nth-child(4),
+.preview-table td:nth-child(4) {
+    width: 10%;
+    min-width: 55px;
+    white-space: nowrap;
+}
+
+/* =========================
+   استراحت
+========================= */
+
+.preview-table th:nth-child(5),
+.preview-table td:nth-child(5) {
+    width: 13%;
+    min-width: 70px;
+    white-space: nowrap;
+}
+
+/* =========================
+   وزنه
+========================= */
+
+.preview-table th:nth-child(6),
+.preview-table td:nth-child(6) {
+    width: 9%;
+    min-width: 55px;
+    white-space: nowrap;
+}
+
+/* =========================
+   اجرای حرکت
+========================= */
+
+.preview-table th:nth-child(7),
+.preview-table td:nth-child(7) {
+    width: 10%;
+    min-width: 70px;
+    white-space: nowrap;
+}
 
 /* =========================
    لینک اجرای حرکت
@@ -251,9 +260,13 @@ p {
     white-space: nowrap;
 }
 
-a {
+/* تمام لینک‌های جدول */
+.preview-table a,
+.preview-table a:link,
+.preview-table a:visited {
     color: #2563eb;
     text-decoration: underline;
+    white-space: nowrap;
 }
 
 
