@@ -59,6 +59,7 @@ p {
 .preview-athlete {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     direction: rtl;
     background-color: #f8fafc;
     margin-bottom: 18px;
@@ -66,20 +67,17 @@ p {
 
 .preview-athlete td {
     border: none;
-    padding: 6px 8px;
+    padding: 8px 10px;
     text-align: right;
     vertical-align: middle;
     font-size: 9pt;
     white-space: nowrap;
+    width: 33.33%;
 }
 
-.athlete-label {
+.preview-athlete strong {
     font-weight: bold;
-    width: 12%;
-}
-
-.athlete-value {
-    width: 38%;
+    margin-left: 4px;
 }
 
 
