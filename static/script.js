@@ -1500,14 +1500,14 @@ function buildProgramPreviewHTML(program) {
 
           <table class="preview-athlete">
             <tr>
-                <td><strong>ورزشکار:</strong> ${escapeHTML(program.athlete_name) || "-"}</td>
-                <td><strong>سن:</strong> ${escapeHTML(program.athlete_age) || "-"}</td>
-                <td><strong>قد:</strong> ${escapeHTML(program.athlete_height) || "-"}</td>
+                <td>${escapeHTML(program.athlete_name) || "-"}<strong>ورزشکار:</strong> </td>
+                <td>${escapeHTML(program.athlete_age) || "-"}<strong>سن:</strong> </td>
+                <td>${escapeHTML(program.athlete_height) || "-"}<strong>قد:</strong> </td>
             </tr>
             <tr>
-                <td><strong>وزن:</strong> ${escapeHTML(program.athlete_weight) || "-"}</td>
-                <td><strong>هدف:</strong> ${escapeHTML(program.athlete_goal) || "-"}</td>
-                <td><strong>جنسیت:</strong> ${escapeHTML(program.athlete_gender) || "-"}</td>
+                <td>${escapeHTML(program.athlete_weight) || "-"}<strong>وزن:</strong></td>
+                <td>${escapeHTML(program.athlete_goal) || "-"}<strong>هدف:</strong> </td>
+                <td>${escapeHTML(program.athlete_gender) || "-"}<strong>جنسیت:</strong> </td>
             </tr>
         </table>
 
