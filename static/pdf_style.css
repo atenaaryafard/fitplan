@@ -154,18 +154,10 @@ p {
 ========================= */
 
 
-/* # */
-.preview-table th:nth-child(1),
-.preview-table td:nth-child(1) {
-    width: 4%;
-    white-space: nowrap;
-}
-
-
 /* حرکت */
 .preview-table th:nth-child(2),
 .preview-table td:nth-child(2) {
-    width: 29%;
+    width: 30%;
     white-space: nowrap;
     text-align: right;
 }
@@ -214,7 +206,7 @@ p {
 /* اجرای حرکت */
 .preview-table th:nth-child(8),
 .preview-table td:nth-child(8) {
-    width: 13%;
+    width: 16%;
     white-space: nowrap;
 }
 
