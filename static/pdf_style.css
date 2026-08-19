@@ -136,24 +136,29 @@ p {
    جدول تمرین
 ========================= */
 
+/* =========================
+   جدول تمرین - A4
+========================= */
+
 .preview-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto;
+    table-layout: fixed;
     font-size: 9pt;
     direction: rtl;
     margin-top: 10px;
     margin-bottom: 15px;
 }
 
-/* سلول‌های جدول */
+/* سلول‌ها */
 .preview-table th,
 .preview-table td {
     border: 1px solid #d9d9d9;
-    padding: 6px 7px;
+    padding: 6px 5px;
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
+    box-sizing: border-box;
 }
 
 /* =========================
@@ -170,15 +175,15 @@ p {
 
 /* =========================
    ستون حرکت
-   اولین ستون = سمت راست
+   سمت راست جدول
 ========================= */
 
 .preview-table th:nth-child(1),
 .preview-table td:nth-child(1) {
     width: 30%;
-    min-width: 150px;
     text-align: right;
     white-space: nowrap;
+    padding-right: 7px;
 }
 
 /* =========================
@@ -187,8 +192,7 @@ p {
 
 .preview-table th:nth-child(2),
 .preview-table td:nth-child(2) {
-    width: 20%;
-    min-width: 100px;
+    width: 18%;
     white-space: nowrap;
 }
 
@@ -198,8 +202,7 @@ p {
 
 .preview-table th:nth-child(3),
 .preview-table td:nth-child(3) {
-    width: 8%;
-    min-width: 45px;
+    width: 7%;
     white-space: nowrap;
 }
 
@@ -209,8 +212,7 @@ p {
 
 .preview-table th:nth-child(4),
 .preview-table td:nth-child(4) {
-    width: 10%;
-    min-width: 55px;
+    width: 9%;
     white-space: nowrap;
 }
 
@@ -220,8 +222,7 @@ p {
 
 .preview-table th:nth-child(5),
 .preview-table td:nth-child(5) {
-    width: 13%;
-    min-width: 70px;
+    width: 12%;
     white-space: nowrap;
 }
 
@@ -232,7 +233,6 @@ p {
 .preview-table th:nth-child(6),
 .preview-table td:nth-child(6) {
     width: 9%;
-    min-width: 55px;
     white-space: nowrap;
 }
 
@@ -242,8 +242,7 @@ p {
 
 .preview-table th:nth-child(7),
 .preview-table td:nth-child(7) {
-    width: 10%;
-    min-width: 70px;
+    width: 15%;
     white-space: nowrap;
 }
 
@@ -260,7 +259,6 @@ p {
     white-space: nowrap;
 }
 
-/* تمام لینک‌های جدول */
 .preview-table a,
 .preview-table a:link,
 .preview-table a:visited {
@@ -268,8 +266,6 @@ p {
     text-decoration: underline;
     white-space: nowrap;
 }
-
-
 /* =========================
    یادداشت‌ها
    یک کادر واحد
