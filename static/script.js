@@ -1500,8 +1500,8 @@ function buildProgramPreviewHTML(program) {
 
         <table class="preview-athlete">
             <tr>
-                <td class="athlete-label">ورزشکار:</td>
-                <td class="athlete-value">${escapeHTML(program.athlete_name) || "-"}</td>
+                <td class="athlete-label">${escapeHTML(program.athlete_name) || "-"}ورزشکار:</td>
+                <td class="athlete-value"></td>
                 <td class="athlete-label">سن:</td>
                 <td class="athlete-value">${escapeHTML(program.athlete_age) || "-"}</td>
             </tr>
