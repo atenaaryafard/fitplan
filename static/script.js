@@ -1498,16 +1498,26 @@ function buildProgramPreviewHTML(program) {
 
     let html = `
 
-        <div class="preview-athlete">
-
-            <div>${escapeHTML(program.athlete_name) || "-"} <strong>ورزشکار:</strong></div>
-            <div>${escapeHTML(program.athlete_age) || "-"} <strong>سن:</strong></div>
-            <div><strong>قد:</strong> ${escapeHTML(program.athlete_height) || "-"}</div>
-            <div><strong>وزن:</strong> ${escapeHTML(program.athlete_weight) || "-"}</div>
-            <div><strong>هدف:</strong> ${escapeHTML(program.athlete_goal) || "-"}</div>
-            <div><strong>جنسیت:</strong> ${escapeHTML(program.athlete_gender) || "-"}</div>
-
-        </div>
+        <table class="preview-athlete">
+            <tr>
+                <td class="athlete-label">ورزشکار:</td>
+                <td class="athlete-value">${escapeHTML(program.athlete_name) || "-"}</td>
+                <td class="athlete-label">سن:</td>
+                <td class="athlete-value">${escapeHTML(program.athlete_age) || "-"}</td>
+            </tr>
+            <tr>
+                <td class="athlete-label">قد:</td>
+                <td class="athlete-value">${escapeHTML(program.athlete_height) || "-"}</td>
+                <td class="athlete-label">وزن:</td>
+                <td class="athlete-value">${escapeHTML(program.athlete_weight) || "-"}</td>
+            </tr>
+            <tr>
+                <td class="athlete-label">هدف:</td>
+                <td class="athlete-value">${escapeHTML(program.athlete_goal) || "-"}</td>
+                <td class="athlete-label">جنسیت:</td>
+                <td class="athlete-value">${escapeHTML(program.athlete_gender) || "-"}</td>
+            </tr>
+        </table>
 
     `;
 
