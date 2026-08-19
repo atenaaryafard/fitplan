@@ -59,6 +59,8 @@ p {
 ========================= */
 
 .preview-athlete {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
     box-sizing: border-box;
     background: #f8fafc;
@@ -66,8 +68,21 @@ p {
     border-radius: 8px;
     padding: 10px 14px;
     margin-bottom: 18px;
-    text-align: right;
     direction: rtl;
+}
+
+.preview-athlete div {
+    width: 33.33%;
+    box-sizing: border-box;
+    padding: 5px 8px;
+    font-size: 9pt;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+.preview-athlete strong {
+    font-weight: bold;
+    margin-left: 4px;
 }
 
 .preview-athlete table {
