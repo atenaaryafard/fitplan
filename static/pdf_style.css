@@ -139,6 +139,8 @@ p {
 
 /* عنوان ستون‌ها */
 .preview-table th {
+    background: #f59631;
+    color: #ffffff;
     font-size: 8.5pt;
     font-weight: bold;
     white-space: nowrap;
