@@ -3,10 +3,6 @@
     margin: 12mm;
 }
 
-html {
-    direction: rtl;
-}
-
 body {
     direction: rtl;
     font-family: "Vazirmatn";
@@ -27,23 +23,24 @@ h1 {
     font-size: 18pt;
     font-weight: bold;
     text-align: center;
-    margin: 0 0 15px 0;
+    margin-bottom: 15px;
     color: #111827;
 }
 
 h2 {
     font-family: "Vazirmatn";
-    font-size: 16pt;
+    font-size: 15pt;
     font-weight: bold;
-    margin: 15px 0 10px 0;
+    margin-bottom: 8px;
     color: #111827;
 }
 
 h3 {
     font-family: "Vazirmatn";
-    font-size: 14pt;
+    font-size: 12pt;
     font-weight: bold;
-    margin: 12px 0 8px 0;
+    margin-top: 10px;
+    margin-bottom: 6px;
     color: #111827;
 }
 
@@ -58,7 +55,7 @@ p {
    یک کادر واحد
 ========================= */
 
-.preview-athlete {
+/* .preview-athlete {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -69,23 +66,23 @@ p {
     padding: 10px 14px;
     margin-bottom: 18px;
     direction: rtl;
-}
+} */
 
-.preview-athlete div {
+/* .preview-athlete div {
     width: 33.33%;
     box-sizing: border-box;
     padding: 5px 8px;
     font-size: 9pt;
     line-height: 1.6;
     white-space: nowrap;
-}
+} */
 
-.preview-athlete strong {
+/* .preview-athlete strong {
     font-weight: bold;
     margin-left: 4px;
-}
+} */
 
-.preview-athlete table {
+/* .preview-athlete table {
     width: 100%;
     border-collapse: collapse;
     border: none;
@@ -99,25 +96,25 @@ p {
     vertical-align: middle;
     font-size: 9pt;
     line-height: 1.6;
-}
+} */
 
 /* عنوان اطلاعات */
-.preview-athlete td:nth-child(odd) {
+/* .preview-athlete td:nth-child(odd) {
     font-weight: bold;
     white-space: nowrap;
-}
+} */
 
 /* مقدار اطلاعات */
-.preview-athlete td:nth-child(even) {
+/* .preview-athlete td:nth-child(even) {
     white-space: nowrap;
-}
+} */
 
 
 /* =========================
    هر روز تمرین
 ========================= */
 
-.preview-day {
+/* .preview-day {
     width: 100%;
     margin-bottom: 25px;
 }
@@ -127,7 +124,7 @@ p {
     font-weight: bold;
     margin: 0 0 10px 0;
     color: #111827;
-}
+} */
 
 
 /* =========================
@@ -137,28 +134,30 @@ p {
 .preview-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 8pt;
-    direction: rtl;
+    /* table-layout: fixed; */
+    /* font-size: 8pt; */
+    /* direction: rtl; */
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 .preview-table th,
 .preview-table td {
     border: 1px solid #d9d9d9;
-    padding: 5px 6px;
+    padding: 6px;
     text-align: center;
     vertical-align: middle;
-    font-family: "Vazirmatn";
-    line-height: 1.5;
+    /* font-family: "Vazirmatn";
+    line-height: 1.5; */
 }
 
 /* عنوان ستون‌ها */
 .preview-table th {
     background: #f59631;
-    color: #ffffff;
+    /* color: #ffffff; */
     font-size: 8.5pt;
     font-weight: bold;
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 
@@ -272,9 +271,9 @@ a {
 }
 
 .preview-notes p {
-    line-height: 1.8;
-    white-space: pre-wrap;
-    direction: rtl;
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #cccccc;
 }
 
 
@@ -291,14 +290,14 @@ a {
    جدول می‌تواند بین صفحات ادامه پیدا کند
 ========================= */
 
-.preview-table {
+/* .preview-table {
     page-break-inside: auto;
 }
 
 .preview-table tr {
     page-break-inside: avoid;
     page-break-after: auto;
-}
+} */
 
 
 /* =========================
@@ -316,7 +315,7 @@ a:visited {
    حذف چیزهایی که برای سایت هستند
 ========================= */
 
-button,
+/* button,
 input,
 select,
 textarea {
@@ -332,4 +331,4 @@ textarea {
 .add-exercise-main,
 .delete-exercise {
     display: none;
-}
+} */
