@@ -8,7 +8,7 @@ body {
     font-family: "Vazirmatn";
     font-size: 9pt;
     color: #17202a;
-    background: #ffffff;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
 }
@@ -52,62 +52,34 @@ p {
 
 /* =========================
    اطلاعات ورزشکار
-   یک کادر واحد
+   (table واقعی به‌جای div/flex -
+    xhtml2pdf از flexbox پشتیبانی نمی‌کند)
 ========================= */
 
 .preview-athlete {
-    display: flex;
-    flex-wrap: wrap;
-    direction: rtl;
-    text-align: right;
     width: 100%;
-    box-sizing: border-box;
-    background: #f8fafc;
-    border-radius: 8px;
+    border-collapse: collapse;
+    direction: rtl;
+    background-color: #f8fafc;
     margin-bottom: 18px;
 }
 
-.preview-athlete div {
-    width: 33.33%;
-    box-sizing: border-box;
-    padding: 5px 8px;
-    font-size: 9pt;
-    /* line-height: 1.6; */
-    white-space: nowrap;
-    direction: rtl;
-    
-}
-
-/* .preview-athlete strong {
-    font-weight: bold;
-    margin-left: 4px;
-} */
-
-/* .preview-athlete table {
-    width: 100%;
-    border-collapse: collapse;
-    border: none;
-    margin: 0;
-} */
-
 .preview-athlete td {
     border: none;
-    padding: 5px 5px;
+    padding: 6px 8px;
     text-align: right;
     vertical-align: middle;
     font-size: 9pt;
-    /* line-height: 1.6; */
-} 
-
-/* عنوان اطلاعات */
-.preview-athlete td:nth-child(odd) {
-    font-weight: bold;
     white-space: nowrap;
 }
 
-/* مقدار اطلاعات */
-.preview-athlete td:nth-child(even) {
-    white-space: nowrap;
+.athlete-label {
+    font-weight: bold;
+    width: 12%;
+}
+
+.athlete-value {
+    width: 38%;
 }
 
 
@@ -115,23 +87,18 @@ p {
    هر روز تمرین
 ========================= */
 
-/* .preview-day {
+.preview-day {
     width: 100%;
     margin-bottom: 25px;
+    page-break-inside: avoid;
 }
-
-.preview-day h3 {
-    font-size: 14pt;
-    font-weight: bold;
-    margin: 0 0 10px 0;
-    color: #111827;
-} */
 
 
 /* =========================
    جدول تمرین
+   (عرض/چینش ستون‌ها با کلاس صریح،
+    نه nth-child - در xhtml2pdf پایدار نیست)
 ========================= */
-
 
 .preview-table {
     width: 100%;
@@ -143,7 +110,6 @@ p {
     margin-bottom: 15px;
 }
 
-/* سلول‌ها */
 .preview-table th,
 .preview-table td {
     border: 1px solid #d9d9d9;
@@ -151,93 +117,60 @@ p {
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
-    box-sizing: border-box;
 }
 
-/* =========================
-   عنوان ستون‌ها
-========================= */
-
 .preview-table th {
-    background: #f59631;
+    background-color: #f59631;
     color: #17202a;
     font-size: 9pt;
     font-weight: bold;
     white-space: nowrap;
 }
 
-/* =========================
-   ستون حرکت
-   سمت راست جدول
-========================= */
-
-.preview-table th:nth-child(1),
-.preview-table td:nth-child(1) {
+/* ستون حرکت - سمت راست جدول */
+.preview-table .col-exercise {
     width: 30%;
     text-align: right;
     white-space: nowrap;
     padding-right: 7px;
 }
 
-/* =========================
-   عضله هدف
-========================= */
-
-.preview-table th:nth-child(2),
-.preview-table td:nth-child(2) {
+/* عضله هدف */
+.preview-table .col-muscle {
     width: 18%;
     white-space: nowrap;
 }
 
-/* =========================
-   ست
-========================= */
-
-.preview-table th:nth-child(3),
-.preview-table td:nth-child(3) {
+/* ست */
+.preview-table .col-sets {
     width: 7%;
     white-space: nowrap;
 }
 
-/* =========================
-   تکرار
-========================= */
-
-.preview-table th:nth-child(4),
-.preview-table td:nth-child(4) {
+/* تکرار */
+.preview-table .col-reps {
     width: 9%;
     white-space: nowrap;
 }
 
-/* =========================
-   استراحت
-========================= */
-
-.preview-table th:nth-child(5),
-.preview-table td:nth-child(5) {
+/* استراحت */
+.preview-table .col-rest {
     width: 12%;
     white-space: nowrap;
 }
 
-/* =========================
-   وزنه
-========================= */
-
-.preview-table th:nth-child(6),
-.preview-table td:nth-child(6) {
+/* وزنه */
+.preview-table .col-weight {
     width: 9%;
     white-space: nowrap;
 }
 
-/* =========================
-   اجرای حرکت
-========================= */
-
-.preview-table th:nth-child(7),
-.preview-table td:nth-child(7) {
+/* اجرای حرکت */
+.preview-table .col-guide {
     width: 15%;
     white-space: nowrap;
 }
+
 
 /* =========================
    لینک اجرای حرکت
@@ -259,47 +192,17 @@ p {
     text-decoration: underline;
     white-space: nowrap;
 }
+
+
 /* =========================
    یادداشت‌ها
-   یک کادر واحد
 ========================= */
 
 .preview-notes {
     width: 100%;
     padding: 10px;
-    background: #f8fafc;
-    border-radius: 10px;
+    background-color: #f8fafc;
 }
-
-/* .preview-notes p {
-    margin-top: 5px;
-    padding: 10px;
-    background: #999999;
-    border-radius: 8px;
-} */
-
-
-/* =========================
-   جلوگیری از شکستن روز تمرین
-========================= */
-
-.preview-day {
-    page-break-inside: avoid;
-}
-
-
-/* =========================
-   جدول می‌تواند بین صفحات ادامه پیدا کند
-========================= */
-
-/* .preview-table {
-    page-break-inside: auto;
-}
-
-.preview-table tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
-} */
 
 
 /* =========================
@@ -311,26 +214,3 @@ a:visited {
     color: #2563eb;
     text-decoration: underline;
 }
-
-
-/* =========================
-   حذف چیزهایی که برای سایت هستند
-========================= */
-
-/* button,
-input,
-select,
-textarea {
-    display: none;
-}
-
-.modal-close,
-.modal-footer,
-.pdf-button,
-.bottom-actions,
-.history-card,
-.day-accordion-controls,
-.add-exercise-main,
-.delete-exercise {
-    display: none;
-} */
