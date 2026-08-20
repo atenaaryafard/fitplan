@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>برنامه ساز | FIT PLAN</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+    
+<header class="mobile-header">
+
+    <div class="brand">
+        FIT PLAN
+    </div>
+
+
+    <div class="header-actions">
+
+        <div class="quota">
+
+            <span>
+                باقی‌مانده
+            </span>
+
+            <strong id="quota">
+                {{ remaining }}
+            </strong>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout">
+
+            خروج
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<main class="planner">
+
+
+    <!-- =====================================
+         ATHLETE
+    ====================================== -->
+
+    <section class="section-card">
+
+        <div class="section-title">
+
+            <div>
+
+                <h2>
+                    پروفایل شاگرد
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <div class="field">
+
+                <label>
+                    نام شاگرد
+                </label>
+
+                <input
+                    id="athleteName"
+                    type="text"
+                    placeholder="نام و نام خانوادگی "
+                    oninput="sanitizeNameInput(this)">
+                
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    سن
+                </label>
+
+                <input
+                    id="athleteAge"
+                    type="number"
+                    placeholder="سن شاگرد را وارد کنید">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    قد
+                </label>
+
+                <input
+                    id="athleteHeight"
+                    type="number"
+                    placeholder="قد شاگرد را وارد کنید">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    وزن
+                </label>
+
+                <input
+                    id="athleteWeight"
+                    type="number"
+                    placeholder="وزن شاگرد را وارد کنید">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    هدف
+                </label>
+
+                <select id="athleteGoal">
+
+                    <option value="">
+                        انتخاب هدف
+                    </option>
+
+                    <option>
+                        عضله سازی
+                    </option>
+
+                    <option>
+                        چربی سوزی
+                    </option>
+
+                    <option>
+                         افزایش قدرت و استقامت
+                    </option>
+
+                    <option>
+                        تناسب اندام
+                    </option>
+
+                    <option>
+                        آمادگی جسمانی
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+         <label>
+              جنسیت
+         </label>
+
+        <select id="athleteGender">
+
+        <option value="">
+            انتخاب جنسیت
+        </option>
+
+        <option value="مرد">
+            مرد
+        </option>
+
+        <option value="زن">
+            زن
+        </option>
+
+    </select>
+
+</div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         DAY SELECTOR
+    ====================================== -->
+
+    <section class="section-card">
+
+
+        <div class="section-title">
+
+            <div>
+
+                <h2>
+                    چیدمان تمرین
+                </h2>
+
+                <span>
+                 بر روی روز های تمرین مورد نیاز خود کلیک کنید و برنامه خود را طراحی کنید
+                </span>
+
+                
+
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="daySelector"
+            class="day-accordion">
+
+            <!-- محتوا به صورت پویا توسط script.js ساخته می‌شود -->
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         GENERAL NOTES
+    ====================================== -->
+
+    <section class="section-card">
+
+        <div class="section-title">
+
+            <div>
+
+                <h2>
+                    توضیحات :
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <textarea
+            id="programNotes"
+            class="notes"
+            placeholder="نکات مربی برای این دوره..."></textarea>
+
+    </section>
+
+
+
+    <!-- =====================================
+         HISTORY
+    ====================================== -->
+
+    <section class="section-card history-card">
+
+
+        <div class="section-title">
+
+            <div>
+
+                <h2>
+                    آرشیو برنامه‌ها
+                </h2>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            id="historyList"
+            class="history-list">
+
+            در حال دریافت برنامه‌ها...
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         ACTIONS
+    ====================================== -->
+
+    <div class="bottom-actions">
+
+
+        <button
+            class="secondary-button"
+            onclick="newProgram()">
+
+            طراحی برنامه جدید
+
+        </button>
+
+
+        <button
+            class="primary-button"
+            onclick="saveProgram()">
+
+            ثبت و ذخیره 
+
+        </button>
+
+
+
+    </div>
+
+
+</main>
+
+
+<!-- =====================================
+     PREVIEW MODAL
+====================================== -->
+
+
+<div
+    id="previewModal"
+    class="modal-overlay hidden"
+    onclick="if(event.target===this) closePreview()">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closePreview()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="previewBody"
+            class="modal-body">
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="closePreview()">
+
+                بستن
+
+            </button>
+
+
+            <button
+                id="exportPdfBtn"
+                type="button"
+                class="pdf-button"
+                onclick="exportPDF()">
+
+                 دریافت فایل برنامه
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     EXERCISE GIF / VIDEO MODAL
+====================================== -->
+
+<div
+    id="gifModal"
+    class="modal-overlay hidden"
+    onclick="if(event.target===this) closeGifModal()">
+
+    <div class="modal-box small-modal">
+
+        <div class="modal-header">
+
+            <h2>
+                نحوه اجرای حرکت
+            </h2>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeGifModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="gifModalBody"
+            class="modal-body">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='script.js') }}">
+</script>
+
+
+</body>
+
+</html>
