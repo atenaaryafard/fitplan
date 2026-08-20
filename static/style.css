@@ -1,0 +1,1691 @@
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('font/font/Vazirmatn-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+
+    margin: 0;
+
+    font-family:
+    'Vazirmatn',
+        Tahoma,
+        Arial,
+        sans-serif;
+
+    background: #f4f6f8;
+
+    color: #17202a;
+
+}
+
+
+button,
+input,
+select,
+textarea {
+
+    font-family: inherit;
+
+}
+
+
+button {
+
+    cursor: pointer;
+
+}
+
+
+/* =====================================
+   AUTH
+===================================== */
+
+.auth-page {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #263449
+        );
+
+}
+
+
+.auth-card {
+
+    width: 100%;
+
+    max-width: 430px;
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.2);
+
+}
+
+
+.logo {
+
+    font-size: 22px;
+
+    font-weight: 900;
+
+    margin-bottom: 25px;
+
+}
+
+
+.auth-card h1 {
+
+    margin-bottom: 5px;
+
+}
+
+
+.auth-description {
+
+    color: #777;
+
+    margin-bottom: 25px;
+
+}
+
+
+.auth-card label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+}
+
+
+.auth-card input {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 9px;
+
+    margin-bottom: 15px;
+
+    outline: none;
+
+}
+
+
+.main-button {
+
+    width: 100%;
+
+    border: none;
+
+    padding: 14px;
+
+    border-radius: 9px;
+
+    background: #111827;
+
+    color: white;
+
+    font-size: 15px;
+
+}
+
+
+.switch-auth {
+
+    text-align: center;
+
+    margin-top: 20px;
+
+    font-size: 13px;
+
+}
+
+
+.switch-auth a {
+
+    color: #111827;
+
+    font-weight: bold;
+
+}
+
+
+.error {
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    margin-bottom: 15px;
+
+    font-size: 13px;
+
+}
+
+.exercise-search {
+
+    width: 100%;
+
+    min-height: 34px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 7px;
+
+    padding: 6px 8px;
+
+    margin-bottom: 6px;
+
+    font-size: 12px;
+
+    outline: none;
+
+}
+
+
+.exercise-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.exercise-dropdown.hidden {
+    display: none;
+}
+
+.exercise-dropdown-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.exercise-dropdown-item:hover {
+    background: #f2f2f2;
+}
+
+.exercise-dropdown-muscle {
+    color: #888;
+    font-size: 11px;
+}
+
+.exercise-dropdown-empty {
+    padding: 8px 10px;
+    color: #999;
+    font-size: 13px;
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+
+.mobile-header {
+
+    background: white;
+
+    min-height: 65px;
+
+    padding:
+        10px
+        max(16px, calc((100vw - 1200px) / 2));
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 1px solid #eee;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+}
+
+
+.brand {
+
+    font-weight: 900;
+
+    font-size: 20px;
+
+}
+
+
+.header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.quota {
+
+    background: #f1f5f9;
+
+    padding: 7px 12px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    text-align: center;
+
+}
+
+
+.quota strong {
+
+    display: block;
+
+    font-size: 16px;
+
+}
+
+
+.logout {
+
+    text-decoration: none;
+
+    color: #dc2626;
+
+    font-size: 12px;
+
+}
+
+
+/* =====================================
+   MAIN
+===================================== */
+
+.planner {
+
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 18px;
+
+}
+
+
+.section-card {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 4px 18px
+        rgba(0,0,0,.04);
+
+}
+
+
+.section-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+}
+
+
+.section-title h2 {
+
+    margin: 0 0 5px;
+
+    font-size: 18px;
+
+}
+
+
+.section-title span {
+
+    color: #888;
+
+    font-size: 12px;
+
+}
+
+
+/* =====================================
+   FORM
+===================================== */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 10px;
+
+}
+
+
+.field {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.field label {
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    margin-bottom: 5px;
+
+}
+
+
+.field input,
+.field select {
+
+    width: 100%;
+
+    min-height: 38px;
+
+    border:
+        1px solid #dfe3e8;
+
+    border-radius: 8px;
+
+    padding: 8px;
+
+    font-size: 13px;
+
+    background: white;
+
+    outline: none;
+
+}
+
+
+.field input:focus,
+.field select:focus {
+
+    border-color: #111827;
+
+}
+
+
+/* =====================================
+   DAY ACCORDION
+===================================== */
+
+.day-accordion {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+.day-accordion-item {
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+    overflow-y: visible;
+
+    background: #fafbfc;
+
+    transition: border-color .2s;
+
+}
+
+
+.day-accordion-item.selected {
+
+    border-color: #c7d0dc;
+
+    background: white;
+
+}
+
+
+.day-accordion-item.open {
+
+    border-color: #111827;
+
+}
+
+
+.day-accordion-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 12px 14px;
+
+    cursor: pointer;
+
+    user-select: none;
+
+}
+
+
+.day-accordion-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-weight: bold;
+
+    font-size: 14px;
+
+}
+
+
+.day-check {
+
+    color: #16a34a;
+
+    font-weight: 900;
+
+    width: 14px;
+
+    display: inline-block;
+
+}
+
+
+.day-count {
+
+    font-weight: normal;
+
+    font-size: 11px;
+
+    color: #888;
+
+    background: #f1f5f9;
+
+    padding: 3px 8px;
+
+    border-radius: 20px;
+
+}
+
+
+.day-accordion-controls {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.day-remove {
+
+    border: none;
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    font-size: 11px;
+
+    padding: 6px 10px;
+
+    border-radius: 7px;
+
+}
+
+
+.day-chevron {
+
+    display: inline-block;
+
+    color: #888;
+
+    transition: transform .2s;
+
+    font-size: 16px;
+
+}
+
+
+.day-accordion-item.open .day-chevron {
+
+    transform: rotate(180deg);
+
+    color: #111827;
+
+}
+
+
+.day-accordion-body {
+
+    padding: 0 14px 14px;
+
+    border-top:
+        1px solid #eee;
+
+}
+
+
+/* =====================================
+   WORKOUT
+===================================== */
+
+.workout-toolbar {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin: 14px 0;
+
+}
+
+
+.workout-toolbar span {
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    color: #555;
+
+}
+
+
+.add-exercise-main {
+
+    border: none;
+
+    background: #111827;
+
+    color: white;
+
+    padding: 9px 14px;
+
+    font-size: 12px;
+
+    border-radius: 8px;
+
+}
+
+.how-to-btn {
+
+    margin-top: 6px;
+
+    border: none;
+
+    background: #eef2ff;
+
+    color: #3730a3;
+
+    font-size: 11px;
+
+    padding: 6px 10px;
+
+    border-radius: 7px;
+
+}
+
+
+.small-modal {
+
+    max-width: 420px;
+
+}
+
+
+.guide-gif {
+
+    width: 100%;
+
+    border-radius: 10px;
+
+    margin-top: 10px;
+
+}
+
+
+.guide-search-link {
+
+    display: inline-block;
+
+    margin-top: 10px;
+
+    background: #111827;
+
+    color: white;
+
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+}
+
+
+.empty-workout {
+
+    text-align: center;
+
+    padding: 35px 10px;
+
+    color: #888;
+
+    border:
+        1px dashed #d5d9df;
+
+    border-radius: 10px;
+
+}
+
+
+/* .exercise-row {
+
+    display: grid;
+
+    grid-template-columns:
+        35px
+        1.5fr
+        1fr
+        .55fr
+        .7fr
+        .9fr
+        auto
+        1.3fr
+        35px,     
+
+    gap: 8px;
+
+    align-items: end;
+
+    padding: 10px;
+
+    border-bottom:
+        1px solid #eee;
+} */
+
+
+.exercise-row {
+
+    display: grid;
+
+    grid-template-columns:
+    
+        minmax(0, 1.4fr)      /* نام حرکت */
+        minmax(0, 1fr)        /* عضله هدف */
+        minmax(0, .6fr)       /* ست */
+        minmax(0, .7fr)       /* تکرار */
+        minmax(0, .7fr)       /* استراحت */
+        minmax(0, .8fr)       /* وزنه */
+        35px                 /* دکمه حذف */
+        minmax(0, .7fr);    /* افزودن حرکت */  
+        
+
+    gap: 6px;
+
+    align-items: end;
+
+    padding: 10px;
+
+    border-bottom: 1px solid #eee;
+}
+
+
+.exercise-field {
+
+    min-width: 0;
+
+}
+
+
+.exercise-field label {
+
+    display: block;
+
+    font-size: 10px;
+
+    margin-bottom: 5px;
+
+    color: #777;
+
+}
+
+
+.exercise-field input,
+.exercise-field select {
+
+    width: 100%;
+
+    min-height: 42px;
+
+    border:
+        1px solid #ddd;
+
+    border-radius: 7px;
+
+    padding: 8px;
+
+    background: white;
+
+}
+
+
+.delete-exercise {
+
+    height: 42px;
+
+    width: 35px;
+
+    border: none;
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    border-radius: 7px;
+
+    font-size: 20px;
+
+}
+
+
+/* =====================================
+   NOTES
+===================================== */
+
+.notes {
+
+    width: 100%;
+
+    min-height: 110px;
+
+    resize: vertical;
+
+    border:
+        1px solid #ddd;
+
+    border-radius: 9px;
+
+    padding: 12px;
+
+    outline: none;
+
+}
+
+
+/* =====================================
+   HISTORY
+===================================== */
+
+.history-card {
+
+    margin-top: 20px;
+
+}
+
+
+.history-refresh {
+
+    border: none;
+
+    background: #f1f5f9;
+
+    color: #334155;
+
+    border-radius: 8px;
+
+    padding: 9px 13px;
+
+}
+
+
+.history-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+}
+
+
+.history-item {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 13px;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+}
+
+
+.history-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+}
+
+
+.history-info strong {
+
+    font-size: 14px;
+
+}
+
+
+.history-info span {
+
+    font-size: 12px;
+
+    color: #555;
+
+}
+
+
+.history-info small {
+
+    font-size: 10px;
+
+    color: #999;
+
+}
+
+
+.history-actions {
+
+    display: flex;
+
+    gap: 7px;
+
+}
+
+
+.history-actions button {
+
+    border: none;
+
+    background: #eef2ff;
+
+    color: #3730a3;
+
+    border-radius: 7px;
+
+    padding: 8px 12px;
+
+}
+
+
+.history-actions .history-delete {
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+}
+
+
+.empty-history {
+
+    text-align: center;
+
+    color: #888;
+
+    padding: 20px;
+
+}
+
+
+/* =====================================
+   ACTIONS
+===================================== */
+
+.bottom-actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 30px;
+
+}
+
+
+.bottom-actions button {
+
+    flex: 1;
+
+    border: none;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+}
+
+
+.primary-button {
+
+    background: #111827;
+
+    color: white;
+
+}
+
+
+.secondary-button {
+
+    background: #e5e7eb;
+
+    color: #222;
+
+}
+
+
+
+/* =====================================
+   PREVIEW MODAL
+===================================== */
+
+.modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(17,24,39,.55);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 16px;
+
+    z-index: 200;
+
+}
+
+
+.modal-overlay.hidden {
+
+    display: none;
+
+}
+
+
+.modal-box {
+
+    width: 100%;
+
+    max-width: 720px;
+
+    max-height: 88vh;
+
+    background: white;
+
+    border-radius: 16px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+}
+
+
+.modal-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 16px 20px;
+
+    border-bottom:
+        1px solid #eee;
+
+}
+
+
+.modal-header h2 {
+
+    margin: 0;
+
+    font-size: 16px;
+
+}
+
+
+.modal-close {
+
+    border: none;
+
+    background: #f1f5f9;
+
+    width: 32px;
+
+    height: 32px;
+
+    border-radius: 50%;
+
+    font-size: 18px;
+
+    line-height: 1;
+
+}
+
+
+.modal-body {
+
+    padding: 30px 20px;
+
+    overflow-y: auto;
+
+}
+
+
+.modal-footer {
+
+    display: flex;
+
+    gap: 10px;
+
+    padding: 14px 20px;
+
+    border-top:
+        1px solid #eee;
+
+}
+
+
+.modal-footer button {
+
+    flex: 1;
+
+    border: none;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+}
+
+
+.preview-saved-banner {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    margin-bottom: 16px;
+
+    text-align: center;
+
+}
+
+
+.preview-athlete {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 8px;
+
+    font-size: 13px;
+
+    background: #f8fafc;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    margin-bottom: 30px;
+
+}
+
+
+.preview-day {
+
+    margin-bottom: 40px;
+
+}
+
+
+.preview-day h3 {
+
+    font-size: 14px;
+
+    margin: 0 0 8px;
+
+}
+
+
+.preview-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 14px;
+
+}
+
+
+.preview-table th,
+.preview-table td {
+
+    border:
+        1.2px solid #fde0c2;
+
+    padding: 7px 8px;
+
+    text-align: center;
+
+}
+
+
+.preview-table th {
+
+    background: #f59631;
+    color: floralwhite;
+
+}
+
+
+.preview-notes {
+
+    font-size: 13px;
+
+    background: #f8fafc;
+
+    padding: 16px 18px;
+
+    border-radius: 10px;
+
+}
+
+
+.preview-notes p {
+
+    margin: 10px 0 0;
+
+    white-space: pre-wrap;
+
+}
+
+.pdf-button {
+
+    background: #16a34a;
+
+    color: white;
+
+}
+/* =====================================
+   MOBILE
+===================================== */
+
+@media(max-width: 700px) {
+
+
+    .mobile-header {
+
+        padding:
+            10px
+            14px;
+
+    }
+
+
+    .brand {
+
+        font-size: 17px;
+
+    }
+
+
+    .planner {
+
+        padding: 10px;
+
+    }
+
+
+    .section-card {
+
+        padding: 14px;
+
+        border-radius: 13px;
+
+    }
+
+
+    .form-grid {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .day-accordion-header {
+
+        padding: 11px;
+
+    }
+
+
+    .day-accordion-title {
+
+        font-size: 13px;
+
+    }
+
+
+    .preview-athlete {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .modal-box {
+
+        max-height: 92vh;
+
+    }
+
+
+    .exercise-row {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 10px;
+
+        padding: 14px;
+
+        background: #fafafa;
+
+        border-radius: 10px;
+
+        margin-bottom: 10px;
+
+    }
+
+
+    .exercise-number {
+
+        display: none;
+
+    }
+
+
+    .exercise-field {
+
+        width: 100%;
+
+    }
+
+
+    .exercise-field.wide {
+
+        grid-column:
+            1 / -1;
+
+    }
+
+
+.exercise-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    width: 100%;
+
+    grid-column: 1 / -1;
+
+}
+
+.exercise-actions .delete-exercise {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 1;
+
+}
+
+.exercise-actions .add-exercise-row {
+
+    flex: 1;
+
+    width: auto;
+
+    height: 42px;
+
+    white-space: nowrap;
+
+}
+
+    .bottom-actions {
+
+        position: sticky;
+
+        bottom: 0;
+
+        background: #f4f6f8;
+
+        padding: 8px 0;
+
+        z-index: 50;
+
+    }
+
+
+    .bottom-actions button {
+
+        font-size: 11px;
+
+        padding: 12px 5px;
+
+    }
+
+
+    .history-item {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+
+    .history-actions {
+
+        width: 100%;
+
+    }
+
+
+    .history-actions button {
+
+        flex: 1;
+
+    }
+
+}
+
+
+/* =====================================
+   PRINT / PDF
+===================================== */
+
+@media print {
+
+
+    body {
+
+        background: white;
+
+    }
+
+
+    .mobile-header {
+
+        position: static;
+
+        border: none;
+
+    }
+
+
+    .logout,
+    .quota,
+    .day-accordion-controls,
+    .add-exercise-main,
+    .delete-exercise,
+    .bottom-actions,
+    .history-card,
+    .history-refresh {
+
+        display: none !important;
+
+    }
+
+
+    .day-accordion-item:not(.open) {
+
+        display: none !important;
+
+    }
+
+
+    .planner {
+
+        max-width: none;
+
+        padding: 0;
+
+    }
+
+
+    body.modal-active .planner,
+    body.modal-active .mobile-header {
+
+        display: none !important;
+
+    }
+
+
+    body.modal-active .modal-overlay {
+
+        position: static;
+
+        background: none;
+
+        padding: 0;
+
+        display: block;
+
+    }
+
+
+    body.modal-active .modal-box {
+
+        max-width: none;
+
+        max-height: none;
+
+    }
+
+
+    body.modal-active .modal-close,
+    body.modal-active .modal-footer {
+
+        display: none !important;
+
+    }
+
+
+    .section-card {
+
+        box-shadow: none;
+
+        border:
+            1px solid #ddd;
+
+        break-inside: avoid;
+
+    }
+
+
+    .exercise-row {
+
+        grid-template-columns:
+            25px
+            1.5fr
+            1fr
+            .5fr
+            .7fr
+            .8fr
+            1.2fr;
+
+    }
+
+
+    input,
+    select,
+    textarea {
+
+        border: none !important;
+
+        appearance: none;
+
+        background: transparent !important;
+
+    }
+
+
+    @page {
+
+        size: A4;
+
+        margin: 30mm;
+
+    }
+
+}
+
+.exercise-guide-link {
+    color: #2563eb;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.exercise-guide-disabled {
+    color: #999999;
+}
