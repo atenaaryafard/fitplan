@@ -465,66 +465,46 @@ def delete_program(program_id):
 # جایی برای نگه‌داری موقت HTML بین لحظه‌ی درخواست PDF
 # و لحظه‌ای که Chrome داخلی میاد و می‌خونتش.
 # هر توکن فقط یک‌بار مصرف میشه و بعد پاک میشه.
-_PRINT_CACHE = {}
-_PRINT_CACHE_TTL_SECONDS = 60
+import tempfile
 
+def render_pdf_from_html(html_content: str) -> bytes:
 
-def _cleanup_print_cache():
-    now = time.time()
-    expired = [
-        token
-        for token, (_, created_at) in _PRINT_CACHE.items()
-        if now - created_at > _PRINT_CACHE_TTL_SECONDS
-    ]
-    for token in expired:
-        _PRINT_CACHE.pop(token, None)
+    style_css_path = os.path.join(
+        os.path.dirname(__file__), "static", "style.css"
+    )
+    style_css_uri = "file:///" + style_css_path.replace("\\", "/")
 
+    full_html = render_template(
+        "print_program.html",
+        content=html_content,
+        style_css_uri=style_css_uri,
+    )
 
-@app.route("/internal/print/<token>")
-def internal_print(token):
-    """
-    این route فقط برای مصرف داخلی خودِ سرور (توسط Chrome نامرئی) هست،
-    نه برای کاربر عادی. توکن تصادفی و یک‌بارمصرفه.
-    """
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".html", delete=False, encoding="utf-8"
+    ) as tmp_file:
+        tmp_file.write(full_html)
+        tmp_path = tmp_file.name
 
-    _cleanup_print_cache()
+    try:
+        with sync_playwright() as p:
 
-    entry = _PRINT_CACHE.pop(token, None)
+            browser = p.chromium.launch()
+            page = browser.new_page()
 
-    if entry is None:
-        return "این لینک منقضی شده یا قبلاً استفاده شده.", 404
+            page.goto(f"file://{tmp_path}", wait_until="networkidle")
 
-    html_content, _ = entry
+            pdf_bytes = page.pdf(
+                print_background=True,
+                prefer_css_page_size=True,
+            )
 
-    return render_template("print_program.html", content=html_content)
+            browser.close()
 
+        return pdf_bytes
 
-def render_pdf_from_url(url: str) -> bytes:
-
-    with sync_playwright() as p:
-
-        browser = p.chromium.launch()
-
-        page = browser.new_page()
-
-        # صفحه رو باز می‌کنه و صبر می‌کنه تا کامل لود بشه
-        # (فونت‌ها، CSS و هر منبع دیگه‌ای که style.css نیاز داره)
-        page.goto(url, wait_until="networkidle")
-
-        pdf_bytes = page.pdf(
-            format="A4",
-            margin={
-                "top": "12mm",
-                "bottom": "12mm",
-                "left": "12mm",
-                "right": "12mm",
-            },
-            print_background=True,
-        )
-
-        browser.close()
-
-    return pdf_bytes
+    finally:
+        os.remove(tmp_path)
 
 
 @app.route("/api/program/pdf", methods=["POST"])
@@ -541,20 +521,7 @@ def export_program_pdf():
 
     try:
 
-        html_content = data["html"]
-
-        # HTML رو موقت ذخیره می‌کنیم و یه توکن یک‌بارمصرف بهش میدیم
-        token = secrets.token_urlsafe(16)
-
-        _PRINT_CACHE[token] = (html_content, time.time())
-
-        internal_url = url_for(
-            "internal_print",
-            token=token,
-            _external=True,
-        )
-
-        pdf_bytes = render_pdf_from_url(internal_url)
+        pdf_bytes = render_pdf_from_html(data["html"])
 
         return send_file(
             BytesIO(pdf_bytes),
