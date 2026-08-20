@@ -1498,18 +1498,16 @@ function buildProgramPreviewHTML(program) {
 
     let html = `
 
-          <table class="preview-athlete">
-            <tr>
-                <td>${escapeHTML(program.athlete_name) || "-"}<strong>ورزشکار:</strong> </td>
-                <td>${escapeHTML(program.athlete_age) || "-"}<strong>سن:</strong> </td>
-                <td>${escapeHTML(program.athlete_height) || "-"}<strong>قد:</strong> </td>
-            </tr>
-            <tr>
-                <td>${escapeHTML(program.athlete_weight) || "-"}<strong>وزن:</strong></td>
-                <td>${escapeHTML(program.athlete_goal) || "-"}<strong>هدف:</strong> </td>
-                <td>${escapeHTML(program.athlete_gender) || "-"}<strong>جنسیت:</strong> </td>
-            </tr>
-        </table>
+        <div class="preview-athlete">
+
+            <div><strong>ورزشکار:</strong> ${escapeHTML(program.athlete_name) || "-"}</div>
+            <div><strong>سن:</strong> ${escapeHTML(program.athlete_age) || "-"}</div>
+            <div><strong>قد:</strong> ${escapeHTML(program.athlete_height) || "-"}</div>
+            <div><strong>وزن:</strong> ${escapeHTML(program.athlete_weight) || "-"}</div>
+            <div><strong>هدف:</strong> ${escapeHTML(program.athlete_goal) || "-"}</div>
+            <div><strong>جنسیت:</strong> ${escapeHTML(program.athlete_gender) || "-"}</div>
+
+        </div>
 
     `;
 
@@ -1593,7 +1591,6 @@ function buildProgramPreviewHTML(program) {
                                                     `
                                                 }
                                             </td>
-                                        </tr>  
                                        
                                     `;
 
