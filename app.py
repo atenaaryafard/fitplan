@@ -554,12 +554,17 @@ def export_program_pdf():
         # ==========================================
 
         pdf_buffer = BytesIO()
-
+        
+        os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "0"
+        
         with sync_playwright() as p:
 
-            browser = p.chromium.launch(
-                headless=True,
-                args=["--no-sandbox"]
+           browser = p.chromium.launch(
+                 headless=True,
+                 args=[
+                     "--no-sandbox",
+                     "--disable-dev-shm-usage"
+                 ]
             )
 
             page = browser.new_page()
