@@ -450,28 +450,6 @@ def delete_program(program_id):
 # PDF EXPORT
 # =========================================================
 
-def pdf_link_callback(uri, rel):
-    """
-    تبدیل مسیر فایل‌های محلی برای xhtml2pdf
-    """
-
-    if uri.startswith("file:///"):
-        path = uri[8:]
-
-    elif uri.startswith("file://"):
-        path = uri[7:]
-
-    else:
-        path = uri
-
-    path = path.replace("/", os.sep)
-
-    if os.path.exists(path):
-        return path
-
-    return uri
-
-
 
 @app.route("/api/program/pdf", methods=["POST"])
 @login_required
