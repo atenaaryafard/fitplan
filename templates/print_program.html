@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <!--
+        این دقیقاً همون style.css ایه که پیش‌نمایش تو مرورگر کاربر
+        هم ازش استفاده می‌کنه. یعنی هیچ استایل جدا و دوگانه‌ای
+        دیگه لازم نیست.
+    -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="print-body">
+
+    {{ content | safe }}
+
+</body>
+
+</html>
