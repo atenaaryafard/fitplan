@@ -512,62 +512,64 @@ def export_program_pdf():
         # HTML نهایی
         # ==========================================
 
+       
         full_html = f"""
-        <!DOCTYPE html>
-        <html lang="fa" dir="rtl">
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
 
-        <head>
-            <meta charset="UTF-8">
+<head>
 
-            <style>
+    <meta charset="UTF-8">
 
-                @font-face {{
-                    font-family: "Vazirmatn";
-                    src: url("{font_uri}") format("truetype");
-                    font-weight: 400;
-                    font-style: normal;
-                }}
+    <style>
 
-                html {{
-                    direction: rtl;
-                }}
+        @font-face {{
+            font-family: "Vazirmatn";
+            src: url("{font_uri}") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+        }}
 
-                body {{
-                    direction: rtl;
-                    font-family: "Vazirmatn", sans-serif;
-                }}
+        html {{
+            direction: rtl;
+        }}
 
-                {css_content}
+        body {{
+            direction: rtl;
+            font-family: "Vazirmatn", sans-serif;
+        }}
 
-            </style>
-        </head>
+        {css_content}
 
-        <body>
-            {html_content}
-        </body>
+    </style>
 
-        </html>
-        """
+</head>
+
+<body>
+
+    {html_content}
+
+</body>
+
+</html>
+"""
 
         # ==========================================
         # ساخت PDF با Playwright
         # ==========================================
 
         pdf_buffer = BytesIO()
-        
-        os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "0"
-        
+                
         with sync_playwright() as p:
 
-           browser = p.chromium.launch(
-                  headless=True,
-                  executable_path="/opt/render/.cache/ms-playwright/chromium-1234/chrome-linux/chrome",
-                  args=[
-                        "--no-sandbox",
-                        "--disable-dev-shm-usage",
-                        "--disable-gpu"
-                       ]
-           )
+          
+            browser = p.chromium.launch(
+                headless=True,
+                args=[
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage"
+                ]
+            )
 
             page = browser.new_page()
 
