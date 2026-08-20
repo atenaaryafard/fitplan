@@ -1,6 +1,5 @@
 flask
 psycopg2-binary
 gunicorn
-xhtml2pdf
 werkzeug
 playwright
