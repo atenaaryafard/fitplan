@@ -560,12 +560,14 @@ def export_program_pdf():
         with sync_playwright() as p:
 
            browser = p.chromium.launch(
-                 headless=True,
-                 args=[
-                     "--no-sandbox",
-                     "--disable-dev-shm-usage"
-                 ]
-            )
+                  headless=True,
+                  executable_path="/opt/render/.cache/ms-playwright/chromium-1234/chrome-linux/chrome",
+                  args=[
+                        "--no-sandbox",
+                        "--disable-dev-shm-usage",
+                        "--disable-gpu"
+         ]
+    )
 
             page = browser.new_page()
 
