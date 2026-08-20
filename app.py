@@ -20,7 +20,7 @@ from functools import wraps
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
+from playwright.sync_api import sync_playwright
 from io import BytesIO
 
 
@@ -567,30 +567,47 @@ def export_program_pdf():
         </html>
         """
 
-        # ==========================================
-        # ساخت PDF
-        # ==========================================
+     # ==========================================
+# ساخت PDF با Playwright
+# ==========================================
 
-        pdf_buffer = BytesIO()
+pdf_buffer = BytesIO()
 
-        pisa_status = pisa.CreatePDF(
-            src=full_html,
-            dest=pdf_buffer,
-            link_callback=pdf_link_callback
-        )
+with sync_playwright() as p:
+    browser = p.chromium.launch(
+        headless=True,
+        args=["--no-sandbox"]
+    )
 
-        # ==========================================
-        # بررسی خطا
-        # ==========================================
+    page = browser.new_page()
 
-        if pisa_status.err:
+    page.set_content(
+        full_html,
+        wait_until="networkidle"
+    )
 
-            print("PDF ERROR: xhtml2pdf returned error")
+    # صبر برای کامل شدن فونت‌ها
+    page.evaluate("""
+        async () => {
+            await document.fonts.ready;
+        }
+    """)
 
-            return jsonify({
-                "success": False,
-                "message": "خطا در تولید PDF."
-            }), 500
+    pdf_bytes = page.pdf(
+        format="A4",
+        print_background=True,
+        margin={
+            "top": "12mm",
+            "right": "12mm",
+            "bottom": "12mm",
+            "left": "12mm"
+        }
+    )
+
+    browser.close()
+
+pdf_buffer.write(pdf_bytes)
+pdf_buffer.seek(0)
 
         # ==========================================
         # خروجی
