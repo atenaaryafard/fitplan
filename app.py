@@ -450,7 +450,6 @@ def delete_program(program_id):
 # PDF EXPORT
 # =========================================================
 
-
 @app.route("/api/program/pdf", methods=["POST"])
 @login_required
 def export_program_pdf():
@@ -464,7 +463,6 @@ def export_program_pdf():
         }), 400
 
     try:
-
         html_content = data["html"]
 
         # ==========================================
@@ -475,18 +473,8 @@ def export_program_pdf():
             os.path.dirname(__file__),
             "static",
             "font",
-            "font",
             "Vazirmatn-Regular.ttf"
         )
-
-        try:
-            pdfmetrics.registerFont(
-                TTFont("Vazirmatn", font_path)
-    )
-            print("Vazirmatn font registered successfully")
-
-        except Exception as e:
-            print("FONT REGISTER ERROR:", e)
 
         if not os.path.exists(font_path):
             return jsonify({
@@ -514,30 +502,28 @@ def export_program_pdf():
             css_content = f.read()
 
         # ==========================================
-        # تبدیل مسیر فونت به مسیر قابل استفاده
+        # مسیر فونت برای HTML
         # ==========================================
 
         font_uri = "file:///" + font_path.replace("\\", "/")
 
         # ==========================================
-        # HTML نهایی PDF
+        # HTML نهایی
         # ==========================================
 
         full_html = f"""
         <!DOCTYPE html>
-
         <html lang="fa" dir="rtl">
 
         <head>
-
             <meta charset="UTF-8">
 
             <style>
 
                 @font-face {{
                     font-family: "Vazirmatn";
-                    src: url("{font_uri}");
-                    font-weight: normal;
+                    src: url("{font_uri}") format("truetype");
+                    font-weight: 400;
                     font-style: normal;
                 }}
 
@@ -547,73 +533,71 @@ def export_program_pdf():
 
                 body {{
                     direction: rtl;
-                    font-family: "Vazirmatn";
+                    font-family: "Vazirmatn", sans-serif;
                 }}
 
                 {css_content}
 
             </style>
-
         </head>
 
         <body>
-
-            <pdf:language name="persian"/>
-
             {html_content}
-
         </body>
 
         </html>
         """
 
-     # ==========================================
-# ساخت PDF با Playwright
-# ==========================================
-
-pdf_buffer = BytesIO()
-
-with sync_playwright() as p:
-    browser = p.chromium.launch(
-        headless=True,
-        args=["--no-sandbox"]
-    )
-
-    page = browser.new_page()
-
-    page.set_content(
-        full_html,
-        wait_until="networkidle"
-    )
-
-    # صبر برای کامل شدن فونت‌ها
-    page.evaluate("""
-        async () => {
-            await document.fonts.ready;
-        }
-    """)
-
-    pdf_bytes = page.pdf(
-        format="A4",
-        print_background=True,
-        margin={
-            "top": "12mm",
-            "right": "12mm",
-            "bottom": "12mm",
-            "left": "12mm"
-        }
-    )
-
-    browser.close()
-
-pdf_buffer.write(pdf_bytes)
-pdf_buffer.seek(0)
-
         # ==========================================
-        # خروجی
+        # ساخت PDF با Playwright
         # ==========================================
 
+        pdf_buffer = BytesIO()
+
+        with sync_playwright() as p:
+
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox"]
+            )
+
+            page = browser.new_page()
+
+            page.set_content(
+                full_html,
+                wait_until="networkidle"
+            )
+
+            # صبر برای بارگذاری کامل فونت
+            page.evaluate("""
+                async () => {
+                    await document.fonts.ready;
+                }
+            """)
+
+            pdf_bytes = page.pdf(
+                format="A4",
+                print_background=True,
+                margin={
+                    "top": "12mm",
+                    "right": "12mm",
+                    "bottom": "12mm",
+                    "left": "12mm"
+                }
+            )
+
+            browser.close()
+
+        # ==========================================
+        # آماده‌سازی فایل
+        # ==========================================
+
+        pdf_buffer.write(pdf_bytes)
         pdf_buffer.seek(0)
+
+        # ==========================================
+        # ارسال PDF
+        # ==========================================
 
         return send_file(
             pdf_buffer,
@@ -625,18 +609,6 @@ pdf_buffer.seek(0)
     except Exception as e:
 
         print("PDF ERROR:", repr(e))
-
-        return jsonify({
-            "success": False,
-            "message": f"خطا در ساخت PDF: {str(e)}"
-        }), 500
-
-        pdf_bytes = pdf_buffer.getvalue()
-
-
-    except Exception as e:
-
-        print("PDF ERROR:", e)
 
         return jsonify({
             "success": False,
