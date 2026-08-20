@@ -20,10 +20,9 @@ from functools import wraps
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from xhtml2pdf import pisa
+
 from io import BytesIO
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+
 
 
 
