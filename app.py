@@ -566,8 +566,8 @@ def export_program_pdf():
                         "--no-sandbox",
                         "--disable-dev-shm-usage",
                         "--disable-gpu"
-         ]
-    )
+                       ]
+           )
 
             page = browser.new_page()
 
