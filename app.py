@@ -17,6 +17,7 @@ import json
 
 from datetime import datetime
 from functools import wraps
+import base64
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
