@@ -473,7 +473,6 @@ def export_program_pdf():
             os.path.dirname(__file__),
             "static",
             "font",
-            "font",
             "Vazirmatn-Regular.ttf"
         )
 
