@@ -79,7 +79,7 @@ p {
     vertical-align: middle;
 
     font-family: "Vazirmatn";
-    font-size: 14pt;
+    font-size: 12pt;
 }
 
 /* ستون آخر سمت چپ، خط کناری نداشته باشد */
@@ -118,7 +118,7 @@ p {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    font-size: 9pt;
+    font-size: 10pt;
     direction: rtl;
     border-radius: 8px;
 }
