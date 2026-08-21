@@ -24,7 +24,7 @@ body {
 
 h1 {
     font-family: "Vazirmatn";
-    font-size: 20pt;
+    font-size: 18pt;
     font-weight: bold;
     text-align: center;
     margin: 0 0 15px 0;
@@ -57,39 +57,29 @@ p {
    اطلاعات ورزشکار
 ========================= */
 
-/* =========================
-   اطلاعات ورزشکار
-========================= */
-
 .preview-athlete {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, auto);
     direction: rtl;
-
     background: #f8fafc;
-    border: 1px solid #e5e7eb;
-
     margin-bottom: 20px;
     padding: 0;
-
+    border-radiusaa: 15px;
     box-sizing: border-box;
 }
 
 /* هر مشخصه */
 .preview-athlete > div {
-    padding: 8px 10px;
+    padding: 10px 12px;
     box-sizing: border-box;
 
     text-align: right;
     vertical-align: middle;
 
     font-family: "Vazirmatn";
-    font-size: 9pt;
-
-    border-left: 1px solid #e5e7eb;
-    border-bottom: 1px solid #e5e7eb;
+    font-size: 12pt;
 }
 
 /* ستون آخر سمت چپ، خط کناری نداشته باشد */
@@ -207,9 +197,8 @@ a {
 
 .preview-notes {
     font-family: "Vazirmatn";
-    font-size: 10pt;
+    font-size: 12pt;
     background: #f8fafc;
-    border: 1px solid #e5e7eb;
     padding: 12px;
     margin-top: 15px;
 }
