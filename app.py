@@ -17,7 +17,6 @@ import json
 
 from datetime import datetime
 from functools import wraps
-import base64
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -489,7 +488,7 @@ def export_program_pdf():
         with open(font_path, "rb") as f:
             font_base64 = base64.b64encode(f.read()).decode("utf-8")
 
-        font_data_uri = f"data:font/ttf;base64,{font_base64}"
+        font_data_uri = f"data:font/font/ttf;base64,{font_base64}"
 
         # ==========================================
         # مسیر CSS مخصوص PDF
@@ -527,7 +526,7 @@ def export_program_pdf():
 
         @font-face {{
             font-family: "Vazirmatn";
-            src: url("{font_uri}") format("truetype");
+            src: url("{font_data_uri}") format("truetype");
             font-weight: 400;
             font-style: normal;
         }}
