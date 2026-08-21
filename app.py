@@ -469,8 +469,6 @@ def export_program_pdf():
         # مسیر فونت
         # ==========================================
 
-          import base64
-
         font_path = os.path.join(
             os.path.dirname(__file__),
             "static",
@@ -484,11 +482,6 @@ def export_program_pdf():
                 "success": False,
                 "message": f"فونت پیدا نشد: {font_path}"
             }), 500
-
-        with open(font_path, "rb") as f:
-            font_base64 = base64.b64encode(f.read()).decode("utf-8")
-
-        font_data_uri = f"data:font/font/ttf;base64,{font_base64}"
 
         # ==========================================
         # مسیر CSS مخصوص PDF
@@ -526,7 +519,7 @@ def export_program_pdf():
 
         @font-face {{
             font-family: "Vazirmatn";
-            src: url("{font_data_uri}") format("truetype");
+            src: url("{font_uri}") format("truetype");
             font-weight: 400;
             font-style: normal;
         }}
