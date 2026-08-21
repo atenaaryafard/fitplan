@@ -16,13 +16,6 @@ body {
     margin: 0;
     padding: 0;
 
-    @font-face {
-    font-family: 'Vazirmatn';
-    src: url('font/Vazirmatn-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
 /* =========================
    عنوان اصلی
 ========================= */
@@ -68,17 +61,31 @@ p {
     border: 1px solid #e5e7eb;
     padding: 12px;
     margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
 .preview-athlete table {
     width: 100%;
     border: none;
+    border-collapse: collapse;
+    table-layout: fixed;
+    direction: rtl;
 }
 
+.preview-athlete tr {
+    width: 100%;
+}
+
+    
 .preview-athlete td {
     border: none;
     padding: 5px 8px;
+    border: none;
     text-align: right;
+    vertical-align: middle;
+    font-family: "Vazirmatn";
+    font-size: 10pt;
+    box-sizing: border-box;
 }
 
 
