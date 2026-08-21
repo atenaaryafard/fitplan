@@ -16,12 +16,6 @@ body {
     margin: 0;
     padding: 0;
     
-    @font-face {
-    font-family: 'Vazirmatn';
-    src: url('font/Vazirmatn-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
 
 
 /* =========================
@@ -63,35 +57,49 @@ p {
    اطلاعات ورزشکار
 ========================= */
 
+/* =========================
+   اطلاعات ورزشکار
+========================= */
+
 .preview-athlete {
     width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    direction: rtl;
+
     background: #f8fafc;
     border: 1px solid #e5e7eb;
-    padding: 12px;
+
     margin-bottom: 20px;
+    padding: 0;
+
     box-sizing: border-box;
 }
 
-.preview-athlete table {
-    width: 100%;
-    border: none;
-    border-collapse: collapse;
-    table-layout: fixed;
-    direction: rtl;
-}
+/* هر مشخصه */
+.preview-athlete > div {
+    padding: 8px 10px;
+    box-sizing: border-box;
 
-.preview-athlete tr {
-    width: 100%;
-}
-
-    
-.preview-athlete td {
-    border: none;
-    padding: 5px 8px;
-    border: none;
     text-align: right;
     vertical-align: middle;
-    box-sizing: border-box;
+
+    font-family: "Vazirmatn";
+    font-size: 9pt;
+
+    border-left: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* ستون آخر سمت چپ، خط کناری نداشته باشد */
+.preview-athlete > div:nth-child(3n) {
+    border-left: none;
+}
+
+/* ردیف دوم، خط پایین نداشته باشد */
+.preview-athlete > div:nth-child(n+4) {
+    border-bottom: none;
 }
 
 
