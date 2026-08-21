@@ -463,55 +463,65 @@ def export_program_pdf():
         }), 400
 
     try:
-        html_content = data["html"]
 
         # ==========================================
-        # مسیر فونت
+        # مسیر اصلی فونت
         # ==========================================
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
 
         font_path = os.path.join(
-            os.path.dirname(__file__),
+            base_dir,
             "static",
             "font",
             "Vazirmatn-Regular.ttf"
         )
 
-        if not os.path.exists(font_path):
+        # بررسی وجود فونت
+        if not os.path.isfile(font_path):
             return jsonify({
                 "success": False,
                 "message": f"فونت پیدا نشد: {font_path}"
             }), 500
 
         # ==========================================
+        # تبدیل فونت به Base64
+        # ==========================================
+
+        with open(font_path, "rb") as font_file:
+            font_base64 = base64.b64encode(
+                font_file.read()
+            ).decode("utf-8")
+
+        # ==========================================
         # مسیر CSS مخصوص PDF
         # ==========================================
 
         pdf_css_path = os.path.join(
-            os.path.dirname(__file__),
+            base_dir,
             "static",
             "pdf_style.css"
         )
 
-        if not os.path.exists(pdf_css_path):
+        if not os.path.isfile(pdf_css_path):
             return jsonify({
                 "success": False,
                 "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
             }), 500
 
-        with open(pdf_css_path, "r", encoding="utf-8") as f:
-            css_content = f.read()
-
         # ==========================================
-        # مسیر فونت برای HTML
+        # خواندن CSS
         # ==========================================
 
-        font_uri = "file:///" + font_path.replace("\\", "/")
+        with open(pdf_css_path, "r", encoding="utf-8") as css_file:
+            css_content = css_file.read()
 
         # ==========================================
-        # HTML نهایی
+        # HTML نهایی برای Playwright
         # ==========================================
 
-       
+        html_content = data["html"]
+
         full_html = f"""
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -524,9 +534,10 @@ def export_program_pdf():
 
         @font-face {{
             font-family: "Vazirmatn";
-            src: url("{font_uri}") format("truetype");
+            src: url("data:font/ttf;base64,{font_base64}") format("truetype");
             font-weight: 400;
             font-style: normal;
+            font-display: block;
         }}
 
         html {{
@@ -557,14 +568,10 @@ def export_program_pdf():
         # ساخت PDF با Playwright
         # ==========================================
 
-        pdf_buffer = BytesIO()
-                
         with sync_playwright() as p:
 
-          
             browser = p.chromium.launch(
                 headless=True,
-                channel="chromium",
                 args=[
                     "--no-sandbox",
                     "--disable-dev-shm-usage"
@@ -573,18 +580,20 @@ def export_program_pdf():
 
             page = browser.new_page()
 
+            # قرار دادن HTML
             page.set_content(
                 full_html,
-                wait_until="networkidle"
+                wait_until="load"
             )
 
-            # صبر برای بارگذاری کامل فونت
+            # صبر تا فونت کاملاً آماده شود
             page.evaluate("""
                 async () => {
                     await document.fonts.ready;
                 }
             """)
 
+            # تولید PDF
             pdf_bytes = page.pdf(
                 format="A4",
                 print_background=True,
@@ -599,14 +608,15 @@ def export_program_pdf():
             browser.close()
 
         # ==========================================
-        # آماده‌سازی فایل
+        # آماده سازی فایل PDF
         # ==========================================
 
+        pdf_buffer = BytesIO()
         pdf_buffer.write(pdf_bytes)
         pdf_buffer.seek(0)
 
         # ==========================================
-        # ارسال PDF
+        # ارسال فایل
         # ==========================================
 
         return send_file(
