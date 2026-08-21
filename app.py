@@ -526,7 +526,7 @@ def export_program_pdf():
 
         @font-face {{
             font-family: "Vazirmatn";
-            src: url("{font_uri}") format("truetype");
+            src: url("{font_data_uri}") format("truetype");
             font-weight: 400;
             font-style: normal;
         }}
