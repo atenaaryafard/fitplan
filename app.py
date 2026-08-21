@@ -13,6 +13,7 @@ import os
 import psycopg2
 import psycopg2.extras
 import json
+import base64
 
 
 from datetime import datetime
