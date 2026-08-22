@@ -69,6 +69,18 @@ class DBConnection:
 def get_db():
     return DBConnection()
 
+def get_plan(plan_id):
+
+    conn = get_db()
+
+    plan = conn.execute("""
+        SELECT * FROM plans WHERE id = ?
+    """, (plan_id,)).fetchone()
+
+    conn.close()
+
+    return plan
+
 
 def init_db():
 
@@ -449,6 +461,44 @@ def activate_trial(plan_id):
         "message": f"تست رایگان {trial_days} روزه فعال شد."
     })
 
+# =========================================================
+# CREATE ORDER (خرید واقعی)
+# =========================================================
+
+@app.route("/api/order", methods=["POST"])
+@login_required
+def create_order():
+
+    data = request.get_json()
+
+    if not data or not data.get("tracking_code"):
+        return jsonify({"success": False, "message": "کد پیگیری را وارد کنید."}), 400
+
+    plan_id = data.get("plan_id")
+
+    plan = get_plan(plan_id)
+
+    if not plan:
+        return jsonify({"success": False, "message": "پلن نامعتبر است."}), 400
+
+    conn = get_db()
+
+    conn.execute("""
+        INSERT INTO orders
+        (coach_id, plan_id, amount, tracking_code, status, created_at)
+        VALUES (?, ?, ?, ?, 'pending', ?)
+    """, (
+        session["coach_id"],
+        plan_id,
+        plan["price"],
+        data.get("tracking_code", ""),
+        datetime.now().isoformat()
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
 ===============================================
 # subscribe
 ===============================================
