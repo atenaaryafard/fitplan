@@ -1693,3 +1693,34 @@ button {
     color: #999999;
 }
 
+
+.nav-subscribe-btn {
+
+    background: #111827;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    white-space: nowrap;
+
+}
+
+@media (max-width: 700px) {
+
+    .nav-subscribe-btn {
+
+        font-size: 11px;
+
+        padding: 7px 10px;
+
+    }
+
+}
+
