@@ -20,7 +20,7 @@
 
 
 <body>
-    
+
 <header class="mobile-header">
 
     <div class="brand">
@@ -101,7 +101,7 @@
                     type="text"
                     placeholder="نام و نام خانوادگی "
                     oninput="sanitizeNameInput(this)">
-                
+
 
             </div>
 
@@ -186,27 +186,27 @@
 
             <div class="field">
 
-         <label>
-              جنسیت
-         </label>
+                <label>
+                    جنسیت
+                </label>
 
-        <select id="athleteGender">
+                <select id="athleteGender">
 
-        <option value="">
-            انتخاب جنسیت
-        </option>
+                    <option value="">
+                        انتخاب جنسیت
+                    </option>
 
-        <option value="مرد">
-            مرد
-        </option>
+                    <option value="مرد">
+                        مرد
+                    </option>
 
-        <option value="زن">
-            زن
-        </option>
+                    <option value="زن">
+                        زن
+                    </option>
 
-    </select>
+                </select>
 
-</div>
+            </div>
 
 
         </div>
@@ -234,7 +234,6 @@
                  بر روی روز های تمرین مورد نیاز خود کلیک کنید و برنامه خود را طراحی کنید
                 </span>
 
-                
 
 
             </div>
@@ -337,7 +336,7 @@
             class="primary-button"
             onclick="saveProgram()">
 
-            ثبت و ذخیره 
+            ثبت و ذخیره
 
         </button>
 
@@ -444,6 +443,57 @@
         <div
             id="gifModalBody"
             class="modal-body">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     QUOTA LIMIT MODAL
+====================================== -->
+
+<div
+    id="quotaModal"
+    class="modal-overlay hidden"
+    onclick="if(event.target===this) closeQuotaModal()">
+
+    <div class="modal-box quota-modal-box">
+
+        <div class="quota-modal-icon">
+            🔒
+        </div>
+
+        <h2 class="quota-modal-title">
+            سهمیه شما به پایان رسید
+        </h2>
+
+        <p class="quota-modal-text">
+            سهمیه ساخت برنامه این ماه شما تمام شده است.
+            برای ساخت برنامه‌های نامحدود، اشتراک خود را ارتقا دهید.
+        </p>
+
+        <div class="quota-modal-actions">
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="closeQuotaModal()">
+
+                بستن
+
+            </button>
+
+            <button
+                type="button"
+                class="primary-button quota-buy-btn"
+                onclick="goToSubscription()">
+
+                خرید اشتراک
+
+            </button>
 
         </div>
 
