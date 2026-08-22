@@ -1,42 +1,250 @@
-<div class="plan-actions">
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خرید اشتراک | FIT PLAN</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 
-    {% if trial_eligible %}
-    <div class="section-title">
-    <div>
-        <h2>پلن‌های اشتراک</h2>
-        <span>پلن مناسب خودتان را انتخاب کنید و همین حالا شروع کنید</span>
+<header class="mobile-header">
+    <div class="brand">FIT PLAN</div>
+    <a href="{{ url_for('planner') }}" class="logout">بازگشت</a>
+</header>
 
-        {% if not trial_eligible %}
-        <p class="trial-used-note">
-            شما قبلاً از فرصت تست رایگان استفاده کرده‌اید یا سفارشی ثبت کرده‌اید.
+<main class="planner">
+
+    <section class="section-card">
+
+        <div class="section-title">
+            <div>
+                <h2>پلن‌های اشتراک</h2>
+                <span>پلن مناسب خودتان را انتخاب کنید و همین حالا شروع کنید</span>
+
+                {% if not trial_eligible %}
+                <p class="trial-used-note">
+                    شما قبلاً از فرصت تست رایگان استفاده کرده‌اید یا سفارشی ثبت کرده‌اید.
+                </p>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="plans-grid">
+
+            {% for plan in plans %}
+
+            <div class="plan-card {% if plan.plan_key == 'branded' %}plan-featured{% endif %}">
+
+                {% if plan.plan_key == 'branded' %}
+                <div class="plan-badge">پیشنهاد ویژه</div>
+                {% endif %}
+
+                <h3 class="plan-title">{{ plan.title }}</h3>
+                <p class="plan-desc">{{ plan.description }}</p>
+
+                <div class="plan-price">{{ plan.price }}</div>
+
+                <ul class="plan-features">
+
+                    <li class="feature-yes">
+                        {% if plan.monthly_quota %}
+                            {{ plan.monthly_quota }} برنامه در ماه
+                        {% else %}
+                            برنامه نامحدود
+                        {% endif %}
+                    </li>
+
+                    <li class="feature-yes">
+                        {% if plan.duration_days %}
+                            اعتبار {{ plan.duration_days }} روزه
+                        {% else %}
+                            بدون محدودیت زمانی
+                        {% endif %}
+                    </li>
+
+                    <li class="{% if plan.has_custom_logo %}feature-yes{% else %}feature-no{% endif %}">
+                        لوگوی شخصی روی PDF
+                    </li>
+
+                    <li class="{% if plan.has_extra_features %}feature-yes{% else %}feature-no{% endif %}">
+                        امکانات ویژه بیشتر
+                    </li>
+
+                </ul>
+
+                <div class="plan-actions">
+
+                    {% if trial_eligible %}
+
+                        <button
+                            class="secondary-button"
+                            onclick="startTrial({{ plan.id }})">
+
+                            تست رایگان {{ plan.trial_days }} روزه
+
+                        </button>
+
+                    {% else %}
+
+                        <button class="secondary-button" disabled title="تست رایگان فقط برای کاربران جدید است">
+                            تست رایگان استفاده شده
+                        </button>
+
+                    {% endif %}
+
+                    <button
+                        class="primary-button"
+                        onclick="selectPlanForPurchase({{ plan.id }}, '{{ plan.title }}', '{{ plan.price }}')">
+
+                        خرید اشتراک
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================
+         PAYMENT BOX
+    ====================================== -->
+
+    <section class="section-card" id="paymentBox" style="display:none;">
+
+        <div class="section-title">
+            <div>
+                <h2>اطلاعات واریز</h2>
+                <span id="selectedPlanLabel"></span>
+            </div>
+        </div>
+
+        <div class="card-info-box">
+            <span>شماره کارت</span>
+            <strong id="cardNumber">6104-XXXX-XXXX-XXXX</strong>
+            <span>به نام: نام و نام خانوادگی</span>
+        </div>
+
+        <div class="form-grid" style="margin-top:20px;">
+
+            <div class="field" style="grid-column: 1 / -1;">
+                <label>کد پیگیری / ۴ رقم آخر تراکنش</label>
+                <input id="trackingCode" type="text" placeholder="کد پیگیری واریز را وارد کنید">
+            </div>
+
+        </div>
+
+        <button class="primary-button" style="margin-top:15px;width:100%;" onclick="submitOrder()">
+            ثبت درخواست و ارسال برای بررسی
+        </button>
+
+        <p class="order-note">
+            بعد از ثبت، درخواست شما بررسی و اشتراک شما فعال می‌شود.
         </p>
-        {% endif %}
 
-    </div>
-</div>
+    </section>
 
-        <button
-            class="secondary-button"
-            onclick="startTrial({{ plan.id }})">
 
-            تست رایگان {{ plan.trial_days }} روزه
+    <section class="section-card" id="successBox" style="display:none;">
+        <div class="empty-workout">
+            ✅ درخواست شما ثبت شد. پس از تایید پرداخت، اشتراک شما فعال خواهد شد.
+        </div>
+    </section>
 
-        </button>
+</main>
 
-    {% else %}
 
-        <button class="secondary-button" disabled title="تست رایگان فقط برای کاربران جدید است">
-            تست رایگان استفاده شده
-        </button>
+<script>
 
-    {% endif %}
+let selectedPlanId = null;
 
-    <button
-        class="primary-button"
-        onclick="selectPlanForPurchase({{ plan.id }}, '{{ plan.title }}', '{{ plan.price }}')">
+async function startTrial(planId) {
 
-        خرید اشتراک
+    try {
 
-    </button>
+        const response = await fetch(`/api/trial/${planId}`, {
+            method: "POST"
+        });
 
-</div>
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message);
+            return;
+        }
+
+        alert(result.message);
+        window.location.href = "/planner";
+
+    } catch (error) {
+        alert("خطا در فعال‌سازی تست رایگان.");
+    }
+
+}
+
+function selectPlanForPurchase(planId, title, price) {
+
+    selectedPlanId = planId;
+
+    document.getElementById("selectedPlanLabel").textContent =
+        `پلن انتخابی: ${title} — ${price}`;
+
+    document.getElementById("paymentBox").style.display = "block";
+    document.getElementById("successBox").style.display = "none";
+
+    document.getElementById("paymentBox").scrollIntoView({ behavior: "smooth" });
+
+}
+
+async function submitOrder() {
+
+    if (!selectedPlanId) {
+        alert("ابتدا یک پلن انتخاب کنید.");
+        return;
+    }
+
+    const tracking = document.getElementById("trackingCode").value.trim();
+
+    if (!tracking) {
+        alert("کد پیگیری واریز را وارد کنید.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/api/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                plan_id: selectedPlanId,
+                tracking_code: tracking
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message);
+            return;
+        }
+
+        document.getElementById("paymentBox").style.display = "none";
+        document.getElementById("successBox").style.display = "block";
+
+    } catch (error) {
+        alert("خطا در ثبت درخواست.");
+    }
+
+}
+
+</script>
+
+</body>
+</html>
