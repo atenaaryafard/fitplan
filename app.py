@@ -75,6 +75,10 @@ def init_db():
     conn = get_db()
     cursor = conn.conn.cursor()
 
+    # =========================================================
+    # COACHES
+    # =========================================================
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS coaches (
             id SERIAL PRIMARY KEY,
@@ -87,13 +91,13 @@ def init_db():
             plan_id INTEGER,
             plan_started_at TEXT,
             plan_expires_at TEXT,
-            
+
             monthly_limit INTEGER DEFAULT 0,
             monthly_used INTEGER DEFAULT 0,
             usage_month TEXT,
 
             logo_path TEXT,
-            
+
             created_at TEXT
         )
     """)
@@ -104,11 +108,10 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_expires_at TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS logo_path TEXT")
 
-
     # =========================================================
     # PROGRAMS
     # =========================================================
-    
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS programs (
             id SERIAL PRIMARY KEY,
@@ -124,15 +127,15 @@ def init_db():
             notes TEXT,
             created_at TEXT,
             FOREIGN KEY(coach_id) REFERENCES coaches(id)
-            
         )
     """)
+
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT")
 
     # =========================================================
-    # PLANS  (سه پلن ثابت شما)
+    # PLANS  (سه پلن ثابت)
     # =========================================================
-    
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS plans (
             id SERIAL PRIMARY KEY,
@@ -141,8 +144,8 @@ def init_db():
             description TEXT,
             price TEXT,
 
-            monthly_quota INTEGER,        -- NULL = نامحدود
-            duration_days INTEGER,        -- NULL = بدون محدودیت زمانی
+            monthly_quota INTEGER,
+            duration_days INTEGER,
 
             has_custom_logo BOOLEAN DEFAULT FALSE,
             has_extra_features BOOLEAN DEFAULT FALSE,
@@ -155,10 +158,10 @@ def init_db():
     """)
 
     # =========================================================
-    # TRIALS  (ثبت اینکه هر کاربر برای کدوم پلن تست گرفته)
+    # TRIALS
     # =========================================================
 
-     cursor.execute("""
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS trials (
             id SERIAL PRIMARY KEY,
             coach_id INTEGER NOT NULL,
@@ -169,13 +172,13 @@ def init_db():
             UNIQUE(coach_id, plan_id),
             FOREIGN KEY(coach_id) REFERENCES coaches(id),
             FOREIGN KEY(plan_id) REFERENCES plans(id)
-         )
-     """)
-
+        )
+    """)
 
     # =========================================================
-    # ORDERS  (درخواست خرید / واریز دستی)
+    # ORDERS
     # =========================================================
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS orders (
             id SERIAL PRIMARY KEY,
@@ -183,7 +186,7 @@ def init_db():
             plan_id INTEGER NOT NULL,
             amount TEXT,
             tracking_code TEXT,
-            status TEXT DEFAULT 'pending',   -- pending / approved / rejected
+            status TEXT DEFAULT 'pending',
             admin_note TEXT,
             created_at TEXT,
             reviewed_at TEXT,
@@ -197,7 +200,7 @@ def init_db():
     # =========================================================
     # SEED کردن ۳ پلن (فقط اگر خالی باشه)
     # =========================================================
-    
+
     cursor.execute("SELECT COUNT(*) FROM plans")
     count = cursor.fetchone()[0]
 
@@ -220,16 +223,6 @@ def init_db():
 
         conn.commit()
 
-    conn.close()
-    
-
-    
-
-    cursor.execute("""
-    ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT
-    """)
-
-    conn.commit()
     conn.close()
 
 
@@ -323,7 +316,7 @@ def register():
                 name,
                 email,
                 generate_password_hash(password),
-                30,
+                0,
                 0,
                 datetime.now().strftime("%Y-%m"),
                 datetime.now().isoformat()
@@ -584,10 +577,6 @@ def export_program_pdf():
 
     try:
 
-        # ==========================================
-        # مسیر اصلی فونت
-        # ==========================================
-
         base_dir = os.path.dirname(os.path.abspath(__file__))
 
         font_path = os.path.join(
@@ -597,25 +586,16 @@ def export_program_pdf():
             "Vazirmatn-Regular.ttf"
         )
 
-        # بررسی وجود فونت
         if not os.path.isfile(font_path):
             return jsonify({
                 "success": False,
                 "message": f"فونت پیدا نشد: {font_path}"
             }), 500
 
-        # ==========================================
-        # تبدیل فونت به Base64
-        # ==========================================
-
         with open(font_path, "rb") as font_file:
             font_base64 = base64.b64encode(
                 font_file.read()
             ).decode("utf-8")
-
-        # ==========================================
-        # مسیر CSS مخصوص PDF
-        # ==========================================
 
         pdf_css_path = os.path.join(
             base_dir,
@@ -629,16 +609,8 @@ def export_program_pdf():
                 "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
             }), 500
 
-        # ==========================================
-        # خواندن CSS
-        # ==========================================
-
         with open(pdf_css_path, "r", encoding="utf-8") as css_file:
             css_content = css_file.read()
-
-        # ==========================================
-        # HTML نهایی برای Playwright
-        # ==========================================
 
         html_content = data["html"]
 
@@ -684,10 +656,6 @@ def export_program_pdf():
 </html>
 """
 
-        # ==========================================
-        # ساخت PDF با Playwright
-        # ==========================================
-
         with sync_playwright() as p:
 
             browser = p.chromium.launch(
@@ -700,20 +668,17 @@ def export_program_pdf():
 
             page = browser.new_page()
 
-            # قرار دادن HTML
             page.set_content(
                 full_html,
                 wait_until="load"
             )
 
-            # صبر تا فونت کاملاً آماده شود
             page.evaluate("""
                 async () => {
                     await document.fonts.ready;
                 }
             """)
 
-            # تولید PDF
             pdf_bytes = page.pdf(
                 format="A4",
                 print_background=True,
@@ -727,17 +692,9 @@ def export_program_pdf():
 
             browser.close()
 
-        # ==========================================
-        # آماده سازی فایل PDF
-        # ==========================================
-
         pdf_buffer = BytesIO()
         pdf_buffer.write(pdf_bytes)
         pdf_buffer.seek(0)
-
-        # ==========================================
-        # ارسال فایل
-        # ==========================================
 
         return send_file(
             pdf_buffer,
@@ -762,8 +719,7 @@ def export_program_pdf():
 
 init_db()
 
+
 if __name__ == "__main__":
-    init_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
