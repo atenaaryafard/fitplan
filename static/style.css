@@ -1724,3 +1724,22 @@ button {
 
 }
 
+
+.trial-used-note {
+
+    font-size: 11px;
+
+    color: #b45309;
+
+    background: #fffbeb;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    margin-top: 8px;
+
+    display: inline-block;
+
+}
+
