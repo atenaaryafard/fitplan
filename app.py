@@ -375,6 +375,121 @@ def login():
     return render_template("login.html", error=error)
 
 
+=====================================================
+# app.route("/api/trial
+=======================================================
+
+@app.route("/api/trial/<int:plan_id>", methods=["POST"])
+@login_required
+def activate_trial(plan_id):
+
+    plan = get_plan(plan_id)
+
+    if not plan:
+        return jsonify({"success": False, "message": "پلن پیدا نشد."}), 404
+
+    conn = get_db()
+
+    # چک کلی: آیا این کاربر قبلاً هر تستی گرفته یا هر سفارشی ثبت کرده؟
+
+    trial_count = conn.execute("""
+        SELECT COUNT(*) as cnt FROM trials WHERE coach_id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    order_count = conn.execute("""
+        SELECT COUNT(*) as cnt FROM orders WHERE coach_id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    if trial_count["cnt"] > 0 or order_count["cnt"] > 0:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "تست رایگان فقط برای کاربران تازه‌وارد قابل استفاده است."
+        }), 403
+
+    now = datetime.now()
+    trial_days = plan["trial_days"] or 3
+
+    from datetime import timedelta
+    expires_at = now + timedelta(days=trial_days)
+
+    conn.execute("""
+        INSERT INTO trials (coach_id, plan_id, started_at, expires_at, status)
+        VALUES (?, ?, ?, ?, 'active')
+    """, (
+        session["coach_id"],
+        plan_id,
+        now.isoformat(),
+        expires_at.isoformat()
+    ))
+
+    conn.execute("""
+        UPDATE coaches
+        SET plan_id = ?,
+            plan_started_at = ?,
+            plan_expires_at = ?,
+            monthly_limit = ?,
+            monthly_used = 0,
+            usage_month = ?
+        WHERE id = ?
+    """, (
+        plan_id,
+        now.isoformat(),
+        expires_at.isoformat(),
+        plan["trial_quota"] or 3,
+        now.strftime("%Y-%m"),
+        session["coach_id"]
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "message": f"تست رایگان {trial_days} روزه فعال شد."
+    })
+
+===============================================
+# subscribe
+===============================================
+
+@app.route("/subscribe")
+@login_required
+def subscribe():
+
+    conn = get_db()
+
+    plans = conn.execute("""
+        SELECT * FROM plans WHERE is_active = TRUE ORDER BY id ASC
+    """).fetchall()
+
+    coach = conn.execute("""
+        SELECT * FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    trial_count = conn.execute("""
+        SELECT COUNT(*) as cnt FROM trials WHERE coach_id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    order_count = conn.execute("""
+        SELECT COUNT(*) as cnt FROM orders WHERE coach_id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    conn.close()
+
+    has_used_trial = trial_count["cnt"] > 0
+    has_ordered_before = order_count["cnt"] > 0
+
+    trial_eligible = not has_used_trial and not has_ordered_before
+
+    return render_template(
+        "subscribe.html",
+        plans=plans,
+        coach=coach,
+        trial_eligible=trial_eligible
+    )
+
+
 # =========================================================
 # LOGOUT
 # =========================================================
