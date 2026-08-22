@@ -81,13 +81,34 @@ def init_db():
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
-            monthly_limit INTEGER DEFAULT 30,
+
+            is_admin BOOLEAN DEFAULT FALSE,
+
+            plan_id INTEGER,
+            plan_started_at TEXT,
+            plan_expires_at TEXT,
+            
+            monthly_limit INTEGER DEFAULT 0,
             monthly_used INTEGER DEFAULT 0,
             usage_month TEXT,
+
+            logo_path TEXT,
+            
             created_at TEXT
         )
     """)
 
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_id INTEGER")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_started_at TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_expires_at TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS logo_path TEXT")
+
+
+    # =========================================================
+    # PROGRAMS
+    # =========================================================
+    
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS programs (
             id SERIAL PRIMARY KEY,
@@ -103,8 +124,106 @@ def init_db():
             notes TEXT,
             created_at TEXT,
             FOREIGN KEY(coach_id) REFERENCES coaches(id)
+            
         )
     """)
+    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT")
+
+    # =========================================================
+    # PLANS  (سه پلن ثابت شما)
+    # =========================================================
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS plans (
+            id SERIAL PRIMARY KEY,
+            plan_key TEXT UNIQUE NOT NULL,
+            title TEXT NOT NULL,
+            description TEXT,
+            price TEXT,
+
+            monthly_quota INTEGER,        -- NULL = نامحدود
+            duration_days INTEGER,        -- NULL = بدون محدودیت زمانی
+
+            has_custom_logo BOOLEAN DEFAULT FALSE,
+            has_extra_features BOOLEAN DEFAULT FALSE,
+
+            trial_days INTEGER DEFAULT 3,
+            trial_quota INTEGER DEFAULT 3,
+
+            is_active BOOLEAN DEFAULT TRUE
+        )
+    """)
+
+    # =========================================================
+    # TRIALS  (ثبت اینکه هر کاربر برای کدوم پلن تست گرفته)
+    # =========================================================
+
+     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS trials (
+            id SERIAL PRIMARY KEY,
+            coach_id INTEGER NOT NULL,
+            plan_id INTEGER NOT NULL,
+            started_at TEXT,
+            expires_at TEXT,
+            status TEXT DEFAULT 'active',
+            UNIQUE(coach_id, plan_id),
+            FOREIGN KEY(coach_id) REFERENCES coaches(id),
+            FOREIGN KEY(plan_id) REFERENCES plans(id)
+         )
+     """)
+
+
+    # =========================================================
+    # ORDERS  (درخواست خرید / واریز دستی)
+    # =========================================================
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS orders (
+            id SERIAL PRIMARY KEY,
+            coach_id INTEGER NOT NULL,
+            plan_id INTEGER NOT NULL,
+            amount TEXT,
+            tracking_code TEXT,
+            status TEXT DEFAULT 'pending',   -- pending / approved / rejected
+            admin_note TEXT,
+            created_at TEXT,
+            reviewed_at TEXT,
+            FOREIGN KEY(coach_id) REFERENCES coaches(id),
+            FOREIGN KEY(plan_id) REFERENCES plans(id)
+        )
+    """)
+
+    conn.commit()
+
+    # =========================================================
+    # SEED کردن ۳ پلن (فقط اگر خالی باشه)
+    # =========================================================
+    
+    cursor.execute("SELECT COUNT(*) FROM plans")
+    count = cursor.fetchone()[0]
+
+    if count == 0:
+
+        cursor.execute("""
+            INSERT INTO plans
+            (plan_key, title, description, price, monthly_quota, duration_days,
+             has_custom_logo, has_extra_features, trial_days, trial_quota)
+            VALUES
+            ('basic', 'پلن ساده', 'ساخت برنامه تمرینی با سهمیه ماهانه', '۲۰۰,۰۰۰ تومان',
+             30, 30, FALSE, FALSE, 3, 3),
+
+            ('branded', 'پلن با لوگوی شخصی', 'همه امکانات پایه به‌علاوه درج لوگوی خودتان روی PDF', '۴۵۰,۰۰۰ تومان',
+             60, 30, TRUE, FALSE, 3, 3),
+
+            ('premium', 'پلن نامحدود', 'بدون محدودیت زمانی + امکانات ویژه بیشتر', '۹۰۰,۰۰۰ تومان',
+             NULL, NULL, TRUE, TRUE, 5, 5)
+        """)
+
+        conn.commit()
+
+    conn.close()
+    
+
+    
 
     cursor.execute("""
     ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT
@@ -644,3 +763,4 @@ def export_program_pdf():
 if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
