@@ -16,7 +16,7 @@ import json
 import base64
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -68,6 +68,7 @@ class DBConnection:
 
 def get_db():
     return DBConnection()
+
 
 def get_plan(plan_id):
 
@@ -387,121 +388,19 @@ def login():
     return render_template("login.html", error=error)
 
 
-=====================================================
-# app.route("/api/trial
-=======================================================
-
-@app.route("/api/trial/<int:plan_id>", methods=["POST"])
-@login_required
-def activate_trial(plan_id):
-
-    plan = get_plan(plan_id)
-
-    if not plan:
-        return jsonify({"success": False, "message": "پلن پیدا نشد."}), 404
-
-    conn = get_db()
-
-    # چک کلی: آیا این کاربر قبلاً هر تستی گرفته یا هر سفارشی ثبت کرده؟
-
-    trial_count = conn.execute("""
-        SELECT COUNT(*) as cnt FROM trials WHERE coach_id = ?
-    """, (session["coach_id"],)).fetchone()
-
-    order_count = conn.execute("""
-        SELECT COUNT(*) as cnt FROM orders WHERE coach_id = ?
-    """, (session["coach_id"],)).fetchone()
-
-    if trial_count["cnt"] > 0 or order_count["cnt"] > 0:
-        conn.close()
-        return jsonify({
-            "success": False,
-            "message": "تست رایگان فقط برای کاربران تازه‌وارد قابل استفاده است."
-        }), 403
-
-    now = datetime.now()
-    trial_days = plan["trial_days"] or 3
-
-    from datetime import timedelta
-    expires_at = now + timedelta(days=trial_days)
-
-    conn.execute("""
-        INSERT INTO trials (coach_id, plan_id, started_at, expires_at, status)
-        VALUES (?, ?, ?, ?, 'active')
-    """, (
-        session["coach_id"],
-        plan_id,
-        now.isoformat(),
-        expires_at.isoformat()
-    ))
-
-    conn.execute("""
-        UPDATE coaches
-        SET plan_id = ?,
-            plan_started_at = ?,
-            plan_expires_at = ?,
-            monthly_limit = ?,
-            monthly_used = 0,
-            usage_month = ?
-        WHERE id = ?
-    """, (
-        plan_id,
-        now.isoformat(),
-        expires_at.isoformat(),
-        plan["trial_quota"] or 3,
-        now.strftime("%Y-%m"),
-        session["coach_id"]
-    ))
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({
-        "success": True,
-        "message": f"تست رایگان {trial_days} روزه فعال شد."
-    })
-
 # =========================================================
-# CREATE ORDER (خرید واقعی)
+# LOGOUT
 # =========================================================
 
-@app.route("/api/order", methods=["POST"])
-@login_required
-def create_order():
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
-    data = request.get_json()
 
-    if not data or not data.get("tracking_code"):
-        return jsonify({"success": False, "message": "کد پیگیری را وارد کنید."}), 400
-
-    plan_id = data.get("plan_id")
-
-    plan = get_plan(plan_id)
-
-    if not plan:
-        return jsonify({"success": False, "message": "پلن نامعتبر است."}), 400
-
-    conn = get_db()
-
-    conn.execute("""
-        INSERT INTO orders
-        (coach_id, plan_id, amount, tracking_code, status, created_at)
-        VALUES (?, ?, ?, ?, 'pending', ?)
-    """, (
-        session["coach_id"],
-        plan_id,
-        plan["price"],
-        data.get("tracking_code", ""),
-        datetime.now().isoformat()
-    ))
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({"success": True})
-===============================================
-# subscribe
-===============================================
+# =========================================================
+# SUBSCRIBE PAGE
+# =========================================================
 
 @app.route("/subscribe")
 @login_required
@@ -541,13 +440,114 @@ def subscribe():
 
 
 # =========================================================
-# LOGOUT
+# ACTIVATE FREE TRIAL
 # =========================================================
 
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("login"))
+@app.route("/api/trial/<int:plan_id>", methods=["POST"])
+@login_required
+def activate_trial(plan_id):
+
+    plan = get_plan(plan_id)
+
+    if not plan:
+        return jsonify({"success": False, "message": "پلن پیدا نشد."}), 404
+
+    conn = get_db()
+
+    trial_count = conn.execute("""
+        SELECT COUNT(*) as cnt FROM trials WHERE coach_id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    order_count = conn.execute("""
+        SELECT COUNT(*) as cnt FROM orders WHERE coach_id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    if trial_count["cnt"] > 0 or order_count["cnt"] > 0:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "تست رایگان فقط برای کاربران تازه‌وارد قابل استفاده است."
+        }), 403
+
+    now = datetime.now()
+    trial_days = plan["trial_days"] or 3
+    expires_at = now + timedelta(days=trial_days)
+
+    conn.execute("""
+        INSERT INTO trials (coach_id, plan_id, started_at, expires_at, status)
+        VALUES (?, ?, ?, ?, 'active')
+    """, (
+        session["coach_id"],
+        plan_id,
+        now.isoformat(),
+        expires_at.isoformat()
+    ))
+
+    conn.execute("""
+        UPDATE coaches
+        SET plan_id = ?,
+            plan_started_at = ?,
+            plan_expires_at = ?,
+            monthly_limit = ?,
+            monthly_used = 0,
+            usage_month = ?
+        WHERE id = ?
+    """, (
+        plan_id,
+        now.isoformat(),
+        expires_at.isoformat(),
+        plan["trial_quota"] or 3,
+        now.strftime("%Y-%m"),
+        session["coach_id"]
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "message": f"تست رایگان {trial_days} روزه فعال شد."
+    })
+
+
+# =========================================================
+# CREATE ORDER (خرید واقعی)
+# =========================================================
+
+@app.route("/api/order", methods=["POST"])
+@login_required
+def create_order():
+
+    data = request.get_json()
+
+    if not data or not data.get("tracking_code"):
+        return jsonify({"success": False, "message": "کد پیگیری را وارد کنید."}), 400
+
+    plan_id = data.get("plan_id")
+
+    plan = get_plan(plan_id)
+
+    if not plan:
+        return jsonify({"success": False, "message": "پلن نامعتبر است."}), 400
+
+    conn = get_db()
+
+    conn.execute("""
+        INSERT INTO orders
+        (coach_id, plan_id, amount, tracking_code, status, created_at)
+        VALUES (?, ?, ?, ?, 'pending', ?)
+    """, (
+        session["coach_id"],
+        plan_id,
+        plan["price"],
+        data.get("tracking_code", ""),
+        datetime.now().isoformat()
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
 
 
 # =========================================================
