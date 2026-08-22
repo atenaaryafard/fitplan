@@ -1,6 +1,19 @@
 <div class="plan-actions">
 
     {% if trial_eligible %}
+    <div class="section-title">
+    <div>
+        <h2>پلن‌های اشتراک</h2>
+        <span>پلن مناسب خودتان را انتخاب کنید و همین حالا شروع کنید</span>
+
+        {% if not trial_eligible %}
+        <p class="trial-used-note">
+            شما قبلاً از فرصت تست رایگان استفاده کرده‌اید یا سفارشی ثبت کرده‌اید.
+        </p>
+        {% endif %}
+
+    </div>
+</div>
 
         <button
             class="secondary-button"
