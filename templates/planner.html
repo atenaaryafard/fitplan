@@ -30,6 +30,14 @@
 
     <div class="header-actions">
 
+        
+            href="{{ url_for('subscribe') }}"
+            class="nav-subscribe-btn">
+
+            تهیه اشتراک
+
+        </a>
+
         <div class="quota">
 
             <span>
@@ -42,27 +50,8 @@
 
         </div>
 
-        <div class="header-actions">
 
-    
-        href="{{ url_for('subscribe') }}"
-        class="nav-subscribe-btn">
-
-            تهیه اشتراک
-
-      </a>
-
-    <div class="quota">
-        <span>باقی‌مانده</span>
-        <strong id="quota">{{ remaining }}</strong>
-    </div>
-
-    <a href="{{ url_for('logout') }}" class="logout">خروج</a>
-
-</div>
-
-
-        <a
+        
             href="{{ url_for('logout') }}"
             class="logout">
 
