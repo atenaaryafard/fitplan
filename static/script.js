@@ -5,6 +5,139 @@
         .replace(/[^\u0600-\u06FF\s]/g, "");
 }
 
+function sanitizePhoneInput(input) {
+    input.value = input.value.replace(/[^\d+]/g, "");
+}
+
+function sanitizeSocialInput(input) {
+    let value = input.value.replace(/\s/g, "");
+    if (value && !value.startsWith("@")) {
+        value = "@" + value;
+    }
+    input.value = value;
+}
+
+
+async function uploadLogo(input) {
+
+    const file = input.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("logo", file);
+
+    try {
+
+        const response = await fetch("/api/upload-logo", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message);
+            return;
+        }
+
+        document.getElementById("brandLogoPreview").src =
+            "/static/" + result.logo_path + "?t=" + Date.now();
+
+        document.querySelector(".brand-logo-upload-btn").textContent = "تغییر لوگو";
+
+        COACH_BRAND.logoPath = result.logo_path;
+
+    } catch (error) {
+        alert("خطا در آپلود لوگو.");
+    }
+
+}
+
+
+async function saveBrandProfile() {
+
+    const jobTitle = document.getElementById("jobTitle").value.trim();
+    const socialAddress = document.getElementById("socialAddress").value.trim();
+    const phoneNumber = document.getElementById("phoneNumber").value.trim();
+    const footerText = document.getElementById("footerText").value.trim();
+
+    try {
+
+        const response = await fetch("/api/brand-profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                job_title: jobTitle,
+                social_address: socialAddress,
+                phone_number: phoneNumber,
+                footer_text: footerText
+            })
+        });
+
+        const result = await response.json();
+
+        const msg = document.getElementById("brandSaveMsg");
+
+        if (!response.ok) {
+            msg.textContent = result.message;
+            msg.className = "brand-save-msg error";
+            return;
+        }
+
+        COACH_BRAND.jobTitle = jobTitle;
+        COACH_BRAND.socialAddress = socialAddress;
+        COACH_BRAND.phoneNumber = phoneNumber;
+        COACH_BRAND.footerText = footerText;
+
+        msg.textContent = "✔ اطلاعات برند ذخیره شد.";
+        msg.className = "brand-save-msg success";
+
+        setTimeout(() => { msg.textContent = ""; }, 3000);
+
+    } catch (error) {
+        alert("خطا در ذخیره اطلاعات برند.");
+    }
+
+}
+
+
+function buildBrandHeaderHTML() {
+
+    if (!COACH_BRAND.hasCustomLogo) return "";
+
+    const logoSrc =
+        COACH_BRAND.logoPath
+            ? "/static/" + COACH_BRAND.logoPath
+            : "/static/images/default-logo.png";
+
+    return `
+        <div class="pdf-brand-header">
+
+            <img src="${logoSrc}" class="pdf-brand-logo" alt="لوگو">
+
+            <div class="pdf-brand-info">
+                <strong>${escapeHTML(COACH_BRAND.coachName)}</strong>
+                ${COACH_BRAND.jobTitle ? `<span>${escapeHTML(COACH_BRAND.jobTitle)}</span>` : ""}
+                ${COACH_BRAND.socialAddress ? `<span>${escapeHTML(COACH_BRAND.socialAddress)}</span>` : ""}
+                ${COACH_BRAND.phoneNumber ? `<span>${escapeHTML(COACH_BRAND.phoneNumber)}</span>` : ""}
+            </div>
+
+        </div>
+    `;
+}
+
+
+function buildBrandFooterHTML() {
+
+    if (!COACH_BRAND.hasCustomLogo || !COACH_BRAND.footerText) return "";
+
+    return `
+        <div class="pdf-brand-footer">
+            ${escapeHTML(COACH_BRAND.footerText)}
+        </div>
+    `;
+}
+
 
 
 /* =====================================================
@@ -1494,9 +1627,10 @@ function buildProgramPreviewHTML(program) {
 
     const days =
         program.days || [];
+  
+    let html = buildBrandHeaderHTML();
 
-
-    let html = `
+    html += `
 
         <div class="preview-athlete">
 
@@ -1622,7 +1756,7 @@ function buildProgramPreviewHTML(program) {
 
     }
 
-
+    html += buildBrandFooterHTML();
     return html;
 
 }
