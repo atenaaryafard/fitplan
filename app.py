@@ -15,12 +15,11 @@ import psycopg2.extras
 import json
 import base64
 
-
+from PIL import Image
+from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from functools import wraps
-
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from playwright.sync_api import sync_playwright
 from io import BytesIO
 
@@ -120,6 +119,9 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_started_at TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_expires_at TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS logo_path TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS job_title TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS social_address TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
 
     # =========================================================
     # PROGRAMS
@@ -440,6 +442,168 @@ def subscribe():
 
 
 # =========================================================
+# LOGO UPLOAD
+# =========================================================
+
+ALLOWED_LOGO_EXT = {"png", "jpg", "jpeg", "webp"}
+MAX_LOGO_SIZE = 2 * 1024 * 1024  # 2MB
+
+
+def get_active_plan(coach):
+
+    if not coach["plan_id"]:
+        return None
+
+    plan = get_plan(coach["plan_id"])
+
+    if not plan:
+        return None
+
+    if coach["plan_expires_at"]:
+        expires = datetime.fromisoformat(coach["plan_expires_at"])
+        if expires < datetime.now():
+            return None
+
+    return plan
+
+
+@app.route("/api/upload-logo", methods=["POST"])
+@login_required
+def upload_logo():
+
+    conn = get_db()
+
+    coach = conn.execute("""
+        SELECT * FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    conn.close()
+
+    plan = get_active_plan(coach)
+
+    if not plan or not plan["has_custom_logo"]:
+        return jsonify({
+            "success": False,
+            "message": "این امکان فقط برای پلن برند شخصی فعال است."
+        }), 403
+
+    if "logo" not in request.files:
+        return jsonify({"success": False, "message": "فایلی ارسال نشده است."}), 400
+
+    file = request.files["logo"]
+
+    if file.filename == "":
+        return jsonify({"success": False, "message": "فایلی انتخاب نشده است."}), 400
+
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+
+    if ext not in ALLOWED_LOGO_EXT:
+        return jsonify({
+            "success": False,
+            "message": "فقط فایل تصویری (png, jpg, jpeg, webp) مجاز است."
+        }), 400
+
+    file.seek(0, os.SEEK_END)
+    size = file.tell()
+    file.seek(0)
+
+    if size > MAX_LOGO_SIZE:
+        return jsonify({
+            "success": False,
+            "message": "حجم تصویر باید کمتر از ۲ مگابایت باشد."
+        }), 400
+
+    try:
+        image = Image.open(file)
+        image.verify()
+        file.seek(0)
+        image = Image.open(file)
+        image = image.convert("RGBA")
+    except Exception:
+        return jsonify({
+            "success": False,
+            "message": "فایل ارسال‌شده یک تصویر معتبر نیست."
+        }), 400
+
+    image.thumbnail((500, 250))
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    upload_dir = os.path.join(base_dir, "static", "uploads", "logos")
+    os.makedirs(upload_dir, exist_ok=True)
+
+    filename = secure_filename(f"coach_{coach['id']}.png")
+    filepath = os.path.join(upload_dir, filename)
+
+    image.save(filepath, "PNG")
+
+    relative_path = f"uploads/logos/{filename}"
+
+    conn = get_db()
+
+    conn.execute("""
+        UPDATE coaches SET logo_path = ? WHERE id = ?
+    """, (relative_path, coach["id"]))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True, "logo_path": relative_path})
+
+
+# =========================================================
+# SAVE BRAND PROFILE
+# =========================================================
+
+@app.route("/api/brand-profile", methods=["POST"])
+@login_required
+def save_brand_profile():
+
+    conn = get_db()
+
+    coach = conn.execute("""
+        SELECT * FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    plan = get_active_plan(coach)
+
+    if not plan or not plan["has_custom_logo"]:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "این امکان فقط برای پلن برند شخصی فعال است."
+        }), 403
+
+    data = request.get_json()
+
+    if not data:
+        conn.close()
+        return jsonify({"success": False, "message": "اطلاعاتی دریافت نشد."}), 400
+
+    job_title = (data.get("job_title") or "").strip()
+    social_address = (data.get("social_address") or "").strip()
+    phone_number = (data.get("phone_number") or "").strip()
+    footer_text = (data.get("footer_text") or "").strip()
+
+    if phone_number and not phone_number.replace("+", "").isdigit():
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "شماره تماس فقط باید شامل عدد باشد."
+        }), 400
+
+    conn.execute("""
+        UPDATE coaches
+        SET job_title = ?, social_address = ?, phone_number = ?, footer_text = ?
+        WHERE id = ?
+    """, (job_title, social_address, phone_number,footer_text, coach["id"]))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+
+# =========================================================
 # ACTIVATE FREE TRIAL
 # =========================================================
 
@@ -570,7 +734,7 @@ def planner():
 
     remaining = max(0, coach["monthly_limit"] - coach["monthly_used"])
 
-    return render_template("planner.html", coach=coach, remaining=remaining)
+    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo)
 
 
 # =========================================================
@@ -685,6 +849,7 @@ def save_program():
         data.get("program_name", ""),
         json.dumps(days, ensure_ascii=False),
         data.get("notes", ""),
+        data.get("footer_text", ""),
         datetime.now().isoformat()
     ))
 
