@@ -2189,3 +2189,152 @@ button {
     padding: 40px 20px;
 
 }
+
+/* ========== */
+
+/* =====================================
+   BRAND PROFILE (PLANNER PAGE)
+===================================== */
+
+.brand-form {
+
+    display: grid;
+
+    grid-template-columns: 160px 1fr;
+
+    gap: 20px;
+
+    align-items: start;
+
+}
+
+
+.brand-logo-box {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 8px;
+
+    text-align: center;
+
+}
+
+
+.brand-logo-preview {
+
+    width: 140px;
+
+    height: 90px;
+
+    object-fit: contain;
+
+    border: 1px dashed #d5d9df;
+
+    border-radius: 10px;
+
+    background: #fafbfc;
+
+    padding: 6px;
+
+}
+
+
+.brand-logo-upload-btn {
+
+    background: #111827;
+
+    color: white;
+
+    font-size: 12px;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+}
+
+
+.brand-logo-hint {
+
+    font-size: 10px;
+
+    color: #999;
+
+}
+
+
+.brand-fields {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+}
+
+
+.save-brand-btn {
+
+    margin-top: 16px;
+
+    border: none;
+
+    background: #111827;
+
+    color: white;
+
+    padding: 12px 20px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+}
+
+
+.brand-save-msg {
+
+    margin-top: 10px;
+
+    font-size: 12px;
+
+}
+
+
+.brand-save-msg.success {
+
+    color: #16a34a;
+
+}
+
+
+.brand-save-msg.error {
+
+    color: #dc2626;
+
+}
+
+
+@media (max-width: 700px) {
+
+    .brand-form {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .brand-fields {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
