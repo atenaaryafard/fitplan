@@ -2153,6 +2153,26 @@ button {
 
 }
 
+.submit-order-btn {
+
+    width: 100%;
+
+    margin-top: 15px;
+
+    border: none;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    background: #111827;
+
+    color: white;
+
+}
+
 
 #successBox .empty-workout {
 
