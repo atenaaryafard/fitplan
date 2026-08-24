@@ -1743,3 +1743,270 @@ button {
 
 }
 
+
+/* ===========================
+استایل صفحه اشتراک
+=========================== */
+
+
+/* =====================================
+   PLAN CARDS
+===================================== */
+
+.plans-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 22px;
+
+    margin-top: 10px;
+
+}
+
+
+.plan-card {
+
+    position: relative;
+
+    background: white;
+
+    border: 1.5px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    padding: 24px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    transition:
+        border-color .2s,
+        transform .2s;
+
+}
+
+
+.plan-card:hover {
+
+    border-color: #c7d0dc;
+
+    transform: translateY(-2px);
+
+}
+
+
+.plan-card.plan-featured {
+
+    border: 2px solid #111827;
+
+    box-shadow:
+        0 10px 30px
+        rgba(17,24,39,.12);
+
+}
+
+
+.plan-badge {
+
+    position: absolute;
+
+    top: -12px;
+
+    right: 20px;
+
+    background: #111827;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+}
+
+
+.plan-title {
+
+    margin: 0;
+
+    font-size: 17px;
+
+}
+
+
+.plan-desc {
+
+    margin: 0;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+}
+
+
+.plan-price {
+
+    font-size: 24px;
+
+    font-weight: 900;
+
+    padding: 10px 0;
+
+    border-top: 1px solid #f0f0f0;
+
+    border-bottom: 1px solid #f0f0f0;
+
+}
+
+
+.plan-features {
+
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+}
+
+
+.plan-features li {
+
+    font-size: 13px;
+
+    padding-right: 22px;
+
+    position: relative;
+
+}
+
+
+.feature-yes::before {
+
+    content: "✓";
+
+    position: absolute;
+
+    right: 0;
+
+    color: #16a34a;
+
+    font-weight: 900;
+
+}
+
+
+.feature-no {
+
+    color: #aaa;
+
+}
+
+
+.feature-no::before {
+
+    content: "✗";
+
+    position: absolute;
+
+    right: 0;
+
+    color: #d1d5db;
+
+    font-weight: 900;
+
+}
+
+
+.plan-actions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-top: auto;
+
+    padding-top: 10px;
+
+}
+
+
+.plan-actions button {
+
+    width: 100%;
+
+    min-height: 44px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+}
+
+
+/* =====================================
+   PAYMENT BOX
+===================================== */
+
+.card-info-box {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    padding: 16px 18px;
+
+    font-size: 13px;
+
+}
+
+
+.card-info-box strong {
+
+    font-size: 17px;
+
+    letter-spacing: 1px;
+
+}
+
+
+.order-note {
+
+    margin-top: 12px;
+
+    font-size: 12px;
+
+    color: #888;
+
+    text-align: center;
+
+}
