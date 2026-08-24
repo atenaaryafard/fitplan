@@ -2010,3 +2010,162 @@ button {
     text-align: center;
 
 }
+
+
+/* ===================
+استایل کارت واریز
+=================== */
+
+
+/* =====================================
+   PAYMENT SECTION (UPGRADED)
+===================================== */
+
+#selectedPlanLabel {
+
+    display: inline-block;
+
+    background: #eef2ff;
+
+    color: #3730a3;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    padding: 6px 14px;
+
+    border-radius: 20px;
+
+    margin-top: 4px;
+
+}
+
+
+.card-info-box {
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #263449
+        );
+
+    color: white;
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 22px 24px;
+
+    font-size: 13px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(17,24,39,.18);
+
+}
+
+
+.card-info-box span {
+
+    color: #9ca3af;
+
+    font-size: 12px;
+
+}
+
+
+.card-info-box strong {
+
+    font-size: 20px;
+
+    letter-spacing: 2px;
+
+    color: #fff;
+
+    direction: ltr;
+
+    text-align: right;
+
+}
+
+
+.tracking-field {
+
+    position: relative;
+
+}
+
+
+.tracking-field input {
+
+    text-align: center;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    border: 1.5px dashed #d5d9df;
+
+    background: #fafbfc;
+
+}
+
+
+.tracking-field input:focus {
+
+    border-style: solid;
+
+    border-color: #111827;
+
+    background: white;
+
+}
+
+
+.order-note {
+
+    margin-top: 14px;
+
+    font-size: 12px;
+
+    color: #888;
+
+    text-align: center;
+
+    background: #f8fafc;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+}
+
+
+#successBox .empty-workout {
+
+    color: #166534;
+
+    background: #f0fdf4;
+
+    border: 1.5px dashed #86efac;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    padding: 40px 20px;
+
+}
