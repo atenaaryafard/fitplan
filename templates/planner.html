@@ -63,9 +63,103 @@
 
 </header>
 
-
+<!-- =========== -->
 
 <main class="planner">
+
+{% if has_custom_logo %}
+<section class="section-card brand-card">
+
+    <div class="section-title">
+        <div>
+            <h2>اطلاعات برند شما</h2>
+            <span>این اطلاعات بالای هر برنامه PDF شما نمایش داده می‌شود</span>
+        </div>
+    </div>
+
+    <div class="brand-form">
+
+        <div class="brand-logo-box">
+
+            <img
+                id="brandLogoPreview"
+                src="{% if coach.logo_path %}{{ url_for('static', filename=coach.logo_path) }}{% else %}{{ url_for('static', filename='images/default-logo.png') }}{% endif %}"
+                alt="لوگو"
+                class="brand-logo-preview">
+
+            <label for="logoInput" class="brand-logo-upload-btn">
+                {% if coach.logo_path %}تغییر لوگو{% else %}آپلود لوگو{% endif %}
+            </label>
+
+            <input
+                type="file"
+                id="logoInput"
+                accept="image/png, image/jpeg, image/webp"
+                onchange="uploadLogo(this)"
+                hidden>
+
+            <span class="brand-logo-hint">
+                فرمت PNG یا JPG - حداکثر ۲ مگابایت
+            </span>
+
+        </div>
+
+        <div class="brand-fields">
+
+            <div class="field">
+                <label>عنوان شغلی</label>
+                <input
+                    id="jobTitle"
+                    type="text"
+                    placeholder="مثلاً: مربی بدنسازی"
+                    value="{{ coach.job_title or '' }}">
+            </div>
+
+            <div class="field">
+                <label>آدرس شبکه اجتماعی</label>
+                <input
+                    id="socialAddress"
+                    type="text"
+                    placeholder="@username"
+                    value="{{ coach.social_address or '' }}"
+                    oninput="sanitizeSocialInput(this)">
+            </div>
+
+            <div class="field">
+                <label>شماره تماس</label>
+                <input
+                    id="phoneNumber"
+                    type="text"
+                    placeholder="شماره تماس"
+                    value="{{ coach.phone_number or '' }}"
+                    oninput="sanitizePhoneInput(this)">
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
+                <label>متن پاورقی</label>
+                <input
+                    id="footerText"
+                    type="text"
+                    placeholder="متن ثابتی که پایین هر برنامه نمایش داده می‌شود"
+                    value="{{ coach.footer_text or '' }}">
+            </div>
+
+        </div>
+
+    </div>
+
+    <button
+        type="button"
+        class="save-brand-btn"
+        onclick="saveBrandProfile()">
+        ذخیره اطلاعات برند
+    </button>
+
+    <div id="brandSaveMsg" class="brand-save-msg"></div>
+
+</section>
+{% endif %}
+    
 
 
     <!-- =====================================
@@ -500,6 +594,18 @@
     </div>
 
 </div>
+
+<script>
+    const COACH_BRAND = {
+        hasCustomLogo: {{ has_custom_logo | tojson }},
+        logoPath: {{ (coach.logo_path or '') | tojson }},
+        jobTitle: {{ (coach.job_title or '') | tojson }},
+        socialAddress: {{ (coach.social_address or '') | tojson }},
+        phoneNumber: {{ (coach.phone_number or '') | tojson }},
+        footerText: {{ (coach.footer_text or '') | tojson }},
+        coachName: {{ (coach.name or '') | tojson }}
+    };
+</script>    
 
 
 <script
