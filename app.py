@@ -460,7 +460,12 @@ def get_active_plan(coach):
         return None
 
     if coach["plan_expires_at"]:
-        expires = datetime.fromisoformat(coach["plan_expires_at"])
+
+        expires = datetime.fromisoformat(str(coach["plan_expires_at"]))
+
+        if expires.tzinfo is not None:
+            expires = expires.replace(tzinfo=None)
+
         if expires < datetime.now():
             return None
 
