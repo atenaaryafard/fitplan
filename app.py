@@ -484,6 +484,28 @@ def upload_logo():
 
     conn.close()
 
+
+    
+
+    PDF_STYLE_FILES = {
+    "basic": "pdf_style_basic.css",
+    "branded": "pdf_style_branded.css",
+    "premium": "pdf_style_premium.css"
+}
+
+
+def get_pdf_style_filename(coach):
+
+    plan = get_active_plan(coach)
+
+    if not plan:
+        return PDF_STYLE_FILES["basic"]
+
+    return PDF_STYLE_FILES.get(
+        plan["plan_key"],
+        PDF_STYLE_FILES["basic"]
+    )
+
     plan = get_active_plan(coach)
 
     if not plan or not plan["has_custom_logo"]:
@@ -914,6 +936,16 @@ def export_program_pdf():
 
     try:
 
+        conn = get_db()
+
+        coach = conn.execute("""
+            SELECT * FROM coaches WHERE id = ?
+        """, (session["coach_id"],)).fetchone()
+
+        conn.close()
+
+        pdf_style_filename = get_pdf_style_filename(coach)
+
         base_dir = os.path.dirname(os.path.abspath(__file__))
 
         font_path = os.path.join(
@@ -922,6 +954,8 @@ def export_program_pdf():
             "font",
             "Vazirmatn-Regular.ttf"
         )
+
+        
 
         if not os.path.isfile(font_path):
             return jsonify({
@@ -937,7 +971,7 @@ def export_program_pdf():
         pdf_css_path = os.path.join(
             base_dir,
             "static",
-            "pdf_style.css"
+            pdf_style_filename
         )
 
         if not os.path.isfile(pdf_css_path):
