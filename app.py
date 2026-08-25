@@ -473,9 +473,9 @@ def get_active_plan(coach):
 
 
 PDF_STYLE_FILES = {
-    "basic": "pdf_style.css",
-    "branded": "pdf_style2.css",
-    "premium": "pdf_style3.css"
+    "basic": "pdf_style_basic.css",
+    "branded": "pdf_style_branded.css",
+    "premium": "pdf_style_premium.css"
 }
 
 
