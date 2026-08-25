@@ -260,3 +260,8 @@ textarea {
 .delete-exercise {
     display: none;
 }
+
+.guide-col {
+    display: none;
+}
+    
