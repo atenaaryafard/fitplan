@@ -472,22 +472,7 @@ def get_active_plan(coach):
     return plan
 
 
-@app.route("/api/upload-logo", methods=["POST"])
-@login_required
-def upload_logo():
-
-    conn = get_db()
-
-    coach = conn.execute("""
-        SELECT * FROM coaches WHERE id = ?
-    """, (session["coach_id"],)).fetchone()
-
-    conn.close()
-
-
-    
-
-    PDF_STYLE_FILES = {
+PDF_STYLE_FILES = {
     "basic": "pdf_style_basic.css",
     "branded": "pdf_style_branded.css",
     "premium": "pdf_style_premium.css"
@@ -505,6 +490,19 @@ def get_pdf_style_filename(coach):
         plan["plan_key"],
         PDF_STYLE_FILES["basic"]
     )
+
+
+@app.route("/api/upload-logo", methods=["POST"])
+@login_required
+def upload_logo():
+
+    conn = get_db()
+
+    coach = conn.execute("""
+        SELECT * FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    conn.close()
 
     plan = get_active_plan(coach)
 
