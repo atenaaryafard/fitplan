@@ -1677,7 +1677,7 @@ function buildProgramPreviewHTML(program) {
                             <th>تکرار</th>
                             <th>استراحت</th>
                             <th> وزنه</th>
-                            <th class="guide-col"> اجرا حرکت</th>
+                            ${COACH_BRAND.hasCustomLogo ? `<th class="guide-col"> اجرا حرکت</th>` : ""}
                         </tr>
                     </thead>
 
@@ -1707,6 +1707,7 @@ function buildProgramPreviewHTML(program) {
                                             <td>${escapeHTML(exercise.rest) || "-"}</td>
                                             <td>${escapeHTML(exercise.weight) || "-"}</td>
                                             
+                                            ${COACH_BRAND.hasCustomLogo ? `
                                             <td class="guide-col">
                                                 ${
                                                     gifUrl
@@ -1725,6 +1726,7 @@ function buildProgramPreviewHTML(program) {
                                                     `
                                                 }
                                             </td>
+                                            ` : ""}
                                        
                                     `;
 
