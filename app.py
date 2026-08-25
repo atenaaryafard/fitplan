@@ -508,7 +508,7 @@ def upload_logo():
     plan = get_active_plan(coach)
 
     if not plan or plan["plan_key"] != "premium":
-    return jsonify({
+        return jsonify({
         "success": False,
         "message": "این امکان فقط برای پلن نامحدود فعال است."
     }), 403
@@ -762,6 +762,7 @@ def planner():
 
     plan = get_active_plan(coach)
     has_custom_logo = bool(plan and plan["has_custom_logo"])
+    can_upload_logo = bool(plan and plan["plan_key"] == "premium")
 
     return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,can_upload_logo=can_upload_logo)
 
