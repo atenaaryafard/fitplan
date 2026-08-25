@@ -491,7 +491,7 @@ def get_pdf_style_filename(coach):
         plan["plan_key"],
         PDF_STYLE_FILES["basic"]
     )
-
+# ========
 
 @app.route("/api/upload-logo", methods=["POST"])
 @login_required
@@ -507,11 +507,11 @@ def upload_logo():
 
     plan = get_active_plan(coach)
 
-    if not plan or not plan["has_custom_logo"]:
-        return jsonify({
-            "success": False,
-            "message": "این امکان فقط برای پلن برند شخصی فعال است."
-        }), 403
+    if not plan or plan["plan_key"] != "premium":
+    return jsonify({
+        "success": False,
+        "message": "این امکان فقط برای پلن نامحدود فعال است."
+    }), 403
 
     if "logo" not in request.files:
         return jsonify({"success": False, "message": "فایلی ارسال نشده است."}), 400
@@ -763,7 +763,7 @@ def planner():
     plan = get_active_plan(coach)
     has_custom_logo = bool(plan and plan["has_custom_logo"])
 
-    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo)
+    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,can_upload_logo=can_upload_logo)
 
 
 # =========================================================
