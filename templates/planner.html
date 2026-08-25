@@ -159,8 +159,36 @@
 
 </section>
 {% endif %}
-    
 
+<!-- ========= -->
+    
+    
+{% if can_upload_logo %}
+<div class="brand-logo-box">
+
+    <img
+        id="brandLogoPreview"
+        src="{% if coach.logo_path %}{{ url_for('static', filename=coach.logo_path) }}{% else %}{{ url_for('static', filename='images/default-logo.png') }}{% endif %}"
+        alt="لوگو"
+        class="brand-logo-preview">
+
+    <label for="logoInput" class="brand-logo-upload-btn">
+        {% if coach.logo_path %}تغییر لوگو{% else %}آپلود لوگو{% endif %}
+    </label>
+
+    <input
+        type="file"
+        id="logoInput"
+        accept="image/png, image/jpeg, image/webp"
+        onchange="uploadLogo(this)"
+        hidden>
+
+    <span class="brand-logo-hint">
+        فرمت PNG یا JPG - حداکثر ۲ مگابایت
+    </span>
+
+</div>
+{% endif %}
 
     <!-- =====================================
          ATHLETE
