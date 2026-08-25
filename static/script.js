@@ -106,9 +106,9 @@ function buildBrandHeaderHTML() {
     if (!COACH_BRAND.hasCustomLogo) return "";
 
     const logoSrc =
-        COACH_BRAND.logoPath
-            ? "/static/" + COACH_BRAND.logoPath
-            : "/static/images/default-logo.png";
+        (COACH_BRAND.canUploadLogo && COACH_BRAND.logoPath)
+            ? window.location.origin + "/static/" + COACH_BRAND.logoPath
+            : window.location.origin + "/static/images/default-logo.png";
 
     return `
         <div class="pdf-brand-header">
