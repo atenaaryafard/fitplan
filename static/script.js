@@ -1677,7 +1677,7 @@ function buildProgramPreviewHTML(program) {
                             <th>تکرار</th>
                             <th>استراحت</th>
                             <th> وزنه</th>
-                            <th> اجرا حرکت</th>
+                            <th class="guide-col"> اجرا حرکت</th>
                         </tr>
                     </thead>
 
@@ -1707,7 +1707,7 @@ function buildProgramPreviewHTML(program) {
                                             <td>${escapeHTML(exercise.rest) || "-"}</td>
                                             <td>${escapeHTML(exercise.weight) || "-"}</td>
                                             
-                                            <td>
+                                            <td class="guide-col">
                                                 ${
                                                     gifUrl
                                                     ? `
