@@ -734,6 +734,9 @@ def planner():
 
     remaining = max(0, coach["monthly_limit"] - coach["monthly_used"])
 
+    plan = get_active_plan(coach)
+    has_custom_logo = bool(plan and plan["has_custom_logo"])
+
     return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo)
 
 
@@ -849,7 +852,6 @@ def save_program():
         data.get("program_name", ""),
         json.dumps(days, ensure_ascii=False),
         data.get("notes", ""),
-        data.get("footer_text", ""),
         datetime.now().isoformat()
     ))
 
