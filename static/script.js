@@ -79,10 +79,9 @@ function buildBrandHeaderHTML() {
                 ${COACH_BRAND.jobTitle ? `<span>${escapeHTML(COACH_BRAND.jobTitle)}</span>` : ""}
                 ${COACH_BRAND.socialAddress ? `<span>${escapeHTML(COACH_BRAND.socialAddress)}</span>` : ""}
                 ${COACH_BRAND.phoneNumber ? `<span>${escapeHTML(COACH_BRAND.phoneNumber)}</span>` : ""}
-
-             <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
              
             </div>
+             <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
 
         </div>
     `;
