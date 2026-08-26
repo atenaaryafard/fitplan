@@ -246,40 +246,39 @@ a:visited {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    background: #111111;
-    padding: 16px 22px;
-    box-sizing: border-box;
+    gap: 14px;
+    border-bottom: 2px solid #111827;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
 }
+
+.pdf-brand-logo {
+    width: 110px;
+    height: auto;
+    object-fit: contain;
+    order: -1;
+}    
 
 
 
 .pdf-brand-info {
-
     display: flex;
-
     flex-direction: column;
-
-    gap: 2px;
-
+    gap: 3px;
+    border: 1px solid #111827;
+    border-radius: 8px;
+    padding: 8px 14px;
 }
 
 
 .pdf-brand-info strong {
-
     font-size: 12pt;
-
     color: #111827;
-
 }
 
-
 .pdf-brand-info span {
-
     font-size: 9pt;
-
     color: #555;
-
 }
 
 
