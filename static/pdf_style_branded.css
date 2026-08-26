@@ -253,9 +253,8 @@ a:visited {
     justify-content: space-between;
     gap: 14px;
     padding: 12px;
+    margin-bottom:20px;
     background-color:#1b1b1b;
-    margin: -12mm -12mm 20px -12mm;
-    width: calc(100% + 24mm);
 }
 
 .pdf-brand-logo {
