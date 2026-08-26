@@ -18,42 +18,6 @@ function sanitizeSocialInput(input) {
 }
 
 
-async function uploadLogo(input) {
-
-    const file = input.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("logo", file);
-
-    try {
-
-        const response = await fetch("/api/upload-logo", {
-            method: "POST",
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            alert(result.message);
-            return;
-        }
-
-        document.getElementById("brandLogoPreview").src =
-            "/static/" + result.logo_path + "?t=" + Date.now();
-
-        document.querySelector(".brand-logo-upload-btn").textContent = "تغییر لوگو";
-
-        COACH_BRAND.logoPath = result.logo_path;
-
-    } catch (error) {
-        alert("خطا در آپلود لوگو.");
-    }
-
-}
-
-
 async function saveBrandProfile() {
 
     const jobTitle = document.getElementById("jobTitle").value.trim();
@@ -105,10 +69,7 @@ function buildBrandHeaderHTML() {
 
     if (!COACH_BRAND.hasCustomLogo) return "";
 
-    const logoSrc =
-        (COACH_BRAND.canUploadLogo && COACH_BRAND.logoPath)
-            ? window.location.origin + "/static/" + COACH_BRAND.logoPath
-            : window.location.origin + "/static/images/default-logo.png";
+    const logoSrc = window.location.origin + "/static/images/default-logo.png";
 
     return `
         <div class="pdf-brand-header">
