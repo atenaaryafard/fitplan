@@ -243,7 +243,6 @@ a:visited {
 ========================= */
 
 .pdf-brand-header {  
-    direction: rtl;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -251,14 +250,15 @@ a:visited {
     padding: 12px;
     margin-bottom: 20px;
     background-color:#1b1b1b;
+    margin-top: -12mm;
+    margin-left: -12mm;
+    margin-right: -12mm;
 }
 
 .pdf-brand-logo {
     width: 200px;
     height: auto;
-    object-fit: contain;
-    direction: ltr;
-    
+    object-fit: contain; 
 }    
 
 
@@ -269,6 +269,7 @@ a:visited {
     gap: 3px;
     border: 1px solid #ffffff;
     padding: 8px 14px;
+    padding-left:10px;
 }
 
 
