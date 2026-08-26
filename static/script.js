@@ -74,7 +74,7 @@ function buildBrandHeaderHTML() {
     return `
         <div class="pdf-brand-header">
 
-            <img src="${logoSrc}" class="pdf-brand-logo" alt="لوگو">
+            <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
 
             <div class="pdf-brand-info">
                 <strong>${escapeHTML(COACH_BRAND.coachName)}</strong>
