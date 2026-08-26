@@ -243,23 +243,22 @@ a:visited {
 ========================= */
 
 .pdf-brand-header {  
+    direction: rtl;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    padding-bottom: 12px;
+    padding: 12px;
     margin-bottom: 20px;
     background-color:#1b1b1b;
-    margin-top: -12mm;
-    margin-left: -12mm;
-    margin-right: -12mm;
 }
 
 .pdf-brand-logo {
     width: 200px;
     height: auto;
     object-fit: contain;
-    order: -1
+    direction: ltr;
+    
 }    
 
 
