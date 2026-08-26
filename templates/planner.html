@@ -27,6 +27,19 @@
         FIT PLAN
     </div>
 
+    
+
+    <div class="header-actions">
+
+        {% if coach.is_admin %}
+        <a href="{{ url_for('admin_orders') }}"
+             class="nav-subscribe-btn">
+
+        پنل ادمین
+
+        </a>
+        {% endif %}
+
 
     <div class="header-actions">
 
