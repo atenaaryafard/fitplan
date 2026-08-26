@@ -256,6 +256,122 @@ def login_required(function):
 
     return wrapper
 
+# ==========
+
+def admin_required(function):
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        if "coach_id" not in session:
+            return redirect(url_for("login"))
+
+        conn = get_db()
+        coach = conn.execute("""
+            SELECT * FROM coaches WHERE id = ?
+        """, (session["coach_id"],)).fetchone()
+        conn.close()
+
+        if not coach or not coach["is_admin"]:
+            return "دسترسی غیرمجاز", 403
+
+        return function(*args, **kwargs)
+
+    return wrapper
+
+# ==========
+
+@app.route("/admin/orders")
+@admin_required
+def admin_orders():
+
+    conn = get_db()
+
+    orders = conn.execute("""
+        SELECT o.id, o.coach_id, o.plan_id, o.amount, o.tracking_code,
+               o.status, o.created_at, c.name as coach_name, p.title as plan_title
+        FROM orders o
+        JOIN coaches c ON o.coach_id = c.id
+        JOIN plans p ON o.plan_id = p.id
+        ORDER BY o.created_at DESC
+    """).fetchall()
+
+    conn.close()
+
+    return render_template("admin_orders.html", orders=orders)
+
+# ============
+
+@app.route("/admin/orders/<int:order_id>/approve", methods=["POST"])
+@admin_required
+def approve_order(order_id):
+
+    conn = get_db()
+
+    order = conn.execute("""
+        SELECT * FROM orders WHERE id = ?
+    """, (order_id,)).fetchone()
+
+    if not order:
+        conn.close()
+        return jsonify({"success": False, "message": "سفارش پیدا نشد."}), 404
+
+    if order["status"] != "pending":
+        conn.close()
+        return jsonify({"success": False, "message": "این سفارش قبلاً بررسی شده است."}), 400
+
+    plan = conn.execute("""
+        SELECT * FROM plans WHERE id = ?
+    """, (order["plan_id"],)).fetchone()
+
+    now = datetime.now()
+    duration = plan["duration_days"]
+    expires_at = (now + timedelta(days=duration)).isoformat() if duration else None
+
+    conn.execute("""
+        UPDATE coaches
+        SET plan_id = ?,
+            plan_started_at = ?,
+            plan_expires_at = ?,
+            monthly_limit = ?,
+            monthly_used = 0,
+            usage_month = ?
+        WHERE id = ?
+    """, (
+        order["plan_id"],
+        now.isoformat(),
+        expires_at,
+        plan["monthly_quota"] or 999999,
+        now.strftime("%Y-%m"),
+        order["coach_id"]
+    ))
+
+    conn.execute("""
+        UPDATE orders SET status = 'approved', reviewed_at = ? WHERE id = ?
+    """, (now.isoformat(), order_id))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+# ===================
+
+@app.route("/admin/orders/<int:order_id>/reject", methods=["POST"])
+@admin_required
+def reject_order(order_id):
+
+    conn = get_db()
+
+    conn.execute("""
+        UPDATE orders SET status = 'rejected', reviewed_at = ? WHERE id = ?
+    """, (datetime.now().isoformat(), order_id))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+
 
 # =========================================================
 # MONTHLY USAGE
