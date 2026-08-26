@@ -242,8 +242,7 @@ a:visited {
    BRAND HEADER (PDF)
 ========================= */
 
-.pdf-brand-header {
-    direction: ltr;  
+.pdf-brand-header {  
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -266,7 +265,6 @@ a:visited {
     width: 200px;
     height: auto;
     object-fit: contain;
-    order: -1;
 }    
 
 
