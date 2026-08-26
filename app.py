@@ -493,87 +493,6 @@ def get_pdf_style_filename(coach):
     )
 # ========
 
-@app.route("/api/upload-logo", methods=["POST"])
-@login_required
-def upload_logo():
-
-    conn = get_db()
-
-    coach = conn.execute("""
-        SELECT * FROM coaches WHERE id = ?
-    """, (session["coach_id"],)).fetchone()
-
-    conn.close()
-
-    plan = get_active_plan(coach)
-
-    if not plan or plan["plan_key"] != "premium":
-        return jsonify({
-        "success": False,
-        "message": "این امکان فقط برای پلن نامحدود فعال است."
-    }), 403
-
-    if "logo" not in request.files:
-        return jsonify({"success": False, "message": "فایلی ارسال نشده است."}), 400
-
-    file = request.files["logo"]
-
-    if file.filename == "":
-        return jsonify({"success": False, "message": "فایلی انتخاب نشده است."}), 400
-
-    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
-
-    if ext not in ALLOWED_LOGO_EXT:
-        return jsonify({
-            "success": False,
-            "message": "فقط فایل تصویری (png, jpg, jpeg, webp) مجاز است."
-        }), 400
-
-    file.seek(0, os.SEEK_END)
-    size = file.tell()
-    file.seek(0)
-
-    if size > MAX_LOGO_SIZE:
-        return jsonify({
-            "success": False,
-            "message": "حجم تصویر باید کمتر از ۲ مگابایت باشد."
-        }), 400
-
-    try:
-        image = Image.open(file)
-        image.verify()
-        file.seek(0)
-        image = Image.open(file)
-        image = image.convert("RGBA")
-    except Exception:
-        return jsonify({
-            "success": False,
-            "message": "فایل ارسال‌شده یک تصویر معتبر نیست."
-        }), 400
-
-    image.thumbnail((500, 250))
-
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    upload_dir = os.path.join(base_dir, "static", "uploads", "logos")
-    os.makedirs(upload_dir, exist_ok=True)
-
-    filename = secure_filename(f"coach_{coach['id']}.png")
-    filepath = os.path.join(upload_dir, filename)
-
-    image.save(filepath, "PNG")
-
-    relative_path = f"uploads/logos/{filename}"
-
-    conn = get_db()
-
-    conn.execute("""
-        UPDATE coaches SET logo_path = ? WHERE id = ?
-    """, (relative_path, coach["id"]))
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({"success": True, "logo_path": relative_path})
 
 
 # =========================================================
@@ -762,9 +681,8 @@ def planner():
 
     plan = get_active_plan(coach)
     has_custom_logo = bool(plan and plan["has_custom_logo"])
-    can_upload_logo = bool(plan and plan["plan_key"] == "premium")
 
-    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,can_upload_logo=can_upload_logo)
+    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,)
 
 
 # =========================================================
