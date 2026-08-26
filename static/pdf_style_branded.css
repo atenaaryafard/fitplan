@@ -66,6 +66,8 @@ p {
     direction: rtl;
     background: #f8fafc;
     margin-bottom: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
     padding: 10px;
     border-radius: 8px;
     box-sizing: border-box;
@@ -122,8 +124,8 @@ p {
     table-layout: fixed;
     font-size: 11pt;
     direction: rtl;
-     margin-left: 12mm;
-    margin-right: 12mm;
+     margin-left: 20px;
+    margin-right: 20px;
 }
 
 .preview-table th,
