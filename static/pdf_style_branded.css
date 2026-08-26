@@ -103,8 +103,7 @@ p {
 .preview-day {
     width: 100%;
     margin-bottom: 25px;
-    margin-left: 12mm;
-    margin-right: 12mm;
+   
 }
 
 .preview-day h3 {
@@ -125,7 +124,8 @@ p {
     table-layout: fixed;
     font-size: 11pt;
     direction: rtl;
-    border-radius: 8px;
+     margin-left: 12mm;
+    margin-right: 12mm;
 }
 
 .preview-table th,
@@ -207,6 +207,8 @@ a {
     background: #f8fafc;
     padding: 12px;
     margin-top: 15px;
+    margin-left: 12mm;
+    margin-right: 12mm;
     border-radius: 8px;
 }
 
@@ -273,6 +275,7 @@ a:visited {
     gap: 3px;
     border: 1px solid #ffffff;
     padding: 8px 14px;
+    padding-left:20px,
 }
 
 
