@@ -14,11 +14,7 @@ body {
     background: #ffffff;
     margin: 0;
     padding: 0;
-
-.pdf-page-content {
-    padding: 12mm;
-    box-sizing: border-box;
-}    
+}  
     
     
 
@@ -70,6 +66,8 @@ p {
     direction: rtl;
     background: #f8fafc;
     margin-bottom: 30px;
+    margin-left:12mm;
+    margin-right:12mm;
     padding: 10px;
     border-radius: 8px;
     box-sizing: border-box;
@@ -105,6 +103,8 @@ p {
 .preview-day {
     width: 100%;
     margin-bottom: 25px;
+    margin-left: 12mm;
+    margin-right: 12mm;
 }
 
 .preview-day h3 {
