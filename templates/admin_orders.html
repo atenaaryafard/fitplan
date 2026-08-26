@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت سفارش‌ها | FIT PLAN</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="mobile-header">
+    <div class="brand">FIT PLAN - پنل ادمین</div>
+    <a href="{{ url_for('planner') }}" class="logout">بازگشت به برنامه‌ساز</a>
+</header>
+
+<main class="planner">
+
+    <section class="section-card">
+
+        <div class="section-title">
+            <div>
+                <h2>سفارش‌های اشتراک</h2>
+                <span>سفارش‌های واریزی کاربران را بررسی و تایید کنید</span>
+            </div>
+        </div>
+
+        <div class="history-list">
+
+            {% if orders|length == 0 %}
+            <div class="empty-history">
+                هیچ سفارشی ثبت نشده است.
+            </div>
+            {% endif %}
+
+            {% for order in orders %}
+            <div class="history-item" id="order-{{ order.id }}">
+
+                <div class="history-info">
+                    <strong>{{ order.coach_name }}</strong>
+                    <span>پلن: {{ order.plan_title }} — مبلغ: {{ order.amount }}</span>
+                    <span>کد پیگیری: {{ order.tracking_code }}</span>
+                    <small>
+                        وضعیت:
+                        {% if order.status == 'pending' %}در انتظار بررسی
+                        {% elif order.status == 'approved' %}تایید شده ✔
+                        {% else %}رد شده ✗
+                        {% endif %}
+                    </small>
+                </div>
+
+                {% if order.status == 'pending' %}
+                <div class="history-actions">
+                    <button onclick="approveOrder({{ order.id }})">تایید</button>
+                    <button onclick="rejectOrder({{ order.id }})" class="history-delete">رد کردن</button>
+                </div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+
+async function approveOrder(orderId) {
+
+    if (!confirm("این سفارش تایید و پلن کاربر فعال شود؟")) return;
+
+    try {
+        const response = await fetch(`/admin/orders/${orderId}/approve`, {
+            method: "POST"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message);
+            return;
+        }
+
+        location.reload();
+
+    } catch (error) {
+        alert("خطا در تایید سفارش.");
+    }
+
+}
+
+async function rejectOrder(orderId) {
+
+    if (!confirm("این سفارش رد شود؟")) return;
+
+    try {
+        const response = await fetch(`/admin/orders/${orderId}/reject`, {
+            method: "POST"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message);
+            return;
+        }
+
+        location.reload();
+
+    } catch (error) {
+        alert("خطا در رد کردن سفارش.");
+    }
+
+}
+
+</script>
+
+</body>
+</html>
