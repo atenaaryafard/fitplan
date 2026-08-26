@@ -74,13 +74,14 @@ function buildBrandHeaderHTML() {
     return `
         <div class="pdf-brand-header">
 
-            <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
-
             <div class="pdf-brand-info">
                 <strong>${escapeHTML(COACH_BRAND.coachName)}</strong>
                 ${COACH_BRAND.jobTitle ? `<span>${escapeHTML(COACH_BRAND.jobTitle)}</span>` : ""}
                 ${COACH_BRAND.socialAddress ? `<span>${escapeHTML(COACH_BRAND.socialAddress)}</span>` : ""}
                 ${COACH_BRAND.phoneNumber ? `<span>${escapeHTML(COACH_BRAND.phoneNumber)}</span>` : ""}
+
+             <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
+             
             </div>
 
         </div>
