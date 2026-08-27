@@ -59,12 +59,12 @@ p {
 ========================= */
 
 .preview-athlete {
-    width: 100%;
+    width: 80%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, auto);
-    direction: rtl;
-    background: #fee3ca;
+    direction: center;
+    background: #fbeada;
     margin-bottom: 30px;
     padding: 10px;
     box-sizing: border-box;
@@ -125,7 +125,7 @@ p {
 
 .preview-table th,
 .preview-table td {
-    border: 1px solid #7c7b7a;
+    border: 1px solid #cfcecd;
     padding: 7px 8px;
     text-align: center;
     vertical-align: middle;
@@ -133,7 +133,7 @@ p {
 }
 
 .preview-table th {
-    background: #1b1b1b;
+    background: #2a2a2a;
     color: #ffffff;
     font-weight: bold;
 }
@@ -201,10 +201,6 @@ a {
     font-size: 10pt;
     background: #f8fafc;
     padding: 12px;
-    margin-top: 15px;
-    margin-left: 12mm;
-    margin-right: 12mm;
-    border-radius: 8px;
 }
 
 .preview-notes p {
@@ -253,7 +249,7 @@ a:visited {
     gap: 14px;
     padding: 12px;
     margin-bottom:20px;
-    background-color:#1b1b1b;
+    background-color:#2a2a2a;
 }
 
 .pdf-brand-logo {
@@ -275,7 +271,7 @@ a:visited {
 
 
 .pdf-brand-info strong {
-    font-size: 12pt;
+    font-size: 14pt;
     color: #dd7b20;
 }
 
@@ -299,9 +295,9 @@ a:visited {
 
     text-align: center;
 
-    font-size: 9pt;
+    font-size: 10pt;
 
-    color: #888;
+    color: #2a2a2a;
 
 }
 
