@@ -62,7 +62,7 @@ p {
     width: 100%;
     display: grid;
     /* grid-template-columns: repeat(6, 1fr); */
-    grid-template-columns: 23% 1fr 1fr 1fr 17% 16%;
+    grid-template-columns: 23% 15% 15% 15%  20% 12%;
 
     gap: 20px;
     direction: rtl;
