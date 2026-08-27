@@ -62,6 +62,7 @@ p {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
     direction: rtl;
     background: #fbeada;
     margin-bottom: 30px;    
@@ -124,7 +125,7 @@ p {
 
 .preview-table th,
 .preview-table td {
-    border: 1px solid #cfcecd;
+    border: 1px solid #d6d6d6;
     padding: 7px 8px;
     text-align: center;
     vertical-align: middle;
@@ -132,7 +133,7 @@ p {
 }
 
 .preview-table th {
-    background: #2a2a2a;
+    background: #3e3e3e;
     color: #ffffff;
     font-weight: bold;
 }
@@ -248,7 +249,7 @@ a:visited {
     gap: 14px;
     padding: 12px;
     margin-bottom:20px;
-    background-color:#2a2a2a;
+    background-color:#3e3e3e;
 }
 
 .pdf-brand-logo {
@@ -296,7 +297,7 @@ a:visited {
 
     font-size: 10pt;
 
-    color: #2a2a2a;
+    color: #3e3e3e;
 
 }
 
