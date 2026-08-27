@@ -61,8 +61,10 @@ p {
 .preview-athlete {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    /* grid-template-columns: repeat(6, 1fr); */
+    grid-template-columns: 30% 1fr 1fr 1fr 20% 1fr;
+
+    gap: 20px;
     direction: rtl;
     background: #fbeada;
     margin-bottom: 30px;    
