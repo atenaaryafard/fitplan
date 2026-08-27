@@ -61,13 +61,10 @@ p {
 .preview-athlete {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, auto);
+    grid-template-columns: repeat(6, 1fr);
     direction: rtl;
     background: #fbeada;
-    margin-bottom: 30px;
-    margim-left:50px,
-    margin-right:50px,    
+    margin-bottom: 30px;    
     padding: 10px;
     box-sizing: border-box;
 }
@@ -77,8 +74,8 @@ p {
     padding: 10px 12px;
     box-sizing: border-box;
 
-    text-align: center;
-    vertical-align: middle;
+    text-align: right;
+    /* vertical-align: middle; */
 
     font-family: "Vazirmatn";
     font-size: 11pt;
