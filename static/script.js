@@ -1589,7 +1589,7 @@ function buildProgramPreviewHTML(program) {
     const days =
         program.days || [];
   
-    let html = buildBrandHeaderHTML();
+    let html = "";
 
     html += `
 
@@ -1719,7 +1719,6 @@ function buildProgramPreviewHTML(program) {
 
     }
 
-    html += buildBrandFooterHTML();
     return html;
 
 }
@@ -1817,7 +1816,7 @@ function closePreview() {
 
 
     const html =
-        previewBody.innerHTML;
+        buildBrandHeaderHTML() + previewBody.innerHTML + buildBrandFooterHTML();
 
 
     try {
