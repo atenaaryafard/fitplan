@@ -1,5 +1,4 @@
-
-  function sanitizeNameInput(input) {
+function sanitizeNameInput(input) {
     input.value = input.value
         .replace(/[\u0660-\u0669\u06F0-\u06F9]/g, "")
         .replace(/[^\u0600-\u06FF\s]/g, "");
@@ -69,8 +68,6 @@ function buildBrandHeaderHTML() {
 
     if (!COACH_BRAND.hasCustomLogo) return "";
 
-    const logoSrc = window.location.origin + "/static/images/default-logo.png";
-
     return `
         <div class="pdf-brand-header">
 
@@ -79,47 +76,12 @@ function buildBrandHeaderHTML() {
                 ${COACH_BRAND.jobTitle ? `<span>${escapeHTML(COACH_BRAND.jobTitle)}</span>` : ""}
                 ${COACH_BRAND.socialAddress ? `<span>${escapeHTML(COACH_BRAND.socialAddress)}</span>` : ""}
                 ${COACH_BRAND.phoneNumber ? `<span>${escapeHTML(COACH_BRAND.phoneNumber)}</span>` : ""}
-             
             </div>
-             <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
+
+            <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
 
         </div>
     `;
-    if (program.sizes) {
-    
-        const sizeRows = [
-            { label: "دور سینه", value: program.sizes.sine },
-            { label: "دور کمر", value: program.sizes.kamar },
-            { label: "دور شکم", value: program.sizes.shekam },
-            { label: "دور باسن", value: program.sizes.basan },
-            { label: "دور بازو", value: program.sizes.bazo },
-            { label: "دور ران", value: program.sizes.ran },
-            { label: "دور ساق", value: program.sizes.sagh },
-        ].filter(row => row.value);
-    
-    if (sizeRows.length > 0) {
-    
-            html += `
-                <div class="preview-size-boxes">
-    
-                    <div class="size-box">
-                        <div class="size-box-title">سایزها</div>
-                        ${sizeRows.map(row => `
-                            <div class="size-row">
-                                <span class="size-row-label">${escapeHTML(row.label)}</span>
-                                <span class="size-row-value">${escapeHTML(row.value)}</span>
-                            </div>
-                        `).join("")}
-                    </div>
-    
-                    <!-- مربع دوم اینجا اضافه می‌شه، بعد از اینکه توضیحش رو گرفتم -->
-    
-                </div>
-            `;
-    
-        }
-    
-    }
 }
 
 
@@ -1147,22 +1109,21 @@ function collectProgram() {
             document.getElementById(
                 "athleteGoal"
             ).value,
-       athlete_gender:
+
+        athlete_gender:
             document.getElementById(
                "athleteGender"
             ).value,
 
-      
         sizes: {
             sine: document.getElementById("sizesine").value,
             kamar: document.getElementById("sizekamar").value,
             shekam: document.getElementById("sizeshekam").value,
             basan: document.getElementById("sizebasan").value,
-            bazo: document.getElementById("sizebazo").value,
             ran: document.getElementById("sizeran").value,
+            bazo: document.getElementById("sizebazo").value,
             sagh: document.getElementById("sizesagh").value
         },
-      
 
         program_name:
             generateProgramName(),
@@ -1479,6 +1440,12 @@ async function viewProgram(id) {
             athlete_goal:
                 program.athlete_goal,
 
+            athlete_gender:
+                program.athlete_gender,
+
+            sizes:
+                program.sizes,
+
             notes:
                 program.notes,
 
@@ -1607,8 +1574,8 @@ function resetProgramForm() {
         "athleteGoal"
     ).value = "";
 
-   document.getElementById(
-       "athleteGender"
+    document.getElementById(
+        "athleteGender"
     ).value = "";
 
 
@@ -1617,16 +1584,13 @@ function resetProgramForm() {
     ).value = "";
 
 
-  
-   sizes: {
-            sine: document.getElementById("sizesine").value ="",
-            kamar: document.getElementById("sizekamar").value ="",
-            shekam: document.getElementById("sizeshekam").value ="",
-            basan: document.getElementById("sizebasan").value ="",
-            ran: document.getElementById("sizeran").value ="",
-            bazo: document.getElementById("sizebazo").value ="",
-            sagh: document.getElementById("sizesagh").value =""
-        },
+    document.getElementById("sizesine").value = "";
+    document.getElementById("sizekamar").value = "";
+    document.getElementById("sizeshekam").value = "";
+    document.getElementById("sizebasan").value = "";
+    document.getElementById("sizeran").value = "";
+    document.getElementById("sizebazo").value = "";
+    document.getElementById("sizesagh").value = "";
 
 
     selectedDays = {};
@@ -1778,6 +1742,42 @@ function buildProgramPreviewHTML(program) {
 
     }
 
+
+    if (program.sizes) {
+
+        const sizeRows = [
+            { label: "دور سینه", value: program.sizes.sine },
+            { label: "دور کمر", value: program.sizes.kamar },
+            { label: "دور شکم", value: program.sizes.shekam },
+            { label: "دور باسن", value: program.sizes.basan },
+            { label: "دور ران", value: program.sizes.ran },
+            { label: "دور بازو", value: program.sizes.bazo },
+            { label: "دور ساق", value: program.sizes.sagh }
+        ].filter(row => row.value);
+
+        if (sizeRows.length > 0) {
+
+            html += `
+                <div class="preview-size-boxes">
+
+                    <div class="size-box">
+                        <div class="size-box-title">سایزها</div>
+                        ${sizeRows.map(row => `
+                            <div class="size-row">
+                                <span class="size-row-label">${escapeHTML(row.label)}</span>
+                                <span class="size-row-value">${escapeHTML(row.value)}</span>
+                            </div>
+                        `).join("")}
+                    </div>
+
+                </div>
+            `;
+
+        }
+
+    }
+
+
     return html;
 
 }
@@ -1788,8 +1788,6 @@ function openPreview(program, savedMessage) {
     const body =
         document.getElementById(
             "previewBody"
-
-          sizes: program.sizes,
         );
 
 
