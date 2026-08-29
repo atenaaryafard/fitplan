@@ -85,6 +85,21 @@ function buildBrandHeaderHTML() {
 }
 
 
+function calculateBMI(weight, height) {
+
+    const w = parseFloat(weight);
+    const hCm = parseFloat(height);
+
+    if (!w || !hCm) return null;
+
+    const hM = hCm / 100;
+    const bmi = w / (hM * hM);
+
+    return bmi.toFixed(1);
+
+}
+
+
 function buildBrandFooterHTML() {
 
     if (!COACH_BRAND.hasCustomLogo || !COACH_BRAND.footerText) return "";
@@ -1741,48 +1756,52 @@ function buildProgramPreviewHTML(program) {
         `;
 
     }
+    const sizeRows = program.sizes ? [
+        { label: "دور سینه: ", value: program.sizes.sine },
+        { label: "دور کمر: ", value: program.sizes.kamar },
+        { label: "دور شکم: ", value: program.sizes.shekam },
+        { label: "دور باسن: ", value: program.sizes.basan },
+        { label: "دور ران: ", value: program.sizes.ran },
+        { label: "دور بازو: ", value: program.sizes.bazo },
+        { label: "دور ساق: ", value: program.sizes.sagh }
+    ].filter(row => row.value) : [];
 
+    const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
 
-    if (program.sizes) {
+    if (sizeRows.length > 0 || bmiValue) {
 
-        const sizeRows = [
-            { label: "دور سینه: ", value: program.sizes.sine },
-            { label: "دور کمر: ", value: program.sizes.kamar },
-            { label: "دور شکم: ", value: program.sizes.shekam },
-            { label: "دور باسن: ", value: program.sizes.basan },
-            { label: "دور ران: ", value: program.sizes.ran },
-            { label: "دور بازو: ", value: program.sizes.bazo },
-            { label: "دور ساق: ", value: program.sizes.sagh }
-        ].filter(row => row.value);
+        html += `<div class="preview-size-boxes">`;
 
         if (sizeRows.length > 0) {
-
             html += `
-                <div class="preview-size-boxes">
-
-                    <div class="size-box">
-                        <div class="size-box-title">سایزها</div>
-                        ${sizeRows.map(row => `
-                            <div class="size-row">
-                                <span class="size-row-label">${escapeHTML(row.label)}</span>
-                                <span class="size-row-value">${escapeHTML(row.value)}</span>
-                            </div>
-                        `).join("")}
-                    </div>
-
+                <div class="size-box">
+                    <div class="size-box-title">سایزها</div>
+                    ${sizeRows.map(row => `
+                        <div class="size-row">
+                            <span class="size-row-label">${escapeHTML(row.label)}</span>
+                            <span class="size-row-value">${escapeHTML(row.value)}</span>
+                        </div>
+                    `).join("")}
                 </div>
             `;
-
         }
 
-    }
+        if (bmiValue) {
+            html += `
+                <div class="size-box bmi-box">
+                    <div class="bmi-box-title">BMI: <strong>${bmiValue}</strong></div>
+                    <img src="${window.location.origin}/static/images/bmi-guide.png" class="bmi-guide-img" alt="راهنمای BMI">
+                </div>
+            `;
+        }
 
+        html += `</div>`;
+
+    }
 
     return html;
 
 }
-
-
 function openPreview(program, savedMessage) {
 
     const body =
