@@ -1746,13 +1746,13 @@ function buildProgramPreviewHTML(program) {
     if (program.sizes) {
 
         const sizeRows = [
-            { label: "دور سینه", value: program.sizes.sine },
-            { label: "دور کمر", value: program.sizes.kamar },
-            { label: "دور شکم", value: program.sizes.shekam },
-            { label: "دور باسن", value: program.sizes.basan },
-            { label: "دور ران", value: program.sizes.ran },
-            { label: "دور بازو", value: program.sizes.bazo },
-            { label: "دور ساق", value: program.sizes.sagh }
+            { label: "دور سینه: ", value: program.sizes.sine },
+            { label: "دور کمر: ", value: program.sizes.kamar },
+            { label: "دور شکم: ", value: program.sizes.shekam },
+            { label: "دور باسن: ", value: program.sizes.basan },
+            { label: "دور ران: ", value: program.sizes.ran },
+            { label: "دور بازو: ", value: program.sizes.bazo },
+            { label: "دور ساق: ", value: program.sizes.sagh }
         ].filter(row => row.value);
 
         if (sizeRows.length > 0) {
