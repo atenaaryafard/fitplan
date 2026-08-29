@@ -304,7 +304,7 @@ a:visited {
 }
 
 .preview-size-boxes {
-    direction: ltr;
+    direction: rtl;
     display: flex;
     justify-content: flex-start;
     gap: 15px;
@@ -315,9 +315,8 @@ a:visited {
     direction: rtl;
     width: 160px;
     box-sizing: border-box;
-    border: 1px solid #f59631;
-    border-radius: 8px;
-    padding: 10px 12px;
+    border: 1px solid #d6d6d6;
+    padding: 12px 16px;
 }
 
 .size-box-title {
@@ -326,9 +325,9 @@ a:visited {
     font-weight: bold;
     color: #111827;
     text-align: center;
-    border-bottom: 1px solid #fde0c2;
-    padding-bottom: 6px;
-    margin-bottom: 6px;
+    border-bottom: 1px solid #d6d6d6;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 .size-row {
