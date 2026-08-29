@@ -2274,3 +2274,49 @@ button {
     }
 
 }
+
+
+.preview-size-boxes {
+    direction: ltr;
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.size-box {
+    direction: rtl;
+    width: 160px;
+    box-sizing: border-box;
+    border: 1px solid #f59631;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.size-box-title {
+    font-family: "Vazirmatn";
+    font-size: 10pt;
+    font-weight: bold;
+    color: #111827;
+    text-align: center;
+    border-bottom: 1px solid #fde0c2;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+}
+
+.size-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Vazirmatn";
+    font-size: 9pt;
+    padding: 2px 0;
+}
+
+.size-row-label {
+    color: #555;
+}
+
+.size-row-value {
+    font-weight: bold;
+    color: #111827;
+}
