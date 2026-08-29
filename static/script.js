@@ -85,6 +85,41 @@ function buildBrandHeaderHTML() {
 
         </div>
     `;
+    if (program.sizes) {
+    
+        const sizeRows = [
+            { label: "دور سینه", value: program.sizes.sine },
+            { label: "دور کمر", value: program.sizes.kamar },
+            { label: "دور شکم", value: program.sizes.shekam },
+            { label: "دور باسن", value: program.sizes.basan },
+            { label: "دور بازو", value: program.sizes.bazo },
+            { label: "دور ران", value: program.sizes.ran },
+            { label: "دور ساق", value: program.sizes.sagh },
+        ].filter(row => row.value);
+    
+    if (sizeRows.length > 0) {
+    
+            html += `
+                <div class="preview-size-boxes">
+    
+                    <div class="size-box">
+                        <div class="size-box-title">سایزها</div>
+                        ${sizeRows.map(row => `
+                            <div class="size-row">
+                                <span class="size-row-label">${escapeHTML(row.label)}</span>
+                                <span class="size-row-value">${escapeHTML(row.value)}</span>
+                            </div>
+                        `).join("")}
+                    </div>
+    
+                    <!-- مربع دوم اینجا اضافه می‌شه، بعد از اینکه توضیحش رو گرفتم -->
+    
+                </div>
+            `;
+    
+        }
+    
+    }
 }
 
 
@@ -1117,6 +1152,18 @@ function collectProgram() {
                "athleteGender"
             ).value,
 
+      
+        sizes: {
+            sine: document.getElementById("sizesine").value,
+            kamar: document.getElementById("sizekamar").value,
+            shekam: document.getElementById("sizeshekam").value,
+            basan: document.getElementById("sizebasan").value,
+            bazo: document.getElementById("sizebazo").value,
+            ran: document.getElementById("sizeran").value,
+            sagh: document.getElementById("sizesagh").value
+        },
+      
+
         program_name:
             generateProgramName(),
 
@@ -1570,6 +1617,18 @@ function resetProgramForm() {
     ).value = "";
 
 
+  
+   sizes: {
+            sine: document.getElementById("sizesine").value ="",
+            kamar: document.getElementById("sizekamar").value ="",
+            shekam: document.getElementById("sizeshekam").value ="",
+            basan: document.getElementById("sizebasan").value ="",
+            ran: document.getElementById("sizeran").value ="",
+            bazo: document.getElementById("sizebazo").value ="",
+            sagh: document.getElementById("sizesagh").value =""
+        },
+
+
     selectedDays = {};
 
     currentDay = null;
@@ -1729,6 +1788,8 @@ function openPreview(program, savedMessage) {
     const body =
         document.getElementById(
             "previewBody"
+
+          sizes: program.sizes,
         );
 
 
