@@ -2285,7 +2285,7 @@ button {
 }
 
 .size-box {
-    direction: ltr;
+    direction: rtl;
     width: 160px;
     box-sizing: border-box;
     border: 1px solid #f59631;
