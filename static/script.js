@@ -1790,7 +1790,7 @@ function buildProgramPreviewHTML(program) {
             html += `
                 <div class="size-box bmi-box">
                     <div class="bmi-box-title">BMI: <strong>${bmiValue}</strong></div>
-                    <img src="${window.location.origin}/static/images/bmi-guide.png" class="bmi-guide-img" alt="راهنمای BMI">
+                    <img src="${BMI_GUIDE_BASE64}" class="bmi-guide-img" alt="راهنمای BMI">
                 </div>
             `;
         }
