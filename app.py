@@ -123,6 +123,7 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS social_address TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
+    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
 
     # =========================================================
     # PROGRAMS
@@ -850,6 +851,11 @@ def get_program(program_id):
     except:
         data["program_data"] = []
 
+    try:
+        data["sizes"] = json.loads(data["sizes"]) if data.get("sizes") else {}
+    except:
+        data["sizes"] = {}
+
     return jsonify({"success": True, "program": data})
 
 
@@ -900,7 +906,7 @@ def save_program():
     conn.execute("""
         INSERT INTO programs
         (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
-         athlete_goal,athlete_gender, program_name, program_data, notes, created_at)
+         athlete_goal,athlete_gender,sizes, program_name, program_data, notes, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         coach["id"],
@@ -910,6 +916,7 @@ def save_program():
         data.get("athlete_weight", ""),
         data.get("athlete_goal", ""),
         data.get("athlete_gender", ""),
+        json.dumps(data.get("sizes", {}), ensure_ascii=False),
         data.get("program_name", ""),
         json.dumps(days, ensure_ascii=False),
         data.get("notes", ""),
