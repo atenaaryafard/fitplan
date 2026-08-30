@@ -123,7 +123,7 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS social_address TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
-    
+    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
 
     # =========================================================
     # PROGRAMS
@@ -148,8 +148,6 @@ def init_db():
     """)
 
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT")
-
-    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
 
     # =========================================================
     # PLANS  (سه پلن ثابت)
@@ -909,7 +907,7 @@ def save_program():
         INSERT INTO programs
         (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
          athlete_goal,athlete_gender,sizes, program_name, program_data, notes, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         coach["id"],
         data.get("athlete_name", ""),
@@ -1070,39 +1068,32 @@ def export_program_pdf():
 </html>
 """
 
-    with sync_playwright() as p:
-    
-        browser = None
-    
-        try:
-    
+        with sync_playwright() as p:
+
             browser = p.chromium.launch(
                 headless=True,
                 args=[
                     "--no-sandbox",
-                    "--disable-dev-shm-usage",
-                    "--disable-gpu",
-                    "--single-process"
+                    "--disable-dev-shm-usage"
                 ]
             )
-    
+
             page = browser.new_page()
-    
+
             page.set_content(
                 full_html,
-                wait_until="domcontentloaded"
+                wait_until="load"
             )
-    
+
             page.evaluate("""
                 async () => {
                     await document.fonts.ready;
                 }
             """)
-    
+
             pdf_bytes = page.pdf(
                 format="A4",
                 print_background=True,
-                prefer_css_page_size=False,
                 margin={
                     "top": "12mm",
                     "right": "12mm",
@@ -1110,11 +1101,8 @@ def export_program_pdf():
                     "left": "12mm"
                 }
             )
-    
-        finally:
-    
-            if browser:
-                browser.close()
+
+            browser.close()
 
         pdf_buffer = BytesIO()
         pdf_buffer.write(pdf_bytes)
