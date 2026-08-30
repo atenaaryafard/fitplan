@@ -123,7 +123,7 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS social_address TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
-    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
+    
 
     # =========================================================
     # PROGRAMS
@@ -148,6 +148,8 @@ def init_db():
     """)
 
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT")
+
+    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
 
     # =========================================================
     # PLANS  (سه پلن ثابت)
@@ -1068,32 +1070,39 @@ def export_program_pdf():
 </html>
 """
 
-        with sync_playwright() as p:
-
+    with sync_playwright() as p:
+    
+        browser = None
+    
+        try:
+    
             browser = p.chromium.launch(
                 headless=True,
                 args=[
                     "--no-sandbox",
-                    "--disable-dev-shm-usage"
+                    "--disable-dev-shm-usage",
+                    "--disable-gpu",
+                    "--single-process"
                 ]
             )
-
+    
             page = browser.new_page()
-
+    
             page.set_content(
                 full_html,
-                wait_until="load"
+                wait_until="domcontentloaded"
             )
-
+    
             page.evaluate("""
                 async () => {
                     await document.fonts.ready;
                 }
             """)
-
+    
             pdf_bytes = page.pdf(
                 format="A4",
                 print_background=True,
+                prefer_css_page_size=False,
                 margin={
                     "top": "12mm",
                     "right": "12mm",
@@ -1101,8 +1110,11 @@ def export_program_pdf():
                     "left": "12mm"
                 }
             )
-
-            browser.close()
+    
+        finally:
+    
+            if browser:
+                browser.close()
 
         pdf_buffer = BytesIO()
         pdf_buffer.write(pdf_bytes)
