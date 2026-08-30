@@ -1766,7 +1766,7 @@ function buildProgramPreviewHTML(program) {
         { label: "دور ساق: ", value: program.sizes.sagh }
     ].filter(row => row.value) : [];
 
-    const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
+    // const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
 
     if (sizeRows.length > 0 || bmiValue) {
 
@@ -1786,14 +1786,14 @@ function buildProgramPreviewHTML(program) {
             `;
         }
 
-        if (bmiValue) {
-            html += `
-                <div class="size-box bmi-box">
-                    <div class="bmi-box-title">BMI: <strong>${bmiValue}</strong></div>
-                    <img src="${window.location.origin}/static/images/bmi-guide.png" class="bmi-guide-img" alt="راهنمای BMI">
-                </div>
-            `;
-        }
+        // if (bmiValue) {
+        //     html += `
+        //         <div class="size-box bmi-box">
+        //             <div class="bmi-box-title">BMI: <strong>${bmiValue}</strong></div>
+        //             <img src="${window.location.origin}/static/images/bmi-guide.png" class="bmi-guide-img" alt="راهنمای BMI">
+        //         </div>
+        //     `;
+        // }
 
         html += `</div>`;
 
