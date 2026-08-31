@@ -1747,18 +1747,19 @@ function buildProgramPreviewHTML(program) {
     });
 
 
+    
+
     if (program.notes) {
+    
+            html += `
+    
+                <div class="preview-notes">
+                    <strong>توضیحات برنامه:</strong>
+                    <p>${escapeHTML(program.notes)}</p>
+                </div>
+    
+            `;
 
-        html += `
-
-            <div class="preview-notes">
-                <strong>توضیحات برنامه:</strong>
-                <p>${escapeHTML(program.notes)}</p>
-            </div>
-
-        `;
-
-    }
     const sizeRows = program.sizes ? [
         { label: "دور سینه: ", value: program.sizes.sine },
         { label: "دور کمر: ", value: program.sizes.kamar },
@@ -1803,8 +1804,11 @@ function buildProgramPreviewHTML(program) {
     }
 
     return html;
-
+        
+    }
 }
+
+
 function openPreview(program, savedMessage) {
 
     const body =
