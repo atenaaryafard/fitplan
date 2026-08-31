@@ -2332,7 +2332,6 @@ button {
 
 .bmi-box {
     padding: 0;
-    width: 160px
     display: flex;
     flex-direction: column;
     overflow: hidden;
