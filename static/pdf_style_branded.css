@@ -374,7 +374,6 @@ textarea {
 .bmi-box {
     padding: 0;
     display: flex;
-    width: 160px
     flex-direction: column;
     overflow: hidden;
     padding: 12px 16px;
