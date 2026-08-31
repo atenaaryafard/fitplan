@@ -1078,18 +1078,33 @@ function buildProgramPreviewHTML(program) {
 
     const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
 
-    if (program.notes || sizeRows.length > 0 || bmiValue) {
+        if (program.notes || sizeRows.length > 0 || bmiValue) {
 
         html += `<div class="preview-bottom-row">`;
 
-        if (sizeRows.length > 0 || bmiValue) {
+        if (program.notes) {
+            html += `
+                <div class="preview-box notes-box">
+                    <div class="preview-box-title">توضیحات:</div>
+                    <p>${escapeHTML(program.notes)}</p>
+                </div>
+            `;
+        }
 
-            html += `<div class="preview-size-boxes">`;
+        if (bmiValue) {
+            html += `
+                <div class="preview-box bmi-box">
+                    <div class="preview-box-title">bmi:${bmiValue}</div>
+                    <img src="${BMI_GUIDE_BASE64}" class="bmi-guide-img" alt="راهنمای BMI">
+                </div>
+            `;
+        }
 
-            if (sizeRows.length > 0) {
-                html += `
-                    <div class="size-box">
-                        <div class="size-box-title">سایزها</div>
+        if (sizeRows.length > 0) {
+            html += `
+                <div class="preview-box sizes-box">
+                    <div class="preview-box-title">سایز ها:</div>
+                    <div class="sizes-grid">
                         ${sizeRows.map(row => `
                             <div class="size-row">
                                 <span class="size-row-label">${escapeHTML(row.label)}</span>
@@ -1097,27 +1112,6 @@ function buildProgramPreviewHTML(program) {
                             </div>
                         `).join("")}
                     </div>
-                `;
-            }
-
-            if (bmiValue) {
-                html += `
-                    <div class="size-box bmi-box">
-                        <div class="bmi-box-title">BMI: <strong>${bmiValue}</strong></div>
-                        <img src="${BMI_GUIDE_BASE64}" class="bmi-guide-img" alt="راهنمای BMI">
-                    </div>
-                `;
-            }
-
-            html += `</div>`;
-
-        }
-
-        if (program.notes) {
-            html += `
-                <div class="preview-notes">
-                    <strong>توضیحات برنامه:</strong>
-                    <p>${escapeHTML(program.notes)}</p>
                 </div>
             `;
         }
@@ -1127,8 +1121,6 @@ function buildProgramPreviewHTML(program) {
     }
 
     return html;
-
-}
 
 
 function openPreview(program, savedMessage) {
