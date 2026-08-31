@@ -314,8 +314,8 @@ a:visited {
 .size-box {
     direction: rtl;
     width: 160px;
-    box-sizing: border-box;
-    border: 1px solid #d6d6d6;
+    /* box-sizing: border-box; */
+    background-color: #f8fafc;
     padding: 12px 16px;
 }
 
@@ -377,7 +377,9 @@ textarea {
     flex-direction: column;
     overflow: hidden;
     padding: 12px 16px;
+    background-color: #f8fafc;
 }
+    
 
 .bmi-box-title {
     font-family: "Vazirmatn";
