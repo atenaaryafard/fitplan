@@ -1746,7 +1746,18 @@ function buildProgramPreviewHTML(program) {
 
     });
 
+    if (program.notes) {
 
+        html += `
+
+            <div class="preview-notes">
+                <strong>توضیحات برنامه:</strong>
+                <p>${escapeHTML(program.notes)}</p>
+            </div>
+
+        `;
+
+    }
     const sizeRows = program.sizes ? [
         { label: "دور سینه: ", value: program.sizes.sine },
         { label: "دور کمر: ", value: program.sizes.kamar },
@@ -1759,23 +1770,7 @@ function buildProgramPreviewHTML(program) {
 
     const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
 
-    const hasNotes = !!program.notes;
-    const hasSizeBoxes = sizeRows.length > 0 || bmiValue;
-
-    if (hasNotes || hasSizeBoxes) {
-
-        html += `<div class="preview-bottom-row">`;
-
-        if (hasNotes) {
-            html += `
-                <div class="preview-notes">
-                    <strong>توضیحات برنامه:</strong>
-                    <p>${escapeHTML(program.notes)}</p>
-                </div>
-            `;
-        }
-
-        if (hasSizeBoxes) {
+    if (sizeRows.length > 0 || bmiValue) {
 
         html += `<div class="preview-size-boxes">`;
 
