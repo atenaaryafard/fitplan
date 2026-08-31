@@ -1758,7 +1758,7 @@ function buildProgramPreviewHTML(program) {
         `;
 
     }
-    const sizeRows = program.sizes ? [
+       const sizeRows = program.sizes ? [
         { label: "دور سینه: ", value: program.sizes.sine },
         { label: "دور کمر: ", value: program.sizes.kamar },
         { label: "دور شکم: ", value: program.sizes.shekam },
@@ -1770,15 +1770,60 @@ function buildProgramPreviewHTML(program) {
 
     const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
 
-    if (sizeRows.length > 0 || bmiValue) {
+    if (program.notes || sizeRows.length > 0 || bmiValue) {
 
-        html += `<div class="preview-size-boxes">`;
+        html += `<div class="preview-bottom-row">`;
 
-        html += `</div>`;
+        if (sizeRows.length > 0 || bmiValue) {
+
+            html += `<div class="preview-size-boxes">`;
+
+            if (sizeRows.length > 0) {
+                html += `
+                    <div class="size-box">
+                        <div class="size-box-title">سایزها</div>
+                        ${sizeRows.map(row => `
+                            <div class="size-row">
+                                <span class="size-row-label">${escapeHTML(row.label)}</span>
+                                <span class="size-row-value">${escapeHTML(row.value)}</span>
+                            </div>
+                        `).join("")}
+                    </div>
+                `;
+            }
+
+            if (bmiValue) {
+                html += `
+                    <div class="size-box bmi-box">
+                        <div class="bmi-box-title">BMI: <strong>${bmiValue}</strong></div>
+                        <img src="${BMI_GUIDE_BASE64}" class="bmi-guide-img" alt="راهنمای BMI">
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
 
         }
 
+        if (program.notes) {
+            html += `
+                <div class="preview-notes">
+                    <strong>توضیحات برنامه:</strong>
+                    <p>${escapeHTML(program.notes)}</p>
+                </div>
+            `;
+        }
+
+        html += `</div>`;
+
+    }
+
     return html;
+
+}
+
+
+function openPreview(program, savedMessage) {
 
 
 function openPreview(program, savedMessage) {
