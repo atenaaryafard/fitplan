@@ -1311,6 +1311,15 @@ button {
 }
 
 
+
+.preview-bottom-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+
 .preview-notes {
 
     font-size: 13px;
@@ -2281,7 +2290,6 @@ button {
     display: flex;
     justify-content: flex-start;
     gap: 15px;
-    margin-top: 20px;
 }
 
 .size-box {
@@ -2324,6 +2332,7 @@ button {
 
 .bmi-box {
     padding: 0;
+    width: 160px
     display: flex;
     flex-direction: column;
     overflow: hidden;
