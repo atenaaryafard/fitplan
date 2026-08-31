@@ -198,7 +198,7 @@ a {
    یادداشت‌ها
 ========================= */
 
-.preview-notes {
+/* .preview-notes {
     font-family: "Vazirmatn";
     font-size: 10pt;
     background: #f8fafc;
@@ -214,7 +214,7 @@ a {
 .preview-notes p {
     margin: 8px 0 0 0;
     white-space: pre-wrap;
-}
+} */
 
 
 /* =========================
@@ -308,46 +308,59 @@ a:visited {
     color: #3e3e3e;
 
 }
-/* کانتینر اصلی: حالا هر ۳ باکس (سایز، BMI و یادداشت‌ها) را افقی کنار هم می‌چیند */
-.preview-size-boxes {
-    direction: rtl;
-    display: flex;          
-    flex-direction: row;   
-    justify-content: flex-start;
-    align-items: stretch;  /* باعث می‌شود ارتفاع هر ۳ باکس با هم برابر و هم‌تراز شود */
-    gap: 12px;             /* کاهش فاصله بین باکس‌ها برای صرفه‌جویی در فضا */
-    width: 100%;
+.preview-bottom-row {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    margin-top: 30px;
 }
 
-/* باکس سایزها (کوچک‌تر و بهینه شده) */
-.size-box {
-    direction: rtl;
-    flex: 1;                /* سهم مساوی از فضا */
-    max-width: 180px;       /* اضافه شد: محدود کردن حداکثر عرض برای کوچک شدن باکس */
-    background-color: #f8fafc;
-    padding: 10px 12px;     /* کاهش پدینگ داخلی */
+.preview-box {
+    flex: 1;
+    background-color: #f0f0f0;
+    padding: 16px;
     box-sizing: border-box;
-    border-radius: 6px;     /* اضافه شدن گوشه‌های نرم (اختیاری) */
 }
 
-.size-box-title {
+.preview-box-title {
     font-family: "Vazirmatn";
-    font-size: 9.5pt;       /* کمی کوچک‌تر */
+    font-size: 11pt;
     font-weight: bold;
-    color: #111827;
     text-align: center;
-    border-bottom: 1px solid #111827;
-    padding-bottom: 6px;
-    margin-bottom: 6px;
+    color: #111827;
+    margin-bottom: 14px;
+}
+
+.notes-box p {
+    font-family: "Vazirmatn";
+    font-size: 10pt;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.bmi-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bmi-guide-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.sizes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
 }
 
 .size-row {
     display: flex;
-    flex-direction: row;        
-    justify-content: space-between; 
+    justify-content: space-between;
     font-family: "Vazirmatn";
-    font-size: 8.5pt;       /* کمی کوچک‌تر */
-    padding: 3px 0;
+    font-size: 10pt;
 }
 
 .size-row-label {
@@ -357,73 +370,6 @@ a:visited {
 .size-row-value {
     font-weight: bold;
     color: #111827;
-}
-
-/* باکس BMI (کوچک‌تر و بهینه شده) */
-.bmi-box {
-    flex: 1;                    
-    max-width: 180px;       /* اضافه شد: هم‌اندازه شدن عرض با باکس سایز */
-    display: flex;              
-    flex-direction: column;     
-    overflow: hidden;
-    background-color: #f8fafc;
-    box-sizing: border-box;
-    border-radius: 6px;
-}
-
-.bmi-box-title {
-    font-family: "Vazirmatn";
-    font-size: 9.5pt;
-    font-weight: bold;
-    text-align: center;
-    color: #111827;
-    padding: 6px;
-    border-bottom: 1px solid #d6d6d6;
-    flex-shrink: 0;             
-}
-
-.bmi-box-title strong {
-    font-size: 10.5pt;
-}
-
-/* تصویر BMI کاملاً اصلاح شد */
-.bmi-guide-img {
-    flex: 1;                    
-    width: 100%;
-    height: 100%;               
-    object-fit: cover;         /* تغییر به cover برای اینکه کل باکس پایینی را بدون حاشیه سفید پر کند */
-    display: block;
-}
-
-/* باکس یادداشت‌ها / توضیحات (منتقل شده به کنار دو باکس دیگر) */
-.preview-notes {
-    font-family: "Vazirmatn";
-    font-size: 9pt;         /* بهینه‌سازی اندازه فونت */
-    background: #f8fafc;
-    padding: 10px 12px;     /* هماهنگ شدن پدینگ با سایر باکس‌ها */
-    flex: 1.5;              /* فضای بیشتری نسبت به کادرهای کوچک دیگر می‌گیرد تا متن جا شود */
-    min-width: 150px;       /* حداقل عرض برای خوانایی متن */
-    box-sizing: border-box;
-    margin-top: 0;          /* اصلاح شد: حذف فاصله بالایی قدیمی برای هم‌تراز شدن */
-    border-radius: 6px;
-}
-
-.preview-notes p {
-    margin: 4px 0 0 0;
-    white-space: pre-wrap;
-    line-height: 1.4;       /* بهبود فاصله‌گذاری خطوط متن */
-}
-
-/* =========================
-   BRAND FOOTER (PDF)
-========================= */
-.pdf-brand-footer {
-    margin-top: 40px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-    text-align: center;
-    font-size: 10pt;
-    color: #3e3e3e;
 }
 
 /* =========================
