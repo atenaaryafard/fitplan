@@ -150,120 +150,25 @@ const DAY_DEFS = [
 
 const exercises = [
 
-    {
-        name: "پرس سرشانه باربل",
-        muscle: "سرشانه",
-        gif: ""
-    },
-
-    {
-        name: "لانج دمبل",
-        muscle: "چهارسر ران",
-        gif: "https://fa.pelank.com/wp-content/uploads/2026/07/dumbbell-lunges.gif"
-    },
-
-    {
-        name: "استپ آپ",
-        muscle: "چهارسر ران",
-        gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/step-up8.gif"
-    },
-
-    {
-        name: "پرس سینه دمبل",
-        muscle: "سینه",
-        gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/incline-dumbbell-bench-press1.gif"
-    },
-
-    {
-        name: "پرس بالا سینه دمبل",
-        muscle: "سینه",
-        gif: "https://fa.pelank.com/wp-content/uploads/2026/02/Dumbbell-Reverse-Grip-30-Degrees-Incline-Bench-Press.gif"
-    },
-
-    {
-        name: "فلای سینه دستگاه",
-        muscle: "سینه",
-        gif: "https://morabihamrah.com/wp-content/uploads/2023/10/Pec-Deck-Fly12.gif"
-    },
-
-    {
-        name: "پوش آپ",
-        muscle: "سینه",
-        gif: "https://routination.com/wp-content/uploads/2023/11/exercises-chest7.gif"
-    },
-
-
-    {
-        name: "ددلیفت دمبل",
-        muscle: "همسترینگ",
-        gif: "https://fitnessia.ir/wp-content/uploads/2023/09/%D8%AF%D8%AF%D9%84%DB%8C%D9%81%D8%AA-%D8%B1%D9%88%D9%85%D8%A7%D9%86%DB%8C%D8%A7%DB%8C%DB%8C-%D8%A8%D8%A7-%D8%AF%D9%85%D8%A8%D9%84.gif"
-    },
-
-    {
-        name: "قایقی دست باز",
-        muscle: "پشت",
-        gif: "https://fitnessia.ir/wp-content/uploads/2023/09/%D8%B2%DB%8C%D8%B1-%D8%A8%D8%BA%D9%84-%D9%BE%D8%A7%D8%B1%D9%88%DB%8C%DB%8C.gif"
-    },
-
-    {
-        name: "پرس سرشانه دمبل",
-        muscle: "سرشانه",
-        gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/dumbbell-shoulder-press-gif.gif"
-    },
-
-    {
-        name: "نشر جانب",
-        muscle: "سرشانه",
-        gif:"https://cdnfa.ir/mokamelshope/8ed3/uploads/leg/1-nashr-janb-dmbl-aistadh.gif"
-    },
-
-    {
-        name: "نشر خم",
-        muscle: "سرشانه",
-        gif:"https://fa.pelank.com/wp-content/uploads/2025/01/Bent-Over-Lateral-Raise.gif"
-    },
-
-    {
-        name: " جلو بازو دمبل لاری",
-        muscle: "جلو بازو",
-        gif:"https://routination.com/wp-content/uploads/2023/11/exercises-biceps23.gif"
-    },
-
-    {
-        name: "پشت بازو دمبل",
-        muscle: "پشت بازو"
-    },
-
-    {
-        name: "پشت بازو بالای سر",
-        muscle: "پشت بازو",
-        gif: "https://morabihamrah.com/wp-content/uploads/2023/09/Dumbbell-Triceps-Extension12.gif"
-    },
-
-    {
-        name: "پل باسن",
-        muscle: "باسن",
-        gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Barbell-Hip-Thrust.gif"
-    },
-
-    {
-        name: "ساق پا",
-        muscle: "ساق",
-        gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Calf-Raise123.gif"
-    },
-
-    {
-        name: "کرانچ",
-        muscle: "شکم",
-        gif: "https://mojekooh.com/wp-content/uploads/2023/09/%DA%A9%D8%B1%D8%A7%D9%86%DA%86-%D8%B4%DA%A9%D9%85.gif"
-    },
-
-    {
-        name: "پلانک",
-        muscle: "شکم",
-        Image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqoBxh0AilvQIxLFgT1rjRF42cBcA3419_ular6qOTaQ&s=10"
-    },
-
+    { name: "پرس سرشانه باربل", muscle: "سرشانه", gif: "" },
+    { name: "لانج دمبل", muscle: "چهارسر ران", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/dumbbell-lunges.gif" },
+    { name: "استپ آپ", muscle: "چهارسر ران", gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/step-up8.gif" },
+    { name: "پرس سینه دمبل", muscle: "سینه", gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/incline-dumbbell-bench-press1.gif" },
+    { name: "پرس بالا سینه دمبل", muscle: "سینه", gif: "https://fa.pelank.com/wp-content/uploads/2026/02/Dumbbell-Reverse-Grip-30-Degrees-Incline-Bench-Press.gif" },
+    { name: "فلای سینه دستگاه", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/10/Pec-Deck-Fly12.gif" },
+    { name: "پوش آپ", muscle: "سینه", gif: "https://routination.com/wp-content/uploads/2023/11/exercises-chest7.gif" },
+    { name: "ددلیفت دمبل", muscle: "همسترینگ", gif: "https://fitnessia.ir/wp-content/uploads/2023/09/dumbbell-deadlift.gif" },
+    { name: "قایقی دست باز", muscle: "پشت", gif: "https://fitnessia.ir/wp-content/uploads/2023/09/wide-grip-row.gif" },
+    { name: "پرس سرشانه دمبل", muscle: "سرشانه", gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/dumbbell-shoulder-press-gif.gif" },
+    { name: "نشر جانب", muscle: "سرشانه", gif:"https://cdnfa.ir/mokamelshope/8ed3/uploads/leg/1-nashr-janb-dmbl-aistadh.gif" },
+    { name: "نشر خم", muscle: "سرشانه", gif:"https://fa.pelank.com/wp-content/uploads/2025/01/Bent-Over-Lateral-Raise.gif" },
+    { name: " جلو بازو دمبل لاری", muscle: "جلو بازو", gif:"https://routination.com/wp-content/uploads/2023/11/exercises-biceps23.gif" },
+    { name: "پشت بازو دمبل", muscle: "پشت بازو" },
+    { name: "پشت بازو بالای سر", muscle: "پشت بازو", gif: "https://morabihamrah.com/wp-content/uploads/2023/09/Dumbbell-Triceps-Extension12.gif" },
+    { name: "پل باسن", muscle: "باسن", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Barbell-Hip-Thrust.gif" },
+    { name: "ساق پا", muscle: "ساق", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Calf-Raise123.gif" },
+    { name: "کرانچ", muscle: "شکم", gif: "https://mojekooh.com/wp-content/uploads/2023/09/crunch.gif" },
+    { name: "پلانک", muscle: "شکم", Image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqoBxh0AilvQIxLFgT1rjRF42cBcA3419_ular6qOTaQ&s=10" },
 
 ];
 
@@ -286,58 +191,32 @@ document.addEventListener(
 
 /* =====================================================
    DAY ACCORDION HEADER CLICK
-   (انتخاب روز + باز/بسته کردن کشویی)
 ===================================================== */
 
 function handleDayHeaderClick(day) {
 
     if (!selectedDays[day]) {
 
-        /*
-            روز جدید انتخاب می‌شود
-            و بخش مربوطه باز می‌شود.
-        */
-
         saveCurrentDay();
 
         selectedDays[day] = {
-
             name: day,
-
-            exercises: [
-
-                createEmptyExercise()
-
-            ]
-
+            exercises: [ createEmptyExercise() ]
         };
 
         currentDay = day;
 
     } else if (currentDay === day) {
 
-        /*
-            روز از قبل باز است،
-            فقط بسته می‌شود (انتخاب باقی می‌ماند).
-        */
-
         saveCurrentDay();
-
         currentDay = null;
 
     } else {
 
-        /*
-            روز از قبل انتخاب شده اما بسته است،
-            حالا باز می‌شود.
-        */
-
         saveCurrentDay();
-
         currentDay = day;
 
     }
-
 
     renderDayAccordion();
 
@@ -351,30 +230,18 @@ function handleDayHeaderClick(day) {
 function removeDay(day, event) {
 
     if (event) {
-
         event.stopPropagation();
-
     }
 
-
-    const confirmed =
-        confirm(
-            "این روز از برنامه حذف شود؟"
-        );
-
+    const confirmed = confirm("این روز از برنامه حذف شود؟");
 
     if (!confirmed) return;
 
-
     delete selectedDays[day];
 
-
     if (currentDay === day) {
-
         currentDay = null;
-
     }
-
 
     renderDayAccordion();
 
@@ -388,19 +255,12 @@ function removeDay(day, event) {
 function createEmptyExercise() {
 
     return {
-
         exercise: "",
-
         muscle: "",
-
         sets: "3",
-
         reps: "12",
-
         rest: "60 ثانیه",
-
         weight: "",
-
     };
 
 }
@@ -412,36 +272,19 @@ function createEmptyExercise() {
 
 function renderDayAccordion() {
 
-    const container =
-        document.getElementById(
-            "daySelector"
-        );
-
+    const container = document.getElementById("daySelector");
 
     let html = "";
-
 
     DAY_DEFS.forEach(def => {
 
         const day = def.key;
-
-        const isSelected =
-            Boolean(
-                selectedDays[day]
-            );
-
-        const isOpen =
-            isSelected &&
-            currentDay === day;
-
+        const isSelected = Boolean(selectedDays[day]);
+        const isOpen = isSelected && currentDay === day;
 
         html += `
 
-            <div class="day-accordion-item ${
-                isSelected ? "selected" : ""
-            } ${
-                isOpen ? "open" : ""
-            }">
+            <div class="day-accordion-item ${isSelected ? "selected" : ""} ${isOpen ? "open" : ""}">
 
                 <div
                     class="day-accordion-header"
@@ -449,13 +292,9 @@ function renderDayAccordion() {
 
                     <div class="day-accordion-title">
 
-                        <span class="day-check">
-                            ${isSelected ? "✓" : ""}
-                        </span>
+                        <span class="day-check">${isSelected ? "✓" : ""}</span>
 
-                        <span>
-                            ${def.label}
-                        </span>
+                        <span>${def.label}</span>
 
                         ${
                             isSelected
@@ -465,7 +304,6 @@ function renderDayAccordion() {
 
                     </div>
 
-
                     <div class="day-accordion-controls">
 
                         ${
@@ -474,39 +312,28 @@ function renderDayAccordion() {
                                 type="button"
                                 class="day-remove"
                                 onclick="removeDay('${day}', event)">
-
                                 حذف
-
                             </button>`
                             : ""
                         }
 
-                        <span class="day-chevron">
-                            ⌄
-                        </span>
+                        <span class="day-chevron">⌄</span>
 
                     </div>
 
                 </div>
 
-
                 ${
                     isOpen
                     ? `
                     <div class="day-accordion-body">
-                    
                         <div class="workout-area">
-
                             ${
                                 selectedDays[day].exercises
-                                    .map((exercise, index) =>
-                                        createExerciseHTML(exercise, index)
-                                    )
+                                    .map((exercise, index) => createExerciseHTML(exercise, index))
                                     .join("")
                             }
-
                         </div>
-
                     </div>
                     `
                     : ""
@@ -517,7 +344,6 @@ function renderDayAccordion() {
         `;
 
     });
-
 
     container.innerHTML = html;
 
@@ -579,24 +405,15 @@ function chooseExercise(el, name, muscle) {
 }
 
 
-
-function createExerciseHTML(
-    exercise,
-    index
-) {
+function createExerciseHTML(exercise, index) {
 
     return `
 
-        <div
-            class="exercise-row"
-            data-index="${index}">
+        <div class="exercise-row" data-index="${index}">
 
+            <div class="exercise-field" style="position: relative;">
 
-                        <div class="exercise-field" style="position: relative;">
-
-                <label>
-                    نام حرکت
-                </label>
+                <label>نام حرکت</label>
 
                 <input
                     type="text"
@@ -614,166 +431,64 @@ function createExerciseHTML(
 
             </div>
 
-
             <div class="exercise-field">
 
-                <label>
-                    عضله هدف
-                </label>
+                <label>عضله هدف</label>
 
-                <select
-                    class="muscle-select">
+                <select class="muscle-select">
 
-                    <option value="">
-                        انتخاب
-                    </option>
+                    <option value="">انتخاب</option>
 
                     ${[
-                        "سینه",
-                        "پشت",
-                        "سرشانه",
-                        "جلو بازو",
-                        "پشت بازو",
-                        "چهارسر ران",
-                        "همسترینگ",
-                        "باسن",
-                        "ساق",
-                        "شکم"
-                    ].map(
-                        muscle => `
-
-                        <option
-                            ${
-                                exercise.muscle === muscle
-                                ? "selected"
-                                : ""
-                            }>
-
-                            ${muscle}
-
-                        </option>
-
+                        "سینه","پشت","سرشانه","جلو بازو","پشت بازو",
+                        "چهارسر ران","همسترینگ","باسن","ساق","شکم"
+                    ].map(muscle => `
+                        <option ${exercise.muscle === muscle ? "selected" : ""}>${muscle}</option>
                     `).join("")}
 
                 </select>
 
             </div>
 
-
             <div class="exercise-field">
 
-                <label>
-                    ست
-                </label>
+                <label>ست</label>
 
                 <select class="sets">
-
-                    ${[
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6"
-                    ].map(
-                        value => `
-
-                        <option
-                            ${
-                                exercise.sets === value
-                                ? "selected"
-                                : ""
-                            }>
-
-                            ${value}
-
-                        </option>
-
+                    ${["1","2","3","4","5","6"].map(value => `
+                        <option ${exercise.sets === value ? "selected" : ""}>${value}</option>
                     `).join("")}
-
                 </select>
 
             </div>
 
-
             <div class="exercise-field">
 
-                <label>
-                    تکرار
-                </label>
+                <label>تکرار</label>
 
                 <select class="reps">
-
-                    ${[
-                        "6",
-                        "8",
-                        "10",
-                        "12",
-                        "15",
-                        "20",
-                        "تا ناتوانی"
-                    ].map(
-                        value => `
-
-                        <option
-                            ${
-                                exercise.reps === value
-                                ? "selected"
-                                : ""
-                            }>
-
-                            ${value}
-
-                        </option>
-
+                    ${["6","8","10","12","15","20","تا ناتوانی"].map(value => `
+                        <option ${exercise.reps === value ? "selected" : ""}>${value}</option>
                     `).join("")}
-
                 </select>
 
             </div>
 
-
             <div class="exercise-field">
 
-                <label>
-                    استراحت
-                </label>
+                <label>استراحت</label>
 
                 <select class="rest">
-
-                    ${[
-                        "30 ثانیه",
-                        "45 ثانیه",
-                        "60 ثانیه",
-                        "2 دقیقه",
-                        "3 دقیقه",
-                        "5 دقیقه"
-                    ].map(
-                        value => `
-
-                        <option
-                            ${
-                                exercise.rest === value
-                                ? "selected"
-                                : ""
-                            }>
-
-                            ${value}
-
-                        </option>
-
+                    ${["30 ثانیه","45 ثانیه","60 ثانیه","2 دقیقه","3 دقیقه","5 دقیقه"].map(value => `
+                        <option ${exercise.rest === value ? "selected" : ""}>${value}</option>
                     `).join("")}
-
                 </select>
 
-            </div> 
-
+            </div>
 
             <div class="exercise-field">
 
-                <label>
-                    وزنه (kg)
-                </label>
+                <label>وزنه (kg)</label>
 
                 <input
                     type="number"
@@ -785,23 +500,9 @@ function createExerciseHTML(
 
             </div>
 
+            <button class="delete-exercise" onclick="deleteExercise(${index})">×</button>
 
-            <button
-                class="delete-exercise"
-                onclick="deleteExercise(${index})">
-
-                ×
-
-            </button>
-
-            <button
-                type="button"
-                class="add-exercise-main"
-                onclick="addExercise()">
-
-                    + افزودن حرکت
-
-            </button>
+            <button type="button" class="add-exercise-main" onclick="addExercise()">+ افزودن حرکت</button>
 
         </div>
 
@@ -832,121 +533,65 @@ function showFullExerciseList(input) {
 }
 
 
-
 function showExerciseGuide(button) {
 
     const row = button.closest(".exercise-row");
-
     const select = row.querySelector(".exercise-select");
-
     const name = select.value;
 
-
     if (!name) {
-
         alert("ابتدا یک حرکت را انتخاب کنید.");
-
         return;
-
     }
 
+    const exerciseData = exercises.find(item => item.name === name);
+    const gifUrl = exerciseData && exerciseData.gif;
 
-    const exerciseData =
-        exercises.find(
-            item => item.name === name
-        );
-
-
-    const gifUrl =
-        exerciseData && exerciseData.gif;
-
-
-    const body =
-        document.getElementById(
-            "gifModalBody"
-        );
-
+    const body = document.getElementById("gifModalBody");
 
     if (gifUrl) {
 
         body.innerHTML = `
-
             <h3>${escapeHTML(name)}</h3>
-
-            <img
-                src="${gifUrl}"
-                alt="${escapeHTML(name)}"
-                class="guide-gif">
-
+            <img src="${gifUrl}" alt="${escapeHTML(name)}" class="guide-gif">
         `;
 
     } else {
 
         const searchUrl =
             "https://www.google.com/search?tbm=isch&q="
-            +
-            encodeURIComponent(name + " تمرین بدنسازی");
+            + encodeURIComponent(name + " تمرین بدنسازی");
 
-
-        /* FIX: تگ <a> ناقص بود (کلمه a جا افتاده بود) */
         body.innerHTML = `
-
             <h3>${escapeHTML(name)}</h3>
-
             <p>گیف این حرکت هنوز ثبت نشده است.</p>
-
-            <a
-                href="${searchUrl}"
-                target="_blank"
-                class="guide-search-link">
-
+            <a href="${searchUrl}" target="_blank" class="guide-search-link">
                 جست‌وجوی تصویر «${escapeHTML(name)}»
-
             </a>
-
         `;
 
     }
 
-
-    document.getElementById(
-        "gifModal"
-    ).classList.remove("hidden");
+    document.getElementById("gifModal").classList.remove("hidden");
 
 }
 
 
 function closeGifModal() {
-
-    document.getElementById(
-        "gifModal"
-    ).classList.add("hidden");
-
+    document.getElementById("gifModal").classList.add("hidden");
 }
 
 
 function addExercise() {
 
     if (!currentDay) {
-
-        alert(
-            "ابتدا یک روز تمرین را انتخاب کنید."
-        );
-
+        alert("ابتدا یک روز تمرین را انتخاب کنید.");
         return;
-
     }
-
 
     saveCurrentDay();
 
-
-    selectedDays[
-        currentDay
-    ].exercises.push(
-        createEmptyExercise()
-    );
-
+    selectedDays[currentDay].exercises.push(createEmptyExercise());
 
     renderDayAccordion();
 
@@ -961,35 +606,16 @@ function deleteExercise(index) {
 
     if (!currentDay) return;
 
-
     saveCurrentDay();
 
-
-    /* FIX: قبلاً این متغیر محلی "exercises" نام‌گذاری شده بود
-       و آرایه‌ی سراسری دیتابیس تمرین‌ها (exercises) را
-       داخل این تابع مخفی (shadow) می‌کرد. */
-    const dayExercises =
-        selectedDays[
-            currentDay
-        ].exercises;
-
+    const dayExercises = selectedDays[currentDay].exercises;
 
     if (dayExercises.length <= 1) {
-
-        alert(
-            "حداقل یک حرکت باید وجود داشته باشد."
-        );
-
+        alert("حداقل یک حرکت باید وجود داشته باشد.");
         return;
-
     }
 
-
-    dayExercises.splice(
-        index,
-        1
-    );
-
+    dayExercises.splice(index, 1);
 
     renderDayAccordion();
 
@@ -1002,31 +628,13 @@ function deleteExercise(index) {
 
 function exerciseChanged(select) {
 
-    const row =
-        select.closest(
-            ".exercise-row"
-        );
-
-
-    const option =
-        select.options[
-            select.selectedIndex
-        ];
-
-
-    const muscle =
-        option.dataset.muscle;
-
+    const row = select.closest(".exercise-row");
+    const option = select.options[select.selectedIndex];
+    const muscle = option.dataset.muscle;
 
     if (muscle) {
-
-        row.querySelector(
-            ".muscle-select"
-        ).value =
-            muscle;
-
+        row.querySelector(".muscle-select").value = muscle;
     }
-
 
     saveCurrentDay();
 
@@ -1052,14 +660,12 @@ function saveCurrentDay() {
     rows.forEach(row => {
 
         exerciseRows.push({
-
             exercise: row.querySelector(".exercise-select").value,
             muscle: row.querySelector(".muscle-select").value,
             sets: row.querySelector(".sets").value,
             reps: row.querySelector(".reps").value,
             rest: row.querySelector(".rest").value,
             weight: row.querySelector(".exercise-weight").value,
-
         });
 
     });
@@ -1070,22 +676,13 @@ function saveCurrentDay() {
 
 
 /* =====================================================
-   GENERATE PROGRAM NAME (خودکار، بدون فیلد ورودی)
+   GENERATE PROGRAM NAME
 ===================================================== */
 
 function generateProgramName() {
 
-    const athleteName =
-        document.getElementById(
-            "athleteName"
-        ).value.trim() || "ورزشکار";
-
-
-    const dateText =
-        new Date().toLocaleDateString(
-            "fa-IR"
-        );
-
+    const athleteName = document.getElementById("athleteName").value.trim() || "ورزشکار";
+    const dateText = new Date().toLocaleDateString("fa-IR");
 
     return `برنامه ${athleteName} - ${dateText}`;
 
@@ -1100,38 +697,14 @@ function collectProgram() {
 
     saveCurrentDay();
 
-
     return {
 
-        athlete_name:
-            document.getElementById(
-                "athleteName"
-            ).value.trim(),
-
-        athlete_age:
-            document.getElementById(
-                "athleteAge"
-            ).value,
-
-        athlete_height:
-            document.getElementById(
-                "athleteHeight"
-            ).value,
-
-        athlete_weight:
-            document.getElementById(
-                "athleteWeight"
-            ).value,
-
-        athlete_goal:
-            document.getElementById(
-                "athleteGoal"
-            ).value,
-
-        athlete_gender:
-            document.getElementById(
-               "athleteGender"
-            ).value,
+        athlete_name: document.getElementById("athleteName").value.trim(),
+        athlete_age: document.getElementById("athleteAge").value,
+        athlete_height: document.getElementById("athleteHeight").value,
+        athlete_weight: document.getElementById("athleteWeight").value,
+        athlete_goal: document.getElementById("athleteGoal").value,
+        athlete_gender: document.getElementById("athleteGender").value,
 
         sizes: {
             sine: document.getElementById("sizesine").value,
@@ -1143,18 +716,11 @@ function collectProgram() {
             sagh: document.getElementById("sizesagh").value
         },
 
-        program_name:
-            generateProgramName(),
+        program_name: generateProgramName(),
 
-        days:
-            Object.values(
-                selectedDays
-            ),
+        days: Object.values(selectedDays),
 
-        notes:
-            document.getElementById(
-                "programNotes"
-            ).value
+        notes: document.getElementById("programNotes").value
 
     };
 
@@ -1167,106 +733,52 @@ function collectProgram() {
 
 async function saveProgram() {
 
-    const data =
-        collectProgram();
-
+    const data = collectProgram();
 
     if (!data.athlete_name) {
-
-        alert(
-            "اطلاعات ورزشکار را وارد کنید."
-        );
-
+        alert("اطلاعات ورزشکار را وارد کنید.");
         return;
-
     }
 
-      const namePattern = /^[\u0600-\u06FF\s]+$/;
-      const hasDigits = /[\u0660-\u0669\u06F0-\u06F9]/;
+    const hasDigits = /[\u0660-\u0669\u06F0-\u06F9]/;
 
-      if (hasDigits.test(data.athlete_name)) {
-
-        alert(
-           "نام شاگرد باید فقط شامل حروف فارسی باشد و نباید عدد یا کاراکتر دیگری داشته باشد."
-        );
-
+    if (hasDigits.test(data.athlete_name)) {
+        alert("نام شاگرد باید فقط شامل حروف فارسی باشد و نباید عدد یا کاراکتر دیگری داشته باشد.");
         return;
-
-      }
-
+    }
 
     if (data.days.length === 0) {
-
-        alert(
-            "حداقل یک روز تمرین انتخاب کنید."
-        );
-
+        alert("حداقل یک روز تمرین انتخاب کنید.");
         return;
-      }
-
+    }
 
     try {
 
-        const response =
-            await fetch(
-                "/api/program",
-                {
+        const response = await fetch("/api/program", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
 
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify(
-                            data
-                        )
-
-                }
-            );
-
-
-        const result =
-            await response.json();
-
+        const result = await response.json();
 
         if (!response.ok) {
-
-            alert(
-                result.message
-            );
-
+            alert(result.message);
             return;
-
         }
 
-
-        document.getElementById(
-            "quota"
-        ).textContent =
-            result.remaining;
-
+        document.getElementById("quota").textContent = result.remaining;
 
         loadHistory();
-
 
         openPreview(data);
 
         resetProgramForm();
 
-
     } catch (error) {
 
         console.error(error);
-
-
-        alert(
-            "خطا در ارتباط با سرور."
-        );
+        alert("خطا در ارتباط با سرور.");
 
     }
 
@@ -1279,129 +791,59 @@ async function saveProgram() {
 
 async function loadHistory() {
 
-    const container =
-        document.getElementById(
-            "historyList"
-        );
-
+    const container = document.getElementById("historyList");
 
     try {
 
-        const response =
-            await fetch(
-                "/api/programs"
-            );
+        const response = await fetch("/api/programs");
 
-
-        const programs =
-            await response.json();
-
+        const programs = await response.json();
 
         if (programs.length === 0) {
 
             container.innerHTML = `
-
                 <div class="empty-history">
-
                     هنوز برنامه‌ای ذخیره نشده است.
-
                 </div>
-
             `;
 
             return;
 
         }
 
-
         container.innerHTML = "";
 
+        programs.forEach(program => {
 
-        programs.forEach(
-            program => {
+            const item = document.createElement("div");
 
-                const item =
-                    document.createElement(
-                        "div"
-                    );
+            item.className = "history-item";
 
+            const date = new Date(program.created_at);
+            const dateText = date.toLocaleDateString("fa-IR");
 
-                item.className =
-                    "history-item";
+            item.innerHTML = `
 
+                <div class="history-info">
+                    <strong>${escapeHTML(program.athlete_name)}</strong>
+                    <small>${dateText}</small>
+                </div>
 
-                const date =
-                    new Date(
-                        program.created_at
-                    );
+                <div class="history-actions">
+                    <button onclick="viewProgram(${program.id})">مشاهده</button>
+                    <button onclick="deleteProgram(${program.id})" class="history-delete">حذف</button>
+                </div>
 
+            `;
 
-                const dateText =
-                    date.toLocaleDateString(
-                        "fa-IR"
-                    );
+            container.appendChild(item);
 
-
-                item.innerHTML = `
-
-                    <div
-                        class="history-info">
-
-                        <strong>
-                            ${escapeHTML(
-                                program.athlete_name
-                            )}
-                        </strong>
-
-                        <small>
-                            ${dateText}
-                        </small>
-
-                    </div>
-
-
-                    <div
-                        class="history-actions">
-
-                        <button
-                            onclick="viewProgram(
-                                ${program.id}
-                            )">
-
-                            مشاهده
-
-                        </button>
-
-
-                        <button
-                            onclick="deleteProgram(
-                                ${program.id}
-                            )"
-                            class="history-delete">
-
-                            حذف
-
-                        </button>
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(
-                    item
-                );
-
-            }
-        );
-
+        });
 
     } catch (error) {
 
         console.error(error);
-
-        container.innerHTML =
-            "خطا در دریافت تاریخچه.";
+        container.innerHTML = "خطا در دریافت تاریخچه.";
 
     }
 
@@ -1416,69 +858,30 @@ async function viewProgram(id) {
 
     try {
 
-        const response =
-            await fetch(
-                `/api/program/${id}`
-            );
-
-
-        const result =
-            await response.json();
-
+        const response = await fetch(`/api/program/${id}`);
+        const result = await response.json();
 
         if (!response.ok) {
-
-            alert(
-                result.message
-            );
-
+            alert(result.message);
             return;
-
         }
 
-
-        const program =
-            result.program;
-
+        const program = result.program;
 
         openPreview({
-
-            athlete_name:
-                program.athlete_name,
-
-            athlete_age:
-                program.athlete_age,
-
-            athlete_height:
-                program.athlete_height,
-
-            athlete_weight:
-                program.athlete_weight,
-
-            athlete_goal:
-                program.athlete_goal,
-
-            athlete_gender:
-                program.athlete_gender,
-
-            sizes:
-                program.sizes,
-
-            notes:
-                program.notes,
-
-            days:
-                program.program_data
-
+            athlete_name: program.athlete_name,
+            athlete_age: program.athlete_age,
+            athlete_height: program.athlete_height,
+            athlete_weight: program.athlete_weight,
+            athlete_goal: program.athlete_goal,
+            athlete_gender: program.athlete_gender,
+            sizes: program.sizes,
+            notes: program.notes,
+            days: program.program_data
         });
 
-
     } catch (error) {
-
-        alert(
-            "خطا در دریافت برنامه."
-        );
-
+        alert("خطا در دریافت برنامه.");
     }
 
 }
@@ -1490,53 +893,24 @@ async function viewProgram(id) {
 
 async function deleteProgram(id) {
 
-    const confirmed =
-        confirm(
-            "آیا از حذف این برنامه مطمئن هستید؟"
-        );
-
+    const confirmed = confirm("آیا از حذف این برنامه مطمئن هستید؟");
 
     if (!confirmed) return;
 
-
     try {
 
-        const response =
-            await fetch(
-                `/api/program/${id}`,
-                {
-
-                    method:
-                        "DELETE"
-
-                }
-            );
-
-
-        const result =
-            await response.json();
-
+        const response = await fetch(`/api/program/${id}`, { method: "DELETE" });
+        const result = await response.json();
 
         if (!response.ok) {
-
-            alert(
-                result.message
-            );
-
+            alert(result.message);
             return;
-
         }
-
 
         loadHistory();
 
-
     } catch (error) {
-
-        alert(
-            "خطا در حذف برنامه."
-        );
-
+        alert("خطا در حذف برنامه.");
     }
 
 }
@@ -1548,14 +922,9 @@ async function deleteProgram(id) {
 
 function newProgram() {
 
-    const confirmed =
-        confirm(
-            "اطلاعات برنامه فعلی پاک شود؟"
-        );
-
+    const confirmed = confirm("اطلاعات برنامه فعلی پاک شود؟");
 
     if (!confirmed) return;
-
 
     resetProgramForm();
 
@@ -1568,39 +937,13 @@ function newProgram() {
 
 function resetProgramForm() {
 
-    document.getElementById(
-        "athleteName"
-    ).value = "";
-
-
-    document.getElementById(
-        "athleteAge"
-    ).value = "";
-
-
-    document.getElementById(
-        "athleteHeight"
-    ).value = "";
-
-
-    document.getElementById(
-        "athleteWeight"
-    ).value = "";
-
-
-    document.getElementById(
-        "athleteGoal"
-    ).value = "";
-
-    document.getElementById(
-        "athleteGender"
-    ).value = "";
-
-
-    document.getElementById(
-        "programNotes"
-    ).value = "";
-
+    document.getElementById("athleteName").value = "";
+    document.getElementById("athleteAge").value = "";
+    document.getElementById("athleteHeight").value = "";
+    document.getElementById("athleteWeight").value = "";
+    document.getElementById("athleteGoal").value = "";
+    document.getElementById("athleteGender").value = "";
+    document.getElementById("programNotes").value = "";
 
     document.getElementById("sizesine").value = "";
     document.getElementById("sizekamar").value = "";
@@ -1610,11 +953,8 @@ function resetProgramForm() {
     document.getElementById("sizebazo").value = "";
     document.getElementById("sizesagh").value = "";
 
-
     selectedDays = {};
-
     currentDay = null;
-
 
     renderDayAccordion();
 
@@ -1627,39 +967,32 @@ function resetProgramForm() {
 
 function buildProgramPreviewHTML(program) {
 
-    const days =
-        program.days || [];
-  
+    const days = program.days || [];
+
     let html = "";
 
     html += `
 
         <div class="preview-athlete">
-
             <div><strong>ورزشکار:</strong> ${escapeHTML(program.athlete_name) || "-"}</div>
             <div><strong>سن:</strong> ${escapeHTML(program.athlete_age) || "-"}</div>
             <div><strong>قد:</strong> ${escapeHTML(program.athlete_height) || "-"}</div>
             <div><strong>وزن:</strong> ${escapeHTML(program.athlete_weight) || "-"}</div>
             <div><strong>هدف:</strong> ${escapeHTML(program.athlete_goal) || "-"}</div>
             <div><strong>جنسیت:</strong> ${escapeHTML(program.athlete_gender) || "-"}</div>
-
         </div>
 
     `;
 
-
     if (days.length === 0) {
 
         html += `
-
             <div class="empty-workout">
                 هیچ روز تمرینی ثبت نشده است.
             </div>
-
         `;
 
     }
-
 
     days.forEach(day => {
 
@@ -1689,35 +1022,23 @@ function buildProgramPreviewHTML(program) {
                             (day.exercises || [])
                                 .map((exercise, index) => {
 
-                              
-                                    const exerciseInfo =
-                                        exercises.find(
-                                            item => item.name === exercise.exercise
-                                        );
-
-                                    const gifUrl =
-                                        (exerciseInfo && exerciseInfo.gif) || "";
-
+                                    const exerciseInfo = exercises.find(item => item.name === exercise.exercise);
+                                    const gifUrl = (exerciseInfo && exerciseInfo.gif) || "";
 
                                     return `
                                         <tr>
-                                            
                                             <td>${escapeHTML(exercise.exercise) || "-"}</td>
                                             <td>${escapeHTML(exercise.muscle) || "-"}</td>
                                             <td>${escapeHTML(exercise.sets) || "-"}</td>
                                             <td>${escapeHTML(exercise.reps) || "-"}</td>
                                             <td>${escapeHTML(exercise.rest) || "-"}</td>
                                             <td>${escapeHTML(exercise.weight) || "-"}</td>
-                                            
                                             ${COACH_BRAND.hasCustomLogo ? `
                                             <td class="guide-col">
                                                 ${
                                                     gifUrl
                                                     ? `
-                                                        <a
-                                                            href="${gifUrl}"
-                                                            target="_blank"
-                                                            class="exercise-guide-link">
+                                                        <a href="${gifUrl}" target="_blank" class="exercise-guide-link">
                                                              اجرا حرکت
                                                         </a>
                                                     `
@@ -1729,7 +1050,6 @@ function buildProgramPreviewHTML(program) {
                                                 }
                                             </td>
                                             ` : ""}
-                                       
                                     `;
 
                                 })
@@ -1746,8 +1066,7 @@ function buildProgramPreviewHTML(program) {
 
     });
 
-
-       const sizeRows = program.sizes ? [
+    const sizeRows = program.sizes ? [
         { label: "دور سینه: ", value: program.sizes.sine },
         { label: "دور کمر: ", value: program.sizes.kamar },
         { label: "دور شکم: ", value: program.sizes.shekam },
@@ -1814,64 +1133,31 @@ function buildProgramPreviewHTML(program) {
 
 function openPreview(program, savedMessage) {
 
-
-function openPreview(program, savedMessage) {
-
-    const body =
-        document.getElementById(
-            "previewBody"
-        );
-
+    const body = document.getElementById("previewBody");
 
     let html = "";
 
-
     if (savedMessage) {
-
         html += `
-
             <div class="preview-saved-banner">
                 ✔ ${escapeHTML(savedMessage)}
             </div>
-
         `;
-
     }
 
-
-    html += buildProgramPreviewHTML(
-        program
-    );
-
+    html += buildProgramPreviewHTML(program);
 
     body.innerHTML = html;
 
-
-    document.getElementById(
-        "previewModal"
-    ).classList.remove(
-        "hidden"
-    );
-
-    document.body.classList.add(
-        "modal-active"
-    );
+    document.getElementById("previewModal").classList.remove("hidden");
+    document.body.classList.add("modal-active");
 
 }
 
 
 function closePreview() {
-
-    document.getElementById(
-        "previewModal"
-    ).classList.add(
-        "hidden"
-    );
-
-    document.body.classList.remove(
-        "modal-active"
-    );
-
+    document.getElementById("previewModal").classList.add("hidden");
+    document.body.classList.remove("modal-active");
 }
 
 
@@ -1879,126 +1165,54 @@ function closePreview() {
    PDF
 ===================================================== */
 
-//  function exportPDF() 
-
-
- async function exportPDF() {
+async function exportPDF() {
 
     closeGifModal();
-
     saveCurrentDay();
 
-
-    const previewBody =
-        document.getElementById(
-            "previewBody"
-        );
-
+    const previewBody = document.getElementById("previewBody");
 
     if (!previewBody) {
-
-        alert(
-            "پیش‌نمایش برنامه پیدا نشد."
-        );
-
+        alert("پیش‌نمایش برنامه پیدا نشد.");
         return;
-
     }
 
-
-    const html =
-        buildBrandHeaderHTML() + previewBody.innerHTML + buildBrandFooterHTML();
-
+    const html = buildBrandHeaderHTML() + previewBody.innerHTML + buildBrandFooterHTML();
 
     try {
 
-        const response =
-            await fetch(
-                "/api/program/pdf",
-                {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        html: html
-                    })
-
-                }
-            );
-
+        const response = await fetch("/api/program/pdf", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ html: html })
+        });
 
         if (!response.ok) {
-
-            const error =
-                await response.json();
-
-            throw new Error(
-                error.message ||
-                "خطا در ساخت PDF"
-            );
-
+            const error = await response.json();
+            throw new Error(error.message || "خطا در ساخت PDF");
         }
 
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
 
-        const blob =
-            await response.blob();
-
-
-        const url =
-            window.URL.createObjectURL(
-                blob
-            );
-
-
-        const link =
-            document.createElement("a");
-
-
+        const link = document.createElement("a");
         link.href = url;
+        link.download = "FIT_PLAN.pdf";
 
-        link.download =
-            "FIT_PLAN.pdf";
-
-
-        document.body.appendChild(
-            link
-        );
-
-
+        document.body.appendChild(link);
         link.click();
-
-
         link.remove();
 
+        window.URL.revokeObjectURL(url);
 
-        window.URL.revokeObjectURL(
-            url
-        );
+    } catch (error) {
 
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "PDF ERROR:",
-            error
-        );
-
-        alert(
-            "خطا در ساخت PDF: " +
-            error.message
-        );
+        console.error("PDF ERROR:", error);
+        alert("خطا در ساخت PDF: " + error.message);
 
     }
 
 }
-
 
 
 /* =====================================================
@@ -2009,32 +1223,11 @@ function escapeHTML(value) {
 
     if (!value) return "";
 
-
     return String(value)
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
