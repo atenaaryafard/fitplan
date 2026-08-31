@@ -62,7 +62,7 @@ p {
     width: 100%;
     display: grid;
     /* grid-template-columns: repeat(6, 1fr); */
-    grid-template-columns: 16% 15% 15% 15% 18% 18%;
+    grid-template-columns: 16% 12% 12% 12% 22% 18%;
 
     gap: 20px;
     direction: rtl;
@@ -374,6 +374,7 @@ textarea {
 .bmi-box {
     padding: 0;
     display: flex;
+    width: 160px
     flex-direction: column;
     overflow: hidden;
     padding: 12px 16px;
