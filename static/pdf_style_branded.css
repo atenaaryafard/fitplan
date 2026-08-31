@@ -62,7 +62,7 @@ p {
     width: 100%;
     display: grid;
     /* grid-template-columns: repeat(6, 1fr); */
-    grid-template-columns: 16% 12% 12% 12% 22% 18%;
+    grid-template-columns: 16% 12% 12% 10% 21% 18%;
 
     gap: 20px;
     direction: rtl;
@@ -316,7 +316,7 @@ a:visited {
 
 .preview-size-boxes {
     direction: rtl;
-    display: flex;
+    display: 2;
     justify-content: flex-start;
     gap: 15px;
 
