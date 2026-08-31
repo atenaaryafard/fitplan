@@ -1747,19 +1747,6 @@ function buildProgramPreviewHTML(program) {
     });
 
 
-    
-
-    if (program.notes) {
-    
-            html += `
-    
-                <div class="preview-notes">
-                    <strong>توضیحات برنامه:</strong>
-                    <p>${escapeHTML(program.notes)}</p>
-                </div>
-    
-            `;
-
     const sizeRows = program.sizes ? [
         { label: "دور سینه: ", value: program.sizes.sine },
         { label: "دور کمر: ", value: program.sizes.kamar },
@@ -1772,31 +1759,28 @@ function buildProgramPreviewHTML(program) {
 
     const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
 
-    if (sizeRows.length > 0 || bmiValue) {
+    const hasNotes = !!program.notes;
+    const hasSizeBoxes = sizeRows.length > 0 || bmiValue;
 
-        html += `<div class="preview-size-boxes">`;
+    if (hasNotes || hasSizeBoxes) {
 
-        if (sizeRows.length > 0) {
+        html += `<div class="preview-bottom-row">`;
+
+        if (hasNotes) {
             html += `
-                <div class="size-box">
-                    <div class="size-box-title">سایزها</div>
-                    ${sizeRows.map(row => `
-                        <div class="size-row">
-                            <span class="size-row-label">${escapeHTML(row.label)}</span>
-                            <span class="size-row-value">${escapeHTML(row.value)}</span>
-                        </div>
-                    `).join("")}
+                <div class="preview-notes">
+                    <strong>توضیحات برنامه:</strong>
+                    <p>${escapeHTML(program.notes)}</p>
                 </div>
             `;
         }
 
-        if (bmiValue) {
-            html += `
-                <div class="size-box bmi-box">
-                    <div class="bmi-box-title">BMI: <strong>${bmiValue}</strong></div>
-                    <img src="${BMI_GUIDE_BASE64}" class="bmi-guide-img" alt="راهنمای BMI">
-                </div>
-            `;
+        if (hasSizeBoxes) {
+
+        html += `<div class="preview-size-boxes">`;
+
+        html += `</div>`;
+
         }
 
         html += `</div>`;
@@ -1804,9 +1788,6 @@ function buildProgramPreviewHTML(program) {
     }
 
     return html;
-        
-    }
-}
 
 
 function openPreview(program, savedMessage) {
