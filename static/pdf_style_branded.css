@@ -203,6 +203,17 @@ a {
     font-size: 10pt;
     background: #f8fafc;
     padding: 12px;
+    width: 380px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    box-sizing: border-box;
+}
+
+.preview-notes {
+    font-family: "Vazirmatn";
+    font-size: 10pt;
+    background: #f8fafc;
+    padding: 12px;
 }
 
 .preview-notes p {
@@ -308,7 +319,7 @@ a:visited {
     display: flex;
     justify-content: flex-start;
     gap: 15px;
-    margin-top: 20px;
+
 }
 
 .size-box {
