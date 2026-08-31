@@ -308,46 +308,46 @@ a:visited {
     color: #3e3e3e;
 
 }
-
-/* کانتینر اصلی: برای اینکه دو باکس سایز و BMI کنار هم به صورت افقی قرار بگیرند */
+/* کانتینر اصلی: حالا هر ۳ باکس (سایز، BMI و یادداشت‌ها) را افقی کنار هم می‌چیند */
 .preview-size-boxes {
     direction: rtl;
-    display: flex;          /* اصلاح شد: فعال کردن حالت فلکس */
-    flex-direction: row;   /* چینش افقی دو باکس اصلی */
+    display: flex;          
+    flex-direction: row;   
     justify-content: flex-start;
-    gap: 15px;
+    align-items: stretch;  /* باعث می‌شود ارتفاع هر ۳ باکس با هم برابر و هم‌تراز شود */
+    gap: 12px;             /* کاهش فاصله بین باکس‌ها برای صرفه‌جویی در فضا */
     width: 100%;
 }
 
-/* باکس سایزها */
+/* باکس سایزها (کوچک‌تر و بهینه شده) */
 .size-box {
     direction: rtl;
-    /* حذف عرض ثابت 100px برای اینکه فضا داشته باشد به دو قسمت افقی تقسیم شود */
-    flex: 1;                
+    flex: 1;                /* سهم مساوی از فضا */
+    max-width: 180px;       /* اضافه شد: محدود کردن حداکثر عرض برای کوچک شدن باکس */
     background-color: #f8fafc;
-    padding: 12px 16px;
+    padding: 10px 12px;     /* کاهش پدینگ داخلی */
     box-sizing: border-box;
+    border-radius: 6px;     /* اضافه شدن گوشه‌های نرم (اختیاری) */
 }
 
 .size-box-title {
     font-family: "Vazirmatn";
-    font-size: 10pt;
+    font-size: 9.5pt;       /* کمی کوچک‌تر */
     font-weight: bold;
     color: #111827;
     text-align: center;
     border-bottom: 1px solid #111827;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
 }
 
-/* اصلاح شد: برای اینکه ردیف‌های درون باکس سایز به صورت دو قسمت افقی (راست و چپ) در بیایند */
 .size-row {
     display: flex;
-    flex-direction: row;        /* چیدمان افقی لیبل و مقدار */
-    justify-content: space-between; /* ایجاد فاصله و چسبیدن به دو طرف */
+    flex-direction: row;        
+    justify-content: space-between; 
     font-family: "Vazirmatn";
-    font-size: 9pt;
-    padding: 4px 0;
+    font-size: 8.5pt;       /* کمی کوچک‌تر */
+    padding: 3px 0;
 }
 
 .size-row-label {
@@ -359,59 +359,83 @@ a:visited {
     color: #111827;
 }
 
-/* باکس BMI */
+/* باکس BMI (کوچک‌تر و بهینه شده) */
 .bmi-box {
-    flex: 1;                    /* اختصاص سهم مساوی با باکس سایز */
-    display: flex;              /* اضافه شد: برای کنترل چیدمان داخلی */
-    flex-direction: column;     /* اصلاح شد: عنوان در بالا و تصویر در پایین (عمودی) */
+    flex: 1;                    
+    max-width: 180px;       /* اضافه شد: هم‌اندازه شدن عرض با باکس سایز */
+    display: flex;              
+    flex-direction: column;     
     overflow: hidden;
     background-color: #f8fafc;
     box-sizing: border-box;
+    border-radius: 6px;
 }
 
-/* عنوان و عدد BMI در بالا */
 .bmi-box-title {
     font-family: "Vazirmatn";
-    font-size: 10pt;
+    font-size: 9.5pt;
     font-weight: bold;
     text-align: center;
     color: #111827;
-    padding: 6px 6px;
+    padding: 6px;
     border-bottom: 1px solid #d6d6d6;
-    flex-shrink: 0;             /* جلوگیری از فشرده شدن عنوان */
+    flex-shrink: 0;             
 }
 
 .bmi-box-title strong {
-    font-size: 11pt;
+    font-size: 10.5pt;
 }
 
-/* تصویر راهنما در پایین که کشیده و کامل فضا را پر می‌کند */
+/* تصویر BMI کاملاً اصلاح شد */
 .bmi-guide-img {
-    flex: 1;                    /* گرفتن تمام فضای باقی‌مانده عمودی */
+    flex: 1;                    
     width: 100%;
-    height: auto;               /* اصلاح شد برای جلوگیری از دفرمه شدن */
-    object-fit: contain;         /* تصویر کاملاً باکس را پر می‌کند و کشیده می‌شود */
+    height: 100%;               
+    object-fit: cover;         /* تغییر به cover برای اینکه کل باکس پایینی را بدون حاشیه سفید پر کند */
     display: block;
+}
+
+/* باکس یادداشت‌ها / توضیحات (منتقل شده به کنار دو باکس دیگر) */
+.preview-notes {
+    font-family: "Vazirmatn";
+    font-size: 9pt;         /* بهینه‌سازی اندازه فونت */
+    background: #f8fafc;
+    padding: 10px 12px;     /* هماهنگ شدن پدینگ با سایر باکس‌ها */
+    flex: 1.5;              /* فضای بیشتری نسبت به کادرهای کوچک دیگر می‌گیرد تا متن جا شود */
+    min-width: 150px;       /* حداقل عرض برای خوانایی متن */
+    box-sizing: border-box;
+    margin-top: 0;          /* اصلاح شد: حذف فاصله بالایی قدیمی برای هم‌تراز شدن */
+    border-radius: 6px;
+}
+
+.preview-notes p {
+    margin: 4px 0 0 0;
+    white-space: pre-wrap;
+    line-height: 1.4;       /* بهبود فاصله‌گذاری خطوط متن */
+}
+
+/* =========================
+   BRAND FOOTER (PDF)
+========================= */
+.pdf-brand-footer {
+    margin-top: 40px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    text-align: center;
+    font-size: 10pt;
+    color: #3e3e3e;
 }
 
 /* =========================
    حذف چیزهایی که برای سایت هستند
 ========================= */
-button,
-input,
-select,
-textarea {
+button, input, select, textarea {
     display: none;
 }
 
-.modal-close,
-.modal-footer,
-.pdf-button,
-.bottom-actions,
-.history-card,
-.day-accordion-controls,
-.add-exercise-main,
-.delete-exercise {
+.modal-close, .modal-footer, .pdf-button, .bottom-actions, 
+.history-card, .day-accordion-controls, .add-exercise-main, .delete-exercise {
     display: none;
 }
+
 
