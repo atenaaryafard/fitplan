@@ -314,20 +314,24 @@ a:visited {
 
 }
 
+/* کانتینر اصلی: برای اینکه دو باکس سایز و BMI کنار هم به صورت افقی قرار بگیرند */
 .preview-size-boxes {
     direction: rtl;
-    display: 2;
+    display: flex;          /* اصلاح شد: فعال کردن حالت فلکس */
+    flex-direction: row;   /* چینش افقی دو باکس اصلی */
     justify-content: flex-start;
     gap: 15px;
-
+    width: 100%;
 }
 
+/* باکس سایزها */
 .size-box {
     direction: rtl;
-    width: 100px;
-    /* box-sizing: border-box; */
+    /* حذف عرض ثابت 100px برای اینکه فضا داشته باشد به دو قسمت افقی تقسیم شود */
+    flex: 1;                
     background-color: #f8fafc;
     padding: 12px 16px;
+    box-sizing: border-box;
 }
 
 .size-box-title {
@@ -341,12 +345,14 @@ a:visited {
     margin-bottom: 8px;
 }
 
+/* اصلاح شد: برای اینکه ردیف‌های درون باکس سایز به صورت دو قسمت افقی (راست و چپ) در بیایند */
 .size-row {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;        /* چیدمان افقی لیبل و مقدار */
+    justify-content: space-between; /* ایجاد فاصله و چسبیدن به دو طرف */
     font-family: "Vazirmatn";
     font-size: 9pt;
-    padding: 2px 0;
+    padding: 4px 0;
 }
 
 .size-row-label {
@@ -358,11 +364,44 @@ a:visited {
     color: #111827;
 }
 
-    
+/* باکس BMI */
+.bmi-box {
+    flex: 1;                    /* اختصاص سهم مساوی با باکس سایز */
+    display: flex;              /* اضافه شد: برای کنترل چیدمان داخلی */
+    flex-direction: column;     /* اصلاح شد: عنوان در بالا و تصویر در پایین (عمودی) */
+    overflow: hidden;
+    background-color: #f8fafc;
+    box-sizing: border-box;
+}
+
+/* عنوان و عدد BMI در بالا */
+.bmi-box-title {
+    font-family: "Vazirmatn";
+    font-size: 10pt;
+    font-weight: bold;
+    text-align: center;
+    color: #111827;
+    padding: 6px 6px;
+    border-bottom: 1px solid #d6d6d6;
+    flex-shrink: 0;             /* جلوگیری از فشرده شدن عنوان */
+}
+
+.bmi-box-title strong {
+    font-size: 11pt;
+}
+
+/* تصویر راهنما در پایین که کشیده و کامل فضا را پر می‌کند */
+.bmi-guide-img {
+    flex: 1;                    /* گرفتن تمام فضای باقی‌مانده عمودی */
+    width: 100%;
+    height: auto;               /* اصلاح شد برای جلوگیری از دفرمه شدن */
+    object-fit: cover;         /* تصویر کاملاً باکس را پر می‌کند و کشیده می‌شود */
+    display: block;
+}
+
 /* =========================
    حذف چیزهایی که برای سایت هستند
 ========================= */
-
 button,
 input,
 select,
@@ -381,35 +420,3 @@ textarea {
     display: none;
 }
 
-
-.bmi-box {
-    padding: 0;
-    flex-direction: row;
-    overflow: hidden;
-    padding: 12px 16px;
-    background-color: #f8fafc;
-}
-    
-
-.bmi-box-title {
-    font-family: "Vazirmatn";
-    font-size: 10pt;
-    font-weight: bold;
-    text-align: center;
-    color: #111827;
-    padding: 6px 6px;
-    border-bottom: 1px solid #d6d6d6;
-    flex-shrink: 0;
-}
-
-.bmi-box-title strong {
-    font-size: 11pt;
-}
-
-.bmi-guide-img {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
