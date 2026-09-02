@@ -295,7 +295,7 @@
 
             </div>
             
-               {% if plan_key != 'basic' %}
+        
         
                 <div class="field">
                 <label> دور سینه</label>
@@ -334,7 +334,6 @@
 
 
         </div>
-        {% endif %}
 
     </section>
 
@@ -631,7 +630,6 @@
 <script>
     const COACH_BRAND = {
         hasCustomLogo: {{ has_custom_logo | tojson }},
-        planKey: "{{ plan_key }}", 
         jobTitle: {{ (coach.job_title or '') | tojson }},
         socialAddress: {{ (coach.social_address or '') | tojson }},
         phoneNumber: {{ (coach.phone_number or '') | tojson }},
