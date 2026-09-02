@@ -1091,6 +1091,13 @@ def export_program_pdf():
 
 </html>
 """
+    except Exception as e:
+    
+            print("PDF ERROR:", str(e))
+    
+            return jsonify({
+                "error": str(e)
+            }), 500
 
         with sync_playwright() as p:
 
