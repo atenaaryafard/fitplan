@@ -14,6 +14,7 @@ import psycopg2
 import psycopg2.extras
 import json
 import base64
+from bs4 import BeautifulSoup
 
 from PIL import Image
 from werkzeug.utils import secure_filename
@@ -798,9 +799,19 @@ def planner():
 
     plan = get_active_plan(coach)
     has_custom_logo = bool(plan and plan["has_custom_logo"])
+    plan_key = plan["plan_key"] if plan else "basic" 
 
-    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,)
+    if plan and plan["monthly_quota"] is None:
+        remaining = "نامحدود"
+    else:
+        remaining = max(0, coach["monthly_limit"] - coach["monthly_used"])
 
+    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,plan_key=plan_key)
+
+
+# =========================================================
+# GET PROGRAM HISTORY
+# =========================================================
 
 # =========================================================
 # GET PROGRAM HISTORY
@@ -932,6 +943,9 @@ def save_program():
     conn.commit()
     conn.close()
 
+    plan = get_active_plan(coach)
+    remaining_display = "نامحدود" if (plan and plan["monthly_quota"] is None) else (remaining - 1)
+
     return jsonify({"success": True, "remaining": remaining - 1})
 
 
@@ -984,6 +998,18 @@ def export_program_pdf():
         """, (session["coach_id"],)).fetchone()
 
         conn.close()
+        
+        plan = get_active_plan(coach)
+        is_basic = (not plan) or (plan["plan_key"] == "basic")    # <-- جدید
+
+        html_content = data["html"]                               # <-- جدید
+
+        if is_basic:                                               # <-- جدید
+            soup = BeautifulSoup(html_content, "html.parser")
+            for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
+                for tag in soup.find_all(class_=class_name):
+                    tag.decompose()
+            html_content = str(soup)
 
         pdf_style_filename = get_pdf_style_filename(coach)
 
@@ -1061,7 +1087,7 @@ def export_program_pdf():
 
 <body>
 
-    {html_content}
+    {data["html"]}
 
 </body>
 
