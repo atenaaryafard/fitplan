@@ -1133,6 +1133,9 @@ function buildProgramPreviewHTML(program) {
         html += `</div>`;
 
     }
+        html += `</div>`;   
+
+    }
 
     return html;
 }      
