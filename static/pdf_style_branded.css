@@ -372,6 +372,16 @@ a:visited {
     color: #111827;
 }
 
+.preview-size-boxes {
+    display: flex;
+    gap: 20px;
+    flex: 2;
+}
+
+.preview-bottom-row .notes-box {
+    flex: 1;
+}
+
 /* =========================
    حذف چیزهایی که برای سایت هستند
 ========================= */
