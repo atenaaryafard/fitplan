@@ -1121,6 +1121,8 @@ function buildProgramPreviewHTML(program) {
     }
 
     return html;
+}      
+    
 
 
 function openPreview(program, savedMessage) {
