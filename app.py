@@ -1050,9 +1050,8 @@ def export_program_pdf():
         with open(pdf_css_path, "r", encoding="utf-8") as css_file:
             css_content = css_file.read()
 
-        html_content = data["html"]
 
-        full_html = f"""
+       full_html = f"""
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -1067,7 +1066,6 @@ def export_program_pdf():
             src: url("data:font/ttf;base64,{font_base64}") format("truetype");
             font-weight: 400;
             font-style: normal;
-            font-display: block;
         }}
 
         html {{
@@ -1087,7 +1085,7 @@ def export_program_pdf():
 
 <body>
 
-    {data["html"]}
+    {html_content}
 
 </body>
 
