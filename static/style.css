@@ -2360,3 +2360,26 @@ button {
     object-fit: contain;
     display: block;
 }
+
+.preview-bottom-row {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.preview-box {
+    flex: 1;
+    min-width: 0; /* برای جلوگیری از سرریز شدن محتوا در فلکس */
+}
+
+@media (max-width: 700px) {
+    .preview-bottom-row {
+        flex-direction: column;
+    }
+}
+
+
+/* =========================== */
+
+
