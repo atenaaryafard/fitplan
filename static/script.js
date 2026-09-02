@@ -692,10 +692,6 @@ function generateProgramName() {
 /* =====================================================
    COLLECT PROGRAM
 ===================================================== */
-function getVal(id) {
-    const el = document.getElementById(id);
-    return el ? el.value : "";
-}
 
 function collectProgram() {
 
@@ -711,24 +707,14 @@ function collectProgram() {
         athlete_gender: document.getElementById("athleteGender").value,
 
         sizes: {
-
-                sine: getVal("sizesine"),
-                kamar: getVal("sizekamar"),
-                shekam: getVal("sizeshekam"),
-                basan: getVal("sizebasan"),
-                ran: getVal("sizeran"),
-                bazo: getVal("sizebazo"),
-                sagh: getVal("sizesagh")
-          },
-            // sine: document.getElementById("sizesine").value,
-            // kamar: document.getElementById("sizekamar").value,
-            // shekam: document.getElementById("sizeshekam").value,
-            // basan: document.getElementById("sizebasan").value,
-            // ran: document.getElementById("sizeran").value,
-            // bazo: document.getElementById("sizebazo").value,
-            // sagh: document.getElementById("sizesagh").value
-            
-        
+            sine: document.getElementById("sizesine").value,
+            kamar: document.getElementById("sizekamar").value,
+            shekam: document.getElementById("sizeshekam").value,
+            basan: document.getElementById("sizebasan").value,
+            ran: document.getElementById("sizeran").value,
+            bazo: document.getElementById("sizebazo").value,
+            sagh: document.getElementById("sizesagh").value
+        },
 
         program_name: generateProgramName(),
 
@@ -959,11 +945,13 @@ function resetProgramForm() {
     document.getElementById("athleteGender").value = "";
     document.getElementById("programNotes").value = "";
 
-    ["sizesine","sizekamar","sizeshekam","sizebasan","sizeran","sizebazo","sizesagh"]
-    .forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-    });
+    document.getElementById("sizesine").value = "";
+    document.getElementById("sizekamar").value = "";
+    document.getElementById("sizeshekam").value = "";
+    document.getElementById("sizebasan").value = "";
+    document.getElementById("sizeran").value = "";
+    document.getElementById("sizebazo").value = "";
+    document.getElementById("sizesagh").value = "";
 
     selectedDays = {};
     currentDay = null;
@@ -1089,7 +1077,7 @@ function buildProgramPreviewHTML(program) {
     ].filter(row => row.value) : [];
 
     const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
-    const isBasicPlan = COACH_BRAND.planKey === "basic";   // <-- جدید
+
         if (program.notes || sizeRows.length > 0 || bmiValue) {
 
         html += `<div class="preview-bottom-row">`;
@@ -1102,8 +1090,6 @@ function buildProgramPreviewHTML(program) {
                 </div>
             `;
         }
-        if (!isBasicPlan && (bmiValue || sizeRows.length > 0)) {
-            html += `<div class="preview-size-boxes">`;
 
         if (bmiValue) {
             html += `
@@ -1133,13 +1119,8 @@ function buildProgramPreviewHTML(program) {
         html += `</div>`;
 
     }
-        html += `</div>`;   
-
-    }
 
     return html;
-}      
-    
 
 
 function openPreview(program, savedMessage) {
