@@ -4,3 +4,4 @@ gunicorn
 werkzeug
 playwright
 Pillow
+beautifulsoup4
