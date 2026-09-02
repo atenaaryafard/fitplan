@@ -813,38 +813,26 @@ def planner():
 # GET PROGRAM HISTORY
 # =========================================================
 
+# =========================================================
+# GET PROGRAM HISTORY
+# =========================================================
+
 @app.route("/api/programs")
 @login_required
-def save_program():
+def get_programs():
 
     conn = get_db()
 
-    coach = conn.execute("""
-        SELECT * FROM coaches WHERE id = ?
-    """, (session["coach_id"],)).fetchone()
+    programs = conn.execute("""
+        SELECT id, athlete_name, program_name, created_at
+        FROM programs
+        WHERE coach_id = ?
+        ORDER BY id DESC
+    """, (session["coach_id"],)).fetchall()
 
     conn.close()
 
-    coach = reset_monthly_usage(coach)
-
-    remaining = coach["monthly_limit"] - coach["monthly_used"]
-
-    if remaining <= 0:
-        return jsonify({
-            "success": False,
-            "message": "سهمیه ساخت برنامه این ماه شما تمام شده است."
-        }), 403
-
-    # ... همه‌ی validationها و INSERT و UPDATE دقیقا مثل قبل، بدون هیچ تغییری ...
-
-    conn.commit()
-    conn.close()
-
-    # فقط همین دو خط آخر عوض میشه - فقط برای نمایش:
-    plan = get_active_plan(coach)
-    remaining_display = "نامحدود" if (plan and plan["monthly_quota"] is None) else (remaining - 1)
-
-    return jsonify({"success": True, "remaining": remaining_display})
+    return jsonify([dict(program) for program in programs])
 
 
 # =========================================================
@@ -954,6 +942,9 @@ def save_program():
 
     conn.commit()
     conn.close()
+
+    plan = get_active_plan(coach)
+    remaining_display = "نامحدود" if (plan and plan["monthly_quota"] is None) else (remaining - 1)
 
     return jsonify({"success": True, "remaining": remaining - 1})
 
