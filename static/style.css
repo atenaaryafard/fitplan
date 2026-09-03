@@ -2287,39 +2287,73 @@ button {
 }
 
 
-.preview-size-boxes {
-    direction: ltr;
+/* =====================================
+   PREVIEW BOTTOM ROW (Notes + Sizes + BMI)
+===================================== */
+
+.preview-bottom-row {
     display: flex;
-    justify-content: flex-start;
+    align-items: stretch;
     gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
 }
 
-.size-box {
-    direction: rtl;
-    width: 160px;
+.preview-box {
+    flex: 1;
+    min-width: 220px;
+    background-color: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
     box-sizing: border-box;
-    border: 1px solid #f59631;
-    border-radius: 8px;
-    padding: 10px 12px;
 }
 
-.size-box-title {
-    font-family: "Vazirmatn";
-    font-size: 10pt;
+.preview-box-title {
+    font-size: 13px;
     font-weight: bold;
-    color: #111827;
     text-align: center;
-    border-bottom: 1px solid #fde0c2;
-    padding-bottom: 6px;
-    margin-bottom: 6px;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.notes-box p {
+    font-size: 13px;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.preview-size-boxes {
+    display: flex;
+    gap: 15px;
+    flex: 2;
+    min-width: 260px;
+}
+
+.bmi-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bmi-guide-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.sizes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
 }
 
 .size-row {
     display: flex;
     justify-content: space-between;
-    font-family: "Vazirmatn";
-    font-size: 9pt;
-    padding: 2px 0;
+    font-size: 12px;
 }
 
 .size-row-label {
@@ -2331,32 +2365,11 @@ button {
     color: #111827;
 }
 
-
-.bmi-box {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.bmi-box-title {
-    font-family: "Vazirmatn";
-    font-size: 10pt;
-    text-align: center;
-    color: #111827;
-    padding: 8px 6px;
-    border-bottom: 1px solid #fde0c2;
-    flex-shrink: 0;
-}
-
-.bmi-box-title strong {
-    font-size: 12pt;
-}
-
-.bmi-guide-img {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
+@media (max-width: 700px) {
+    .preview-bottom-row {
+        flex-direction: column;
+    }
+    .preview-size-boxes {
+        flex-direction: column;
+    }
 }
