@@ -166,6 +166,44 @@ button {
 
 }
 
+/* دکمه صفحه اصلی */
+
+.nav-home-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 9px 14px;
+
+    border-radius: 9px;
+
+    background: #f4f5f6;
+
+    color: #374151;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-family: inherit;
+
+    transition: 0.2s ease;
+
+    white-space: nowrap;
+
+}
+
+
+.nav-home-btn:hover {
+
+    background: #e9ecef;
+
+    transform: translateY(-1px);
+
+}
 
 .switch-auth {
 
