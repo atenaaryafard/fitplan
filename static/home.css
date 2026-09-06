@@ -31,7 +31,7 @@ html {
    HEADER
 ===================================================== */
 
-/* .home-header {
+.home-header {
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -223,7 +223,7 @@ html {
     background: #fee2e2;
 
     color: #b91c1c;
-} */
+}
 
 
 /* =====================================================
@@ -1918,7 +1918,7 @@ html {
    RESPONSIVE
 ===================================================== */
 
-/* @media (max-width: 1000px) {
+@media (max-width: 1000px) {
 
 
     .home-nav {
@@ -2043,7 +2043,7 @@ html {
         padding: 8px 11px;
 
         font-size: 10px;
-    } */
+    }
 
 
     .hero-section {
