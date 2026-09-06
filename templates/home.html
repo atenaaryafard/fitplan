@@ -1,0 +1,1477 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FIT PLAN | ساخت حرفه‌ای برنامه تمرینی</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body class="home-page">
+
+
+<!-- =====================================
+     HEADER
+===================================== -->
+
+<header class="home-header">
+
+    <div class="home-navbar">
+
+        <!-- LOGO -->
+
+        <a href="{{ url_for('home') }}"
+           class="home-brand">
+
+            <div class="brand-icon">
+                F
+            </div>
+
+            <div>
+
+                <strong>FIT PLAN</strong>
+
+                <span>پلتفرم برنامه‌سازی مربیان</span>
+
+            </div>
+
+        </a>
+
+
+        <!-- DESKTOP MENU -->
+
+        <nav class="home-nav">
+
+            <a href="#features">
+                امکانات
+            </a>
+
+            <a href="#how-it-works">
+                نحوه کار
+            </a>
+
+            <a href="{{ url_for('subscribe') }}">
+                پلن اشتراک
+            </a>
+
+            <a href="#about">
+                درباره FIT PLAN
+            </a>
+
+        </nav>
+
+
+        <!-- ACTIONS -->
+
+        <div class="home-actions">
+
+            {% if session.get("coach_id") %}
+
+                <a href="{{ url_for('planner') }}"
+                   class="header-login-btn">
+
+                    پنل من
+
+                </a>
+
+
+                <a href="{{ url_for('logout') }}"
+                   class="header-register-btn logout-header-btn">
+
+                    خروج
+
+                </a>
+
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}"
+                   class="header-login-btn">
+
+                    ورود
+
+                </a>
+
+
+                <a href="{{ url_for('register') }}"
+                   class="header-register-btn">
+
+                    ثبت‌نام
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================
+     HERO
+===================================== -->
+
+<section class="hero-section">
+
+
+    <div class="hero-background"></div>
+
+
+    <div class="hero-container">
+
+
+        <!-- HERO CONTENT -->
+
+        <div class="hero-content">
+
+
+            <div class="hero-badge">
+
+                <span class="badge-dot"></span>
+
+                ابزار حرفه‌ای مربیان بدنسازی
+
+            </div>
+
+
+            <h1>
+
+                برنامه تمرینی حرفه‌ای بسازید،
+                <br>
+
+                سریع‌تر از همیشه
+
+            </h1>
+
+
+            <p class="hero-description">
+
+                FIT PLAN به مربیان کمک می‌کند برنامه‌های تمرینی
+                اختصاصی طراحی کنند، ورزشکاران خود را مدیریت کنند
+                و برنامه‌ها را با ظاهری حرفه‌ای در اختیار شاگردان قرار دهند.
+
+            </p>
+
+
+            <!-- HERO BUTTONS -->
+
+            <div class="hero-buttons">
+
+
+                {% if session.get("coach_id") %}
+
+                    <a href="{{ url_for('planner') }}"
+                       class="hero-primary-btn">
+
+                        ورود به برنامه‌ساز
+
+                        <span>←</span>
+
+                    </a>
+
+                {% else %}
+
+                    <a href="{{ url_for('register') }}"
+                       class="hero-primary-btn">
+
+                        شروع رایگان
+
+                        <span>←</span>
+
+                    </a>
+
+                {% endif %}
+
+
+                <a href="#features"
+                   class="hero-secondary-btn">
+
+                    مشاهده امکانات
+
+                </a>
+
+
+            </div>
+
+
+            <!-- HERO TRUST -->
+
+            <div class="hero-trust">
+
+
+                <div class="trust-item">
+
+                    <strong>سریع</strong>
+
+                    <span>
+                        ساخت برنامه در چند دقیقه
+                    </span>
+
+                </div>
+
+
+                <div class="trust-divider"></div>
+
+
+                <div class="trust-item">
+
+                    <strong>حرفه‌ای</strong>
+
+                    <span>
+                        خروجی آماده برای شاگرد
+                    </span>
+
+                </div>
+
+
+                <div class="trust-divider"></div>
+
+
+                <div class="trust-item">
+
+                    <strong>ساده</strong>
+
+                    <span>
+                        بدون نیاز به نرم‌افزار
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- HERO CARD -->
+
+        <div class="hero-visual">
+
+
+            <div class="dashboard-glow"></div>
+
+
+            <div class="dashboard-card">
+
+
+                <!-- DASHBOARD HEADER -->
+
+                <div class="dashboard-top">
+
+                    <div>
+
+                        <span class="dashboard-small-title">
+
+                            برنامه تمرینی
+
+                        </span>
+
+                        <h3>
+
+                            برنامه افزایش حجم
+
+                        </h3>
+
+                    </div>
+
+
+                    <div class="dashboard-status">
+
+                        آماده
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ATHLETE -->
+
+                <div class="dashboard-athlete">
+
+                    <div class="athlete-avatar">
+
+                        م
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            محمد رضایی
+
+                        </strong>
+
+                        <span>
+
+                            هدف: افزایش حجم عضلانی
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DAYS -->
+
+                <div class="dashboard-days">
+
+
+                    <div class="mini-day active">
+
+                        شنبه
+
+                        <span>۵ حرکت</span>
+
+                    </div>
+
+
+                    <div class="mini-day">
+
+                        دوشنبه
+
+                        <span>۶ حرکت</span>
+
+                    </div>
+
+
+                    <div class="mini-day">
+
+                        چهارشنبه
+
+                        <span>۵ حرکت</span>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- PROGRESS -->
+
+                <div class="dashboard-progress">
+
+                    <div class="progress-info">
+
+                        <span>
+                            وضعیت برنامه
+                        </span>
+
+                        <strong>
+                            تکمیل شده
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill"></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- FLOATING CARD -->
+
+            <div class="floating-card floating-card-one">
+
+                <span class="floating-icon">
+
+                    ✓
+
+                </span>
+
+                <div>
+
+                    <strong>
+
+                        برنامه آماده شد
+
+                    </strong>
+
+                    <small>
+
+                        قابل ارسال برای ورزشکار
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="floating-card floating-card-two">
+
+                <span class="floating-number">
+
+                    3
+
+                </span>
+
+                <div>
+
+                    <strong>
+
+                        برنامه این ماه
+
+                    </strong>
+
+                    <small>
+
+                        سهمیه فعال
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     PROBLEM SECTION
+===================================== -->
+
+<section class="problem-section">
+
+
+    <div class="marketing-container">
+
+
+        <div class="section-heading center-heading">
+
+
+            <span class="section-label">
+
+                چرا FIT PLAN؟
+
+            </span>
+
+
+            <h2>
+
+                هنوز برنامه‌هایتان را با Word
+                و فایل‌های پراکنده می‌سازید؟
+
+            </h2>
+
+
+            <p>
+
+                زمان مربی ارزشمند است.
+                ابزارهای قدیمی باعث می‌شوند زمان زیادی
+                صرف کارهای تکراری شود.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="problem-grid">
+
+
+            <div class="problem-card">
+
+                <div class="problem-number">
+
+                    01
+
+                </div>
+
+                <h3>
+
+                    زمان‌بر بودن
+
+                </h3>
+
+                <p>
+
+                    طراحی دستی هر برنامه زمان زیادی
+                    از مربی می‌گیرد.
+
+                </p>
+
+            </div>
+
+
+
+            <div class="problem-card">
+
+                <div class="problem-number">
+
+                    02
+
+                </div>
+
+                <h3>
+
+                    اطلاعات پراکنده
+
+                </h3>
+
+                <p>
+
+                    برنامه‌ها و اطلاعات شاگردان
+                    در فایل‌های مختلف قرار می‌گیرند.
+
+                </p>
+
+            </div>
+
+
+
+            <div class="problem-card">
+
+                <div class="problem-number">
+
+                    03
+
+                </div>
+
+                <h3>
+
+                    ظاهر غیرحرفه‌ای
+
+                </h3>
+
+                <p>
+
+                    یک برنامه تمرینی حرفه‌ای
+                    باید ظاهر حرفه‌ای هم داشته باشد.
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="solution-banner">
+
+
+            <div class="solution-icon">
+
+                ✓
+
+            </div>
+
+
+            <div>
+
+                <strong>
+
+                    FIT PLAN همه چیز را ساده‌تر می‌کند.
+
+                </strong>
+
+                <span>
+
+                    ساخت، مدیریت و ارائه برنامه تمرینی در یک محیط.
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     FEATURES
+===================================== -->
+
+<section class="features-section"
+         id="features">
+
+
+    <div class="marketing-container">
+
+
+        <div class="section-heading">
+
+
+            <span class="section-label">
+
+                امکانات FIT PLAN
+
+            </span>
+
+
+            <h2>
+
+                همه ابزارهای مورد نیاز
+                برای مدیریت برنامه‌های تمرینی
+
+            </h2>
+
+
+            <p>
+
+                به جای استفاده از چند نرم‌افزار مختلف،
+                همه چیز را در یک محیط ساده و حرفه‌ای مدیریت کنید.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="features-grid">
+
+
+            <!-- FEATURE 1 -->
+
+            <div class="feature-card featured-card">
+
+                <div class="feature-icon">
+
+                    ✦
+
+                </div>
+
+
+                <h3>
+
+                    ساخت سریع برنامه
+
+                </h3>
+
+
+                <p>
+
+                    برنامه تمرینی شاگردانتان را
+                    در چند دقیقه طراحی کنید.
+
+                </p>
+
+
+                <div class="feature-line"></div>
+
+
+                <span class="feature-tag">
+
+                    صرفه‌جویی در زمان
+
+                </span>
+
+
+            </div>
+
+
+
+            <!-- FEATURE 2 -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+
+                    ◈
+
+                </div>
+
+
+                <h3>
+
+                    بانک حرکات
+
+                </h3>
+
+
+                <p>
+
+                    انتخاب سریع حرکات تمرینی
+                    از لیست آماده حرکات.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- FEATURE 3 -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+
+                    ◉
+
+                </div>
+
+
+                <h3>
+
+                    مدیریت ورزشکاران
+
+                </h3>
+
+
+                <p>
+
+                    اطلاعات ورزشکاران و برنامه‌های
+                    آن‌ها را منظم نگهداری کنید.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- FEATURE 4 -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+
+                    ↓
+
+                </div>
+
+
+                <h3>
+
+                    خروجی حرفه‌ای
+
+                </h3>
+
+
+                <p>
+
+                    برنامه را با ظاهر مناسب
+                    برای ورزشکار آماده کنید.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- FEATURE 5 -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+
+                    ▣
+
+                </div>
+
+
+                <h3>
+
+                    آرشیو برنامه‌ها
+
+                </h3>
+
+
+                <p>
+
+                    همیشه به برنامه‌های قبلی
+                    خود دسترسی داشته باشید.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- FEATURE 6 -->
+
+            <div class="feature-card future-feature">
+
+                <div class="feature-icon">
+
+                    ↗
+
+                </div>
+
+
+                <h3>
+
+                    امکانات بیشتر
+
+                </h3>
+
+
+                <p>
+
+                    قابلیت‌های جدید به‌صورت
+                    مداوم به FIT PLAN اضافه می‌شوند.
+
+                </p>
+
+
+                <span class="coming-soon">
+
+                    در حال توسعه
+
+                </span>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     HOW IT WORKS
+===================================== -->
+
+<section class="how-section"
+         id="how-it-works">
+
+
+    <div class="marketing-container">
+
+
+        <div class="section-heading center-heading">
+
+
+            <span class="section-label">
+
+                نحوه کار
+
+            </span>
+
+
+            <h2>
+
+                در سه مرحله شروع کنید
+
+            </h2>
+
+
+            <p>
+
+                برای استفاده از FIT PLAN
+                نیازی به دانش فنی یا نرم‌افزار پیچیده ندارید.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="steps-grid">
+
+
+            <div class="step-card">
+
+
+                <div class="step-number">
+
+                    ۱
+
+                </div>
+
+
+                <h3>
+
+                    حساب بسازید
+
+                </h3>
+
+
+                <p>
+
+                    در کمتر از یک دقیقه
+                    حساب مربی خود را ایجاد کنید.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="step-connector"></div>
+
+
+
+            <div class="step-card">
+
+
+                <div class="step-number">
+
+                    ۲
+
+                </div>
+
+
+                <h3>
+
+                    برنامه بسازید
+
+                </h3>
+
+
+                <p>
+
+                    اطلاعات ورزشکار و حرکات
+                    مورد نظر را وارد کنید.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="step-connector"></div>
+
+
+
+            <div class="step-card">
+
+
+                <div class="step-number">
+
+                    ۳
+
+                </div>
+
+
+                <h3>
+
+                    ارائه کنید
+
+                </h3>
+
+
+                <p>
+
+                    برنامه را ذخیره یا خروجی بگیرید
+                    و برای شاگرد ارسال کنید.
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     FREE TRIAL
+===================================== -->
+
+<section class="trial-section">
+
+
+    <div class="marketing-container">
+
+
+        <div class="trial-box">
+
+
+            <div class="trial-content">
+
+
+                <span class="trial-label">
+
+                    تست رایگان
+
+                </span>
+
+
+                <h2>
+
+                    قبل از خرید، FIT PLAN را امتحان کنید.
+
+                </h2>
+
+
+                <p>
+
+                    بدون نیاز به تصمیم‌گیری عجولانه،
+                    ابتدا محیط برنامه‌ساز را تجربه کنید
+                    و سپس پلن مناسب خودتان را انتخاب کنید.
+
+                </p>
+
+
+
+                <div class="trial-benefits">
+
+
+                    <div>
+
+                        <span>✓</span>
+
+                        شروع سریع
+
+                    </div>
+
+
+                    <div>
+
+                        <span>✓</span>
+
+                        بدون پیچیدگی
+
+                    </div>
+
+
+                    <div>
+
+                        <span>✓</span>
+
+                        مناسب مربیان
+
+                    </div>
+
+
+                </div>
+
+
+
+                {% if session.get("coach_id") %}
+
+                    <a href="{{ url_for('subscribe') }}"
+                       class="trial-button">
+
+                        مشاهده پلن‌ها
+
+                        <span>←</span>
+
+                    </a>
+
+                {% else %}
+
+                    <a href="{{ url_for('register') }}"
+                       class="trial-button">
+
+                        شروع تست رایگان
+
+                        <span>←</span>
+
+                    </a>
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <div class="trial-visual">
+
+
+                <div class="trial-circle circle-one"></div>
+
+                <div class="trial-circle circle-two"></div>
+
+
+                <div class="trial-stat-card">
+
+                    <span>
+
+                        شروع با
+
+                    </span>
+
+
+                    <strong>
+
+                        FIT PLAN
+
+                    </strong>
+
+
+                    <small>
+
+                        حرفه‌ای‌تر برنامه بسازید
+
+                    </small>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     PRICING CTA
+===================================== -->
+
+<section class="pricing-preview">
+
+
+    <div class="marketing-container">
+
+
+        <div class="pricing-content">
+
+
+            <div>
+
+                <span class="section-label">
+
+                    پلن‌های اشتراک
+
+                </span>
+
+
+                <h2>
+
+                    پلنی متناسب با فعالیت خودتان انتخاب کنید.
+
+                </h2>
+
+
+                <p>
+
+                    از شروع کار تا مدیریت حرفه‌ای
+                    برنامه‌های تمرینی، پلن مناسب خودتان را انتخاب کنید.
+
+                </p>
+
+            </div>
+
+
+            <a href="{{ url_for('subscribe') }}"
+               class="pricing-button">
+
+                مشاهده پلن‌های اشتراک
+
+                <span>←</span>
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     FINAL CTA
+===================================== -->
+
+<section class="final-cta">
+
+
+    <div class="marketing-container">
+
+
+        <div class="final-cta-box">
+
+
+            <span>
+
+                FIT PLAN برای مربیان ساخته شده است
+
+            </span>
+
+
+            <h2>
+
+                وقت کمتر برای ساخت برنامه،
+                <br>
+
+                زمان بیشتر برای مربیگری.
+
+            </h2>
+
+
+            <p>
+
+                همین امروز شروع کنید و روش مدیریت
+                برنامه‌های تمرینی خود را تغییر دهید.
+
+            </p>
+
+
+            {% if session.get("coach_id") %}
+
+                <a href="{{ url_for('planner') }}"
+                   class="final-cta-button">
+
+                    ورود به پنل من
+
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('register') }}"
+                   class="final-cta-button">
+
+                    همین حالا شروع کن
+
+                </a>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+
+<footer class="home-footer"
+        id="about">
+
+
+    <div class="marketing-container">
+
+
+        <div class="footer-grid">
+
+
+            <div class="footer-brand">
+
+
+                <div class="home-brand">
+
+                    <div class="brand-icon">
+
+                        F
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            FIT PLAN
+
+                        </strong>
+
+
+                        <span>
+
+                            پلتفرم برنامه‌سازی مربیان
+
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <p>
+
+                    ابزار ساده و حرفه‌ای برای مربیانی
+                    که می‌خواهند برنامه‌های تمرینی خود را
+                    سریع‌تر و حرفه‌ای‌تر مدیریت کنند.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="footer-links">
+
+
+                <strong>
+
+                    دسترسی سریع
+
+                </strong>
+
+
+                <a href="#features">
+
+                    امکانات
+
+                </a>
+
+
+                <a href="#how-it-works">
+
+                    نحوه کار
+
+                </a>
+
+
+                <a href="{{ url_for('subscribe') }}">
+
+                    پلن اشتراک
+
+                </a>
+
+
+            </div>
+
+
+
+            <div class="footer-links">
+
+
+                <strong>
+
+                    حساب کاربری
+
+                </strong>
+
+
+                {% if session.get("coach_id") %}
+
+                    <a href="{{ url_for('planner') }}">
+
+                        پنل کاربری
+
+                    </a>
+
+
+                    <a href="{{ url_for('logout') }}">
+
+                        خروج از حساب
+
+                    </a>
+
+
+                {% else %}
+
+                    <a href="{{ url_for('login') }}">
+
+                        ورود
+
+                    </a>
+
+
+                    <a href="{{ url_for('register') }}">
+
+                        ثبت‌نام
+
+                    </a>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="footer-bottom">
+
+
+            <span>
+
+                © تمامی حقوق برای FIT PLAN محفوظ است.
+
+            </span>
+
+
+            <span>
+
+                طراحی شده برای مربیان حرفه‌ای
+
+            </span>
+
+
+        </div>
+
+
+    </div>
+
+
+</footer>
+
+
+</body>
+
+</html>
+```
