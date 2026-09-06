@@ -8,11 +8,10 @@
 </head>
 <body>
 
-{% include 'partials/header.html' %}
-
-<div class="marketing-container" style="padding-top:20px;">
-    <a href="javascript:history.back()" class="header-login-btn">← بازگشت</a>
-</div>
+<header class="mobile-header">
+    <div class="brand">FIT PLAN</div>
+    <a href="{{ url_for('planner') }}" class="logout">بازگشت</a>
+</header>
 
 <main class="planner">
 
