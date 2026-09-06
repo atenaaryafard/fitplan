@@ -14,9 +14,6 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 
-    <link rel="stylesheet"
-      href="{{ url_for('static', filename='home.css') }}">
-
 </head>
 
 
@@ -27,7 +24,100 @@
      HEADER
 ===================================== -->
 
-{% include 'partials/header.html' %}
+<header class="home-header">
+
+    <div class="home-navbar">
+
+        <!-- LOGO -->
+
+        <a href="{{ url_for('home') }}"
+           class="home-brand">
+
+            <div class="brand-icon">
+                F
+            </div>
+
+            <div>
+
+                <strong>FIT PLAN</strong>
+
+                <span>پلتفرم برنامه‌سازی مربیان</span>
+
+            </div>
+
+        </a>
+
+
+        <!-- DESKTOP MENU -->
+
+        <nav class="home-nav">
+
+            <a href="#features">
+                امکانات
+            </a>
+
+            <a href="#how-it-works">
+                نحوه کار
+            </a>
+
+            <a href="{{ url_for('subscribe') }}">
+                پلن اشتراک
+            </a>
+
+            <a href="#about">
+                درباره FIT PLAN
+            </a>
+
+        </nav>
+
+
+        <!-- ACTIONS -->
+
+        <div class="home-actions">
+
+            {% if session.get("coach_id") %}
+
+                <a href="{{ url_for('planner') }}"
+                   class="header-login-btn">
+
+                    پنل من
+
+                </a>
+
+
+                <a href="{{ url_for('logout') }}"
+                   class="header-register-btn logout-header-btn">
+
+                    خروج
+
+                </a>
+
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}"
+                   class="header-login-btn">
+
+                    ورود
+
+                </a>
+
+
+                <a href="{{ url_for('register') }}"
+                   class="header-register-btn">
+
+                    ثبت‌نام
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+</header>
 
 
 
