@@ -243,15 +243,6 @@ def init_db():
 
     conn.close()
 
-# =====================================
-
-@app.context_processor
-def inject_asset_url():
-    def asset_url(filename):
-        path = os.path.join(app.static_folder, filename)
-        version = int(os.path.getmtime(path)) if os.path.exists(path) else 0
-        return url_for('static', filename=filename) + f'?v={version}'
-    return dict(asset_url=asset_url)
 
 
 # =========================================================
