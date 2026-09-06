@@ -2411,10 +2411,3 @@ button {
 }
 
 
-
-
-@media (max-width: 700px) {
-    body {
-        background: red !important;
-    }
-}
