@@ -1918,7 +1918,7 @@ html {
    RESPONSIVE
 ===================================================== */
 
-@media (max-width: 1000px) {
+/* @media (max-width: 1000px) {
 
 
     .home-nav {
@@ -2043,7 +2043,7 @@ html {
         padding: 8px 11px;
 
         font-size: 10px;
-    }
+    } */
 
 
     .hero-section {
