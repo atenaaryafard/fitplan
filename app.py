@@ -244,7 +244,6 @@ def init_db():
     conn.close()
 
 
-
 # =========================================================
 # LOGIN REQUIRED
 # =========================================================
@@ -411,7 +410,9 @@ def reset_monthly_usage(coach):
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    if "coach_id" in session:
+        return redirect(url_for("planner"))
+    return redirect(url_for("login"))
 
 
 # =========================================================
