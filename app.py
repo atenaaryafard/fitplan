@@ -378,7 +378,92 @@ def reject_order(order_id):
     conn.close()
 
     return jsonify({"success": True})
+    
 
+# ============================
+# reset-pass
+# ============================
+
+@app.route("/admin/change-password", methods=["POST"])
+@admin_required
+def admin_change_password():
+
+    phone = request.form.get("phone", "").strip()
+    new_password = request.form.get("new_password", "").strip()
+
+    # بررسی اطلاعات
+    if not phone or not new_password:
+        return jsonify({
+            "success": False,
+            "message": "شماره موبایل و رمز جدید را وارد کنید."
+        }), 400
+
+    if not phone.startswith("09") or len(phone) != 11 or not phone.isdigit():
+        return jsonify({
+            "success": False,
+            "message": "شماره موبایل معتبر نیست."
+        }), 400
+
+    if len(new_password) < 8:
+        return jsonify({
+            "success": False,
+            "message": "رمز عبور باید حداقل ۸ کاراکتر باشد."
+        }), 400
+
+    conn = get_db()
+
+    try:
+
+        # پیدا کردن کاربر
+        coach = conn.execute("""
+            SELECT id, name, phone
+            FROM coaches
+            WHERE phone = ?
+        """, (phone,)).fetchone()
+
+        if not coach:
+            conn.close()
+
+            return jsonify({
+                "success": False,
+                "message": "کاربری با این شماره پیدا نشد."
+            }), 404
+
+        # ساخت هش امن
+        hashed_password = generate_password_hash(new_password)
+
+        # تغییر رمز
+        conn.execute("""
+            UPDATE coaches
+            SET password = ?
+            WHERE phone = ?
+        """, (
+            hashed_password,
+            phone
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "message": "رمز عبور با موفقیت تغییر کرد.",
+            "name": coach["name"],
+            "phone": coach["phone"],
+            "new_password": new_password
+        })
+
+    except Exception as e:
+
+        conn.rollback()
+        conn.close()
+
+        print("PASSWORD RESET ERROR:", e)
+
+        return jsonify({
+            "success": False,
+            "message": "خطا در تغییر رمز عبور."
+        }), 500
 
 
 # =========================================================
@@ -847,10 +932,6 @@ def planner():
 
     return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,plan_key=plan_key)
 
-
-# =========================================================
-# GET PROGRAM HISTORY
-# =========================================================
 
 # =========================================================
 # GET PROGRAM HISTORY
