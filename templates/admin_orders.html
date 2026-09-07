@@ -66,50 +66,6 @@
 
 <script>
 
-
-    <section class="section-card">
-
-    <div class="section-title">
-        <div>
-            <h2>🔐 تغییر رمز کاربر</h2>
-            <span>
-                با شماره موبایل کاربر، رمز عبور او را تغییر دهید
-            </span>
-        </div>
-    </div>
-
-    <div class="password-reset-admin">
-
-        <input
-            type="tel"
-            id="adminResetPhone"
-            placeholder="شماره موبایل کاربر"
-            maxlength="11"
-        >
-
-        <input
-            type="text"
-            id="adminNewPassword"
-            placeholder="رمز جدید"
-            minlength="8"
-        >
-
-        <button
-            type="button"
-            onclick="changeUserPassword()"
-        >
-            تغییر رمز
-        </button>
-
-    </div>
-
-    <div
-        id="passwordResetResult"
-        style="display:none;"
-    ></div>
-
-</section>
-
 async function approveOrder(orderId) {
 
     if (!confirm("این سفارش تایید و پلن کاربر فعال شود؟")) return;
