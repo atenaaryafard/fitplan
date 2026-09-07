@@ -2587,4 +2587,121 @@ button {
 
 }
 
+/* ================================
+   بازیابی رمز عبور
+================================ */
+
+.forgot-password-section {
+    width: 100%;
+    text-align: center;
+    margin-top: 12px;
+}
+
+
+.forgot-password-toggle {
+    border: none;
+    background: transparent;
+
+    color: #f59631;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    padding: 4px 0;
+
+    transition: opacity 0.2s ease;
+}
+
+
+.forgot-password-toggle:hover {
+    opacity: 0.7;
+}
+
+
+/* فرم در ابتدا بسته است */
+
+.password-recovery-box {
+    max-height: 0;
+    overflow: hidden;
+
+    opacity: 0;
+
+    margin-top: 0;
+
+    transition:
+        max-height 0.35s ease,
+        opacity 0.25s ease,
+        margin-top 0.35s ease;
+}
+
+
+/* بعد از کلیک باز می‌شود */
+
+.password-recovery-box.show {
+    max-height: 300px;
+
+    opacity: 1;
+
+    margin-top: 15px;
+}
+
+
+.recovery-description {
+    font-size: 12px;
+    line-height: 1.8;
+
+    color: #777;
+
+    margin: 0 0 10px;
+}
+
+
+.password-recovery-box input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 11px 12px;
+
+    margin-bottom: 9px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    outline: none;
+}
+
+
+.password-recovery-box input:focus {
+    border-color: #f59631;
+
+    box-shadow:
+        0 0 0 3px rgba(245, 150, 49, 0.12);
+}
+
+
+.telegram-reset-btn {
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #f59631;
+
+    color: #17202a;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
 
