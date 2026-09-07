@@ -2411,3 +2411,180 @@ button {
 }
 
 
+/* =========================
+   Password Recovery
+========================= */
+
+.forgot-password-section {
+    width: 100%;
+    text-align: center;
+    margin-top: 14px;
+}
+
+
+/* لینک باز کردن فرم */
+
+.forgot-password-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    color: #f59631;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: opacity 0.2s ease;
+}
+
+.forgot-password-toggle:hover {
+    opacity: 0.75;
+}
+
+
+/* فرم مخفی */
+
+.password-recovery-box {
+
+    max-height: 0;
+    overflow: hidden;
+
+    opacity: 0;
+
+    margin-top: 0;
+
+    transition:
+        max-height 0.35s ease,
+        opacity 0.25s ease,
+        margin-top 0.35s ease;
+}
+
+
+/* فرم باز شده */
+
+.password-recovery-box.show {
+
+    max-height: 300px;
+
+    opacity: 1;
+
+    margin-top: 16px;
+}
+
+
+/* توضیح */
+
+.recovery-description {
+
+    margin: 0 0 12px;
+
+    font-size: 12px;
+
+    line-height: 1.8;
+
+    color: #777;
+}
+
+
+/* ورودی‌ها */
+
+.password-recovery-box input {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 11px 13px;
+
+    margin-bottom: 9px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    color: #17202a;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.password-recovery-box input:focus {
+
+    border-color: #f59631;
+
+    box-shadow:
+        0 0 0 3px rgba(245, 150, 49, 0.12);
+}
+
+
+/* دکمه تلگرام */
+
+.telegram-reset-btn {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #f59631;
+
+    color: #17202a;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.telegram-reset-btn:hover {
+
+    opacity: 0.9;
+
+    transform: translateY(-1px);
+}
+
+
+/* موبایل */
+
+@media (max-width: 600px) {
+
+    .forgot-password-section {
+        margin-top: 12px;
+    }
+
+    .forgot-password-toggle {
+        font-size: 12px;
+    }
+
+    .password-recovery-box.show {
+        max-height: 320px;
+    }
+
+}
+
+
