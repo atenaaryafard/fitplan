@@ -65,37 +65,30 @@
         <button class="main-button">
             ورود
         </button>
-
-    </form>
-
-    <div class="forgot-password-box">
-
-    <p>رمز عبورتان را فراموش کرده‌اید؟</p>
+<div class="forgot-password-section">
 
     <button
         type="button"
-        class="telegram-reset-btn"
-        onclick="openTelegramReset()"
+        class="forgot-password-toggle"
+        onclick="togglePasswordRecovery()"
     >
-        🔐 بازیابی رمز عبور
+        بازیابی رمز عبور
     </button>
 
-</div>
+    <div
+        id="passwordRecoveryBox"
+        class="password-recovery-box"
+    >
 
-<div id="telegramResetModal" class="reset-modal">
-
-    <div class="reset-modal-content">
-
-        <h3>بازیابی رمز عبور</h3>
-
-        <p>
-            نام و شماره‌ای که با آن در FIT PLAN ثبت‌نام کرده‌اید را وارد کنید.
+        <p class="recovery-description">
+            نام و شماره موبایلی که با آن ثبت‌نام کرده‌اید را وارد کنید.
         </p>
 
         <input
             type="text"
             id="resetName"
             placeholder="نام و نام خانوادگی"
+            autocomplete="name"
         >
 
         <input
@@ -103,20 +96,16 @@
             id="resetPhone"
             placeholder="شماره موبایل"
             maxlength="11"
+            inputmode="numeric"
+            autocomplete="tel"
         >
 
         <button
             type="button"
+            class="telegram-reset-btn"
             onclick="sendTelegramReset()"
         >
             ادامه در تلگرام
-        </button>
-
-        <button
-            type="button"
-            onclick="closeTelegramReset()"
-        >
-            انصراف
         </button>
 
     </div>
