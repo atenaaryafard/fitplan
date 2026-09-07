@@ -96,7 +96,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS coaches (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
-            phone TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
 
             is_admin BOOLEAN DEFAULT FALSE,
@@ -125,12 +125,6 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
-    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone TEXT")
-
-    cursor.execute("""
-    CREATE UNIQUE INDEX IF NOT EXISTS coaches_phone_unique
-    ON coaches(phone)
-""")
 
     # =========================================================
     # PROGRAMS
@@ -378,92 +372,7 @@ def reject_order(order_id):
     conn.close()
 
     return jsonify({"success": True})
-    
 
-# ============================
-# reset-pass
-# ============================
-
-@app.route("/admin/change-password", methods=["POST"])
-@admin_required
-def admin_change_password():
-
-    phone = request.form.get("phone", "").strip()
-    new_password = request.form.get("new_password", "").strip()
-
-    # بررسی اطلاعات
-    if not phone or not new_password:
-        return jsonify({
-            "success": False,
-            "message": "شماره موبایل و رمز جدید را وارد کنید."
-        }), 400
-
-    if not phone.startswith("09") or len(phone) != 11 or not phone.isdigit():
-        return jsonify({
-            "success": False,
-            "message": "شماره موبایل معتبر نیست."
-        }), 400
-
-    if len(new_password) < 8:
-        return jsonify({
-            "success": False,
-            "message": "رمز عبور باید حداقل ۸ کاراکتر باشد."
-        }), 400
-
-    conn = get_db()
-
-    try:
-
-        # پیدا کردن کاربر
-        coach = conn.execute("""
-            SELECT id, name, phone
-            FROM coaches
-            WHERE phone = ?
-        """, (phone,)).fetchone()
-
-        if not coach:
-            conn.close()
-
-            return jsonify({
-                "success": False,
-                "message": "کاربری با این شماره پیدا نشد."
-            }), 404
-
-        # ساخت هش امن
-        hashed_password = generate_password_hash(new_password)
-
-        # تغییر رمز
-        conn.execute("""
-            UPDATE coaches
-            SET password = ?
-            WHERE phone = ?
-        """, (
-            hashed_password,
-            phone
-        ))
-
-        conn.commit()
-        conn.close()
-
-        return jsonify({
-            "success": True,
-            "message": "رمز عبور با موفقیت تغییر کرد.",
-            "name": coach["name"],
-            "phone": coach["phone"],
-            "new_password": new_password
-        })
-
-    except Exception as e:
-
-        conn.rollback()
-        conn.close()
-
-        print("PASSWORD RESET ERROR:", e)
-
-        return jsonify({
-            "success": False,
-            "message": "خطا در تغییر رمز عبور."
-        }), 500
 
 
 # =========================================================
@@ -516,43 +425,28 @@ def register():
     if request.method == "POST":
 
         name = request.form.get("name", "").strip()
-        phone = request.form.get("phone", "").strip()
+        email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
 
-        # بررسی خالی نبودن فیلدها
-        if not name or not phone or not password:
+        if not name or not email or not password:
             error = "همه فیلدها را تکمیل کنید."
             return render_template("register.html", error=error)
 
-        # بررسی شماره تماس
-        if not phone.startswith("09") or len(phone) != 11 or not phone.isdigit():
-            error = "شماره تماس معتبر نیست."
-            return render_template("register.html", error=error)
-
-        # بررسی رمز عبور
         if len(password) < 8:
             error = "رمز عبور باید حداقل ۸ کاراکتر باشد."
             return render_template("register.html", error=error)
 
         conn = get_db()
-        
+
         try:
 
             conn.execute("""
                 INSERT INTO coaches
-                (
-                    name,
-                    phone,
-                    password,
-                    monthly_limit,
-                    monthly_used,
-                    usage_month,
-                    created_at
-                )
+                (name, email, password, monthly_limit, monthly_used, usage_month, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (
                 name,
-                phone,
+                email,
                 generate_password_hash(password),
                 0,
                 0,
@@ -566,13 +460,8 @@ def register():
 
             conn.rollback()
             conn.close()
-
-            error = "این شماره تماس قبلاً ثبت شده است."
-
-            return render_template(
-                "register.html",
-                error=error
-            )
+            error = "این ایمیل قبلاً ثبت شده است."
+            return render_template("register.html", error=error)
 
         conn.close()
 
@@ -595,36 +484,21 @@ def login():
 
     if request.method == "POST":
 
-        phone = request.form.get("phone", "").strip()
+        email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
 
-        # بررسی شماره تماس
-        if not phone:
-            error = "شماره تماس را وارد کنید."
-            return render_template("login.html", error=error)
-
-        if not phone.startswith("09") or len(phone) != 11:
-            error = "شماره تماس معتبر نیست."
-            return render_template("login.html", error=error)
-
-        # اتصال به دیتابیس
         conn = get_db()
 
         coach = conn.execute("""
-            SELECT * FROM coaches WHERE phone = ?
-        """, (phone,)).fetchone()
+            SELECT * FROM coaches WHERE email = ?
+        """, (email,)).fetchone()
 
         conn.close()
 
-        # بررسی کاربر و رمز عبور
-        if not coach or not check_password_hash(
-            coach["password"],
-            password
-        ):
-            error = "شماره تماس یا رمز عبور اشتباه است."
+        if not coach or not check_password_hash(coach["password"], password):
+            error = "ایمیل یا رمز عبور اشتباه است."
             return render_template("login.html", error=error)
 
-        # ساخت Session
         session["coach_id"] = coach["id"]
         session["coach_name"] = coach["name"]
 
@@ -932,6 +806,10 @@ def planner():
 
     return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,plan_key=plan_key)
 
+
+# =========================================================
+# GET PROGRAM HISTORY
+# =========================================================
 
 # =========================================================
 # GET PROGRAM HISTORY
