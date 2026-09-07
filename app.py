@@ -114,6 +114,7 @@ def init_db():
             created_at TEXT
         )
     """)
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
 
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_id INTEGER")
