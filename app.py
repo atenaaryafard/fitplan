@@ -434,10 +434,17 @@ def register():
         phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
 
-        if not name or not email or not password:
+        # بررسی خالی نبودن فیلدها
+        if not name or not phone or not password:
             error = "همه فیلدها را تکمیل کنید."
             return render_template("register.html", error=error)
 
+        # بررسی شماره تماس
+        if not phone.startswith("09") or len(phone) != 11 or not phone.isdigit():
+            error = "شماره تماس معتبر نیست."
+            return render_template("register.html", error=error)
+
+        # بررسی رمز عبور
         if len(password) < 8:
             error = "رمز عبور باید حداقل ۸ کاراکتر باشد."
             return render_template("register.html", error=error)
@@ -448,11 +455,19 @@ def register():
 
             conn.execute("""
                 INSERT INTO coaches
-                (name, email, password, monthly_limit, monthly_used, usage_month, created_at)
+                (
+                    name,
+                    phone,
+                    password,
+                    monthly_limit,
+                    monthly_used,
+                    usage_month,
+                    created_at
+                )
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (
                 name,
-                email,
+                phone,
                 generate_password_hash(password),
                 0,
                 0,
@@ -466,8 +481,13 @@ def register():
 
             conn.rollback()
             conn.close()
-            error="این شماره تماس قبلاً ثبت شده است"
-            return render_template("register.html", error=error)
+
+            error = "این شماره تماس قبلاً ثبت شده است."
+
+            return render_template(
+                "register.html",
+                error=error
+            )
 
         conn.close()
 
