@@ -65,52 +65,8 @@
         <button class="main-button">
             ورود
         </button>
-<div class="forgot-password-section">
 
-    <button
-        type="button"
-        class="forgot-password-toggle"
-        onclick="togglePasswordRecovery()"
-    >
-        بازیابی رمز عبور
-    </button>
-
-    <div
-        id="passwordRecoveryBox"
-        class="password-recovery-box"
-    >
-
-        <p class="recovery-description">
-            نام و شماره موبایلی که با آن ثبت‌نام کرده‌اید را وارد کنید.
-        </p>
-
-        <input
-            type="text"
-            id="resetName"
-            placeholder="نام و نام خانوادگی"
-            autocomplete="name"
-        >
-
-        <input
-            type="tel"
-            id="resetPhone"
-            placeholder="شماره موبایل"
-            maxlength="11"
-            inputmode="numeric"
-            autocomplete="tel"
-        >
-
-        <button
-            type="button"
-            class="telegram-reset-btn"
-            onclick="sendTelegramReset()"
-        >
-            ادامه در تلگرام
-        </button>
-
-    </div>
-
-</div>
+    </form>
 
 
     <p class="switch-auth">
@@ -125,8 +81,7 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-    
+
 </body>
 
 </html>
