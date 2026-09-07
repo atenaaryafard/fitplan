@@ -126,16 +126,10 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone TEXT")
-    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS province TEXT")
 
     cursor.execute("""
     CREATE UNIQUE INDEX IF NOT EXISTS coaches_phone_unique
     ON coaches(phone)
-""")
-
-    cursor.execute("""
-    ALTER TABLE coaches
-    ALTER COLUMN email DROP NOT NULL
 """)
 
     # =========================================================
@@ -437,7 +431,7 @@ def register():
     if request.method == "POST":
 
         name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
+        phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
 
         if not name or not email or not password:
@@ -472,7 +466,7 @@ def register():
 
             conn.rollback()
             conn.close()
-            error = "این ایمیل قبلاً ثبت شده است."
+            error="این شماره تماس قبلاً ثبت شده است"
             return render_template("register.html", error=error)
 
         conn.close()
@@ -496,21 +490,36 @@ def login():
 
     if request.method == "POST":
 
-        email = request.form.get("email", "").strip().lower()
+        phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
 
+        # بررسی شماره تماس
+        if not phone:
+            error = "شماره تماس را وارد کنید."
+            return render_template("login.html", error=error)
+
+        if not phone.startswith("09") or len(phone) != 11:
+            error = "شماره تماس معتبر نیست."
+            return render_template("login.html", error=error)
+
+        # اتصال به دیتابیس
         conn = get_db()
 
         coach = conn.execute("""
-            SELECT * FROM coaches WHERE email = ?
-        """, (email,)).fetchone()
+            SELECT * FROM coaches WHERE phone = ?
+        """, (phone,)).fetchone()
 
         conn.close()
 
-        if not coach or not check_password_hash(coach["password"], password):
-            error = "ایمیل یا رمز عبور اشتباه است."
+        # بررسی کاربر و رمز عبور
+        if not coach or not check_password_hash(
+            coach["password"],
+            password
+        ):
+            error = "شماره تماس یا رمز عبور اشتباه است."
             return render_template("login.html", error=error)
 
+        # ساخت Session
         session["coach_id"] = coach["id"]
         session["coach_name"] = coach["name"]
 
