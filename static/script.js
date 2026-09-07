@@ -29,42 +29,51 @@ function sanitizeSocialInput(input) {
    تغییر رمز کاربر توسط ادمین
 ========================================= */
 
+```javascript
+/* =========================================
+   تغییر رمز کاربر توسط ادمین
+========================================= */
+
 async function changeUserPassword() {
 
-    const phone =
-        document.getElementById("adminResetPhone").value.trim();
+    const phoneElement =
+        document.getElementById("adminResetPhone");
 
-    const newPassword =
-        document.getElementById("adminNewPassword").value.trim();
+    const passwordElement =
+        document.getElementById("adminNewPassword");
 
     const resultBox =
         document.getElementById("passwordResetResult");
 
+    if (!phoneElement || !passwordElement || !resultBox) {
+        console.error("بخش تغییر رمز ادمین پیدا نشد.");
+        return;
+    }
+
+    const phone =
+        phoneElement.value.trim();
+
+    const newPassword =
+        passwordElement.value.trim();
 
     if (!phone) {
         alert("شماره موبایل کاربر را وارد کنید.");
         return;
     }
 
-
     if (!newPassword) {
         alert("رمز جدید را وارد کنید.");
         return;
     }
-
 
     if (newPassword.length < 8) {
         alert("رمز جدید باید حداقل ۸ کاراکتر باشد.");
         return;
     }
 
-
-    if (!confirm(
-        "آیا مطمئن هستید می‌خواهید رمز این کاربر تغییر کند؟"
-    )) {
+    if (!confirm("آیا مطمئن هستید می‌خواهید رمز این کاربر تغییر کند؟")) {
         return;
     }
-
 
     try {
 
@@ -85,98 +94,60 @@ async function changeUserPassword() {
             }
         );
 
-
-        const result = await response.json();
-
+        const result =
+            await response.json();
 
         if (!response.ok) {
-
             alert(result.message);
-
             return;
         }
 
-
         resultBox.style.display = "block";
 
-
-        resultBox.innerHTML = `
-            <div style="margin-top:15px;">
-
-                <strong>
-                    ✅ رمز با موفقیت تغییر کرد
-                </strong>
-
-                <br><br>
-
-                کاربر:
-                ${result.name}
-
-                <br>
-
-                شماره:
-                ${result.phone}
-
-                <br><br>
-
-                <strong>
-                    رمز جدید:
-                </strong>
-
-                <span id="newPasswordToCopy">
-                    ${result.new_password}
-                </span>
-
-                <br><br>
-
-                <button
-                    type="button"
-                    onclick="copyNewPassword()"
-                >
-                    📋 کپی رمز
-                </button>
-
-            </div>
-        `;
-
+        resultBox.textContent =
+            "رمز با موفقیت تغییر کرد.\n" +
+            "کاربر: " + result.name + "\n" +
+            "شماره: " + result.phone + "\n" +
+            "رمز جدید: " + result.new_password;
 
     } catch (error) {
 
+        console.error(
+            "PASSWORD CHANGE ERROR:",
+            error
+        );
+
         alert("خطا در ارتباط با سرور.");
-
-        console.error(error);
-
     }
-
 }
 
 
-function copyNewPassword() {
+/* =========================================
+   کپی رمز جدید
+========================================= */
+
+async function copyNewPassword() {
 
     const passwordElement =
         document.getElementById("newPasswordToCopy");
 
     if (!passwordElement) {
+        alert("رمز جدید پیدا نشد.");
         return;
     }
 
+    try {
 
-    const password =
-        passwordElement.innerText;
+        await navigator.clipboard.writeText(
+            passwordElement.innerText
+        );
 
+        alert("رمز کپی شد.");
 
-    navigator.clipboard.writeText(password)
-        .then(() => {
+    } catch (error) {
 
-            alert("رمز کپی شد.");
-
-        })
-        .catch(() => {
-
-            alert("کپی رمز انجام نشد.");
-
-        });
-
+        alert("کپی رمز انجام نشد.");
+    }
 }
 
 
@@ -187,20 +158,18 @@ function copyNewPassword() {
 function togglePasswordRecovery() {
 
     const box =
-        document.getElementById("passwordRecoveryBox");
-
+        document.getElementById(
+            "passwordRecoveryBox"
+        );
 
     if (!box) {
         console.error(
             "passwordRecoveryBox پیدا نشد."
         );
-
         return;
     }
 
-
     box.classList.toggle("show");
-
 }
 
 
@@ -216,7 +185,6 @@ function sendTelegramReset() {
     const phoneElement =
         document.getElementById("resetPhone");
 
-
     if (!nameElement || !phoneElement) {
 
         alert(
@@ -226,13 +194,11 @@ function sendTelegramReset() {
         return;
     }
 
-
     const name =
         nameElement.value.trim();
 
     const phone =
         phoneElement.value.trim();
-
 
     if (!name) {
 
@@ -242,7 +208,6 @@ function sendTelegramReset() {
 
         return;
     }
-
 
     if (
         !phone.startsWith("09") ||
@@ -257,32 +222,32 @@ function sendTelegramReset() {
         return;
     }
 
-
     const message =
-        `سلام، برای بازیابی رمز عبور FIT PLAN درخواست دارم.%0A%0A` +
-        `نام: ${name}%0A` +
-        `شماره ثبت‌شده: ${phone}`;
-
+        "سلام، برای بازیابی رمز عبور FIT PLAN درخواست دارم.\n\n" +
+        "نام: " + name + "\n" +
+        "شماره ثبت‌شده: " + phone;
 
     /*
-       اینجا username واقعی تلگرام خودت را بنویس.
-       علامت @ را ننویس.
+       username واقعی تلگرام خودت را اینجا بنویس.
+       @ ننویس.
     */
 
     const telegramUsername =
         "FITPLAN_support";
 
-
     const telegramUrl =
-        `https://t.me/${telegramUsername}?text=${message}`;
-
+        "https://t.me/" +
+        telegramUsername +
+        "?text=" +
+        encodeURIComponent(message);
 
     window.open(
         telegramUrl,
         "_blank"
     );
-
 }
+```
+
 
 
 /* =========================================
