@@ -39,7 +39,7 @@ def add_no_cache_headers(response):
     return response
 
 
-DATABASE_URL = "postgresql://postgres.vubgomgwhgvjjuhpcxdc:atena.aryafard@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
+DATABASE_URL = "postgresql://postgres:atena.aryafard@db.zutykaiaowoyakvrfjss.supabase.co:5432/postgres"
 
 # =========================================================
 # DATABASE
