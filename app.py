@@ -451,6 +451,16 @@ def register():
 
         conn = get_db()
 
+        # بررسی تکراری نبودن شماره تماس
+        existing = conn.execute("""
+            SELECT id FROM coaches WHERE phone = ?
+        """, (phone,)).fetchone()
+
+        if existing:
+            conn.close()
+            error = "این کاربر با این شماره قبلا ثبت‌نام کرده است."
+            return render_template("register.html", error=error)
+
         try:
 
             conn.execute("""
