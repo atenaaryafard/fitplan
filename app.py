@@ -125,6 +125,18 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS province TEXT")
+
+    cursor.execute("""
+    CREATE UNIQUE INDEX IF NOT EXISTS coaches_phone_unique
+    ON coaches(phone)
+""")
+
+    cursor.execute("""
+    ALTER TABLE coaches
+    ALTER COLUMN email DROP NOT NULL
+""")
 
     # =========================================================
     # PROGRAMS
