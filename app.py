@@ -96,7 +96,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS coaches (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
-            email TEXT UNIQUE
+            phone TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
 
             is_admin BOOLEAN DEFAULT FALSE,
