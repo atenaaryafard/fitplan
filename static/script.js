@@ -19,6 +19,135 @@ function sanitizeSocialInput(input) {
     input.value = value;
 }
 
+async function changeUserPassword() {
+
+    const phone =
+        document.getElementById("adminResetPhone").value.trim();
+
+    const newPassword =
+        document.getElementById("adminNewPassword").value.trim();
+
+    const resultBox =
+        document.getElementById("passwordResetResult");
+
+
+    if (!phone) {
+        alert("شماره موبایل کاربر را وارد کنید.");
+        return;
+    }
+
+    if (!newPassword) {
+        alert("رمز جدید را وارد کنید.");
+        return;
+    }
+
+    if (newPassword.length < 8) {
+        alert("رمز جدید باید حداقل ۸ کاراکتر باشد.");
+        return;
+    }
+
+
+    if (!confirm(
+        "آیا مطمئن هستید می‌خواهید رمز این کاربر تغییر کند؟"
+    )) {
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            "/admin/change-password",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+
+                body: new URLSearchParams({
+                    phone: phone,
+                    new_password: newPassword
+                })
+            }
+        );
+
+
+        const result = await response.json();
+
+
+        if (!response.ok) {
+
+            alert(result.message);
+
+            return;
+        }
+
+
+        resultBox.style.display = "block";
+
+        resultBox.innerHTML = `
+            <div style="margin-top:15px;">
+
+                <strong>
+                    ✅ رمز با موفقیت تغییر کرد
+                </strong>
+
+                <br><br>
+
+                کاربر:
+                ${result.name}
+
+                <br>
+
+                شماره:
+                ${result.phone}
+
+                <br><br>
+
+                <strong>
+                    رمز جدید:
+                </strong>
+
+                <span id="newPasswordToCopy">
+                    ${result.new_password}
+                </span>
+
+                <br><br>
+
+                <button
+                    type="button"
+                    onclick="copyNewPassword()"
+                >
+                    📋 کپی رمز
+                </button>
+
+            </div>
+        `;
+
+
+    } catch (error) {
+
+        alert("خطا در ارتباط با سرور.");
+
+        console.error(error);
+
+    }
+
+}
+
+
+function copyNewPassword() {
+
+    const password =
+        document.getElementById("newPasswordToCopy").innerText;
+
+    navigator.clipboard.writeText(password);
+
+    alert("رمز کپی شد.");
+
+}
+
 
 async function saveBrandProfile() {
 
