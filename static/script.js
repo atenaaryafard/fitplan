@@ -148,6 +148,54 @@ function copyNewPassword() {
 
 }
 
+<script>
+
+function openTelegramReset() {
+    document.getElementById("telegramResetModal").style.display = "flex";
+}
+
+function closeTelegramReset() {
+    document.getElementById("telegramResetModal").style.display = "none";
+}
+
+function sendTelegramReset() {
+
+    const name =
+        document.getElementById("resetName").value.trim();
+
+    const phone =
+        document.getElementById("resetPhone").value.trim();
+
+    if (!name) {
+        alert("لطفاً نام و نام خانوادگی را وارد کنید.");
+        return;
+    }
+
+    if (
+        !phone.startsWith("09") ||
+        phone.length !== 11 ||
+        !/^\d+$/.test(phone)
+    ) {
+        alert("لطفاً شماره موبایل معتبر وارد کنید.");
+        return;
+    }
+
+    const message =
+        `سلام، برای بازیابی رمز عبور FIT PLAN درخواست دارم.%0A%0A` +
+        `نام: ${name}%0A` +
+        `شماره ثبت‌شده: ${phone}`;
+
+    // اینجا username واقعی تلگرام خودت را بنویس
+    const telegramUsername = "FITPLAN_support";
+
+    const telegramUrl =
+        `https://t.me/${telegramUsername}?text=${message}`;
+
+    window.open(telegramUrl, "_blank");
+}
+
+</script>
+
 
 async function saveBrandProfile() {
 
