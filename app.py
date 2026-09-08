@@ -441,7 +441,7 @@ def register():
 
         try:
 
-            conn.execute("""
+            cursor = conn.execute("""
                 INSERT INTO coaches
                 (name, email, password, monthly_limit, monthly_used, usage_month, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -455,6 +455,8 @@ def register():
                 datetime.now().isoformat()
             ))
 
+            new_coach_id = cursor.lastrowid
+
             conn.commit()
 
         except Exception:
@@ -464,9 +466,11 @@ def register():
             error = "این ایمیل قبلاً ثبت شده است."
             return render_template("register.html", error=error)
 
+        session["coach_id"] = new_coach_id
+
         conn.close()
 
-        return redirect(url_for("login"))
+        return redirect(url_for("home"))
 
     return render_template("register.html", error=error)
 
