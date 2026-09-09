@@ -257,7 +257,7 @@ def init_db():
              NULL, NULL, TRUE, TRUE, 5, 5)
         """)
 
-    conn.commit()
+        conn.commit()
         
         cursor.execute("""
             UPDATE plans
@@ -274,8 +274,8 @@ def init_db():
             END
         """)
     
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
 
 
 # =========================================================
