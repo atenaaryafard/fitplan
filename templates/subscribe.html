@@ -107,18 +107,14 @@
                             {% endif %}
                         
                         
-                            <button
-                                type="button"
-                                class="primary-button"
-                                onclick="selectPlanForPurchase(
-                                    {{ plan.id }},
-                                    {{ plan.title|tojson }},
-                                    {{ plan.price|tojson }}
-                                )">
+                        <button
+                            type="button"
+                            class="primary-button"
+                            onclick='selectPlanForPurchase({{ plan.id }}, {{ plan.title|tojson }}, {{ plan.price|tojson }})'>
                         
-                                خرید اشتراک
+                            خرید اشتراک
                         
-                            </button>
+                        </button>
                         
                         </div>
 
@@ -135,7 +131,7 @@
          PAYMENT BOX
     ====================================== -->
 
-    <section class="section-card" id="paymentBox" style="display:none;">
+    <section class="section-card" id="paymentBox" style="display:none  style="display: none;">
 
         <div class="section-title">
             <div>
