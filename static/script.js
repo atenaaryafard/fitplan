@@ -872,6 +872,152 @@ async function viewProgram(id) {
 
 }
 
+// ===================
+//     suborder
+// ===================
+
+
+async function submitOrder() {
+
+    if (!selectedPlanId) {
+
+        alert("ابتدا یک پلن انتخاب کنید.");
+
+        return;
+
+    }
+
+
+    const tracking = document
+        .getElementById("trackingCode")
+        .value
+        .trim();
+
+
+    const receiptInput =
+        document.getElementById("receiptInput");
+
+
+    if (!tracking) {
+
+        alert("کد پیگیری واریز را وارد کنید.");
+
+        return;
+
+    }
+
+
+    if (!receiptInput.files.length) {
+
+        alert("لطفاً تصویر رسید پرداخت را انتخاب کنید.");
+
+        return;
+
+    }
+
+
+    const receiptFile = receiptInput.files[0];
+
+
+    const allowedTypes = [
+
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+
+    ];
+
+
+    if (!allowedTypes.includes(receiptFile.type)) {
+
+        alert("فقط تصاویر JPG، PNG و WEBP مجاز هستند.");
+
+        return;
+
+    }
+
+
+    if (receiptFile.size > 5 * 1024 * 1024) {
+
+        alert("حجم تصویر رسید نباید بیشتر از ۵ مگابایت باشد.");
+
+        return;
+
+    }
+
+
+    const formData = new FormData();
+
+
+    formData.append(
+        "plan_id",
+        selectedPlanId
+    );
+
+
+    formData.append(
+        "tracking_code",
+        tracking
+    );
+
+
+    formData.append(
+        "receipt",
+        receiptFile
+    );
+
+
+    try {
+
+        const response = await fetch(
+            "/api/order",
+            {
+
+                method: "POST",
+
+                body: formData
+
+            }
+        );
+
+
+        const result = await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                result.message ||
+                "خطا در ثبت درخواست."
+            );
+
+            return;
+
+        }
+
+
+        document.getElementById("paymentBox").style.display = "none";
+
+        document.getElementById("successBox").style.display = "block";
+
+
+        document.getElementById("trackingCode").value = "";
+
+        document.getElementById("receiptInput").value = "";
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert("خطا در ارتباط با سرور.");
+
+    }
+
+}
+
 
 /* =====================================================
    DELETE PROGRAM
