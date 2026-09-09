@@ -180,7 +180,6 @@
 
 <script>
 
-let selectedPlanId = null;
 
 async function startTrial(planId) {
 
@@ -208,57 +207,133 @@ async function startTrial(planId) {
 
 function selectPlanForPurchase(planId, title, price) {
 
-    selectedPlanId = planId;
+    console.log("SELECTED PLAN:", planId, title, price);
 
-    document.getElementById("selectedPlanLabel").textContent =
+    const paymentBox = document.getElementById("paymentBox");
+    const selectedPlanLabel = document.getElementById("selectedPlanLabel");
+    const successBox = document.getElementById("successBox");
+
+    if (!paymentBox) {
+        alert("خطا: paymentBox پیدا نشد.");
+        return;
+    }
+
+    paymentBox.dataset.planId = String(planId);
+
+    selectedPlanLabel.textContent =
         `پلن انتخابی: ${title} — ${price}`;
 
-    document.getElementById("paymentBox").style.display = "block";
-    document.getElementById("successBox").style.display = "none";
+    paymentBox.style.display = "block";
 
-    document.getElementById("paymentBox").scrollIntoView({ behavior: "smooth" });
+    if (successBox) {
+        successBox.style.display = "none";
+    }
 
+    console.log(
+        "PAYMENT BOX PLAN ID:",
+        paymentBox.dataset.planId
+    );
+
+    paymentBox.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
 async function submitOrder() {
 
-    if (!selectedPlanId) {
+    const paymentBox = document.getElementById("paymentBox");
+
+    if (!paymentBox) {
+        alert("خطا در صفحه پرداخت.");
+        return;
+    }
+
+    const planId = paymentBox.dataset.planId;
+
+    console.log("PLAN ID BEFORE SEND:", planId);
+
+    if (!planId) {
         alert("ابتدا یک پلن انتخاب کنید.");
         return;
     }
 
-    const tracking = document.getElementById("trackingCode").value.trim();
+    const trackingInput = document.getElementById("trackingCode");
+    const receiptInput = document.getElementById("receiptInput");
+
+    const tracking = trackingInput.value.trim();
 
     if (!tracking) {
         alert("کد پیگیری واریز را وارد کنید.");
         return;
     }
 
+    if (!receiptInput.files || receiptInput.files.length === 0) {
+        alert("لطفاً تصویر رسید پرداخت را انتخاب کنید.");
+        return;
+    }
+
+    const receiptFile = receiptInput.files[0];
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+    if (!allowedTypes.includes(receiptFile.type)) {
+        alert("فقط فایل JPG، PNG و WEBP مجاز است.");
+        return;
+    }
+
+    if (receiptFile.size > 5 * 1024 * 1024) {
+        alert("حجم تصویر نباید بیشتر از ۵ مگابایت باشد.");
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("plan_id", String(planId));
+    formData.append("tracking_code", tracking);
+    formData.append("receipt", receiptFile);
+
+    console.log("===== ORDER DATA =====");
+    console.log("plan_id:", formData.get("plan_id"));
+    console.log("tracking_code:", formData.get("tracking_code"));
+    console.log("receipt:", formData.get("receipt"));
+    console.log("======================");
+
     try {
 
         const response = await fetch("/api/order", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                plan_id: selectedPlanId,
-                tracking_code: tracking
-            })
+            body: formData
         });
 
         const result = await response.json();
 
+        console.log("SERVER RESPONSE:", result);
+
         if (!response.ok) {
-            alert(result.message);
+            alert(result.message || "خطا در ثبت درخواست.");
             return;
         }
 
-        document.getElementById("paymentBox").style.display = "none";
+        paymentBox.style.display = "none";
+
         document.getElementById("successBox").style.display = "block";
 
-    } catch (error) {
-        alert("خطا در ثبت درخواست.");
-    }
+        trackingInput.value = "";
+        receiptInput.value = "";
 
+        paymentBox.dataset.planId = "";
+
+    } catch (error) {
+
+        console.error("ORDER ERROR:", error);
+
+        alert("خطا در ارتباط با سرور.");
+    }
 }
 
 </script>
