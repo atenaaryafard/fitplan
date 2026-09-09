@@ -52,6 +52,12 @@
                 <div class="history-actions">
                     <button onclick="approveOrder({{ order.id }})">تایید</button>
                     <button onclick="rejectOrder({{ order.id }})" class="history-delete">رد کردن</button>
+                    <a
+                    href="{{ url_for('view_order_receipt', order_id=order.id) }}"
+                    target="_blank"
+                    class="receipt-view-btn">
+                    🧾 مشاهده رسید
+                     </a>
                 </div>
                 {% endif %}
 
