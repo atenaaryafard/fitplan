@@ -213,299 +213,88 @@ async function startTrial(planId) {
 
 }
 
-
+let selectedPlanId = null;
+    
 function selectPlanForPurchase(planId, title, price) {
 
-    console.log("========== PLAN SELECT ==========");
-    console.log("planId:", planId);
-    console.log("title:", title);
-    console.log("price:", price);
-
-    const paymentBox =
-        document.getElementById("paymentBox");
-
-    const selectedPlanLabel =
-        document.getElementById("selectedPlanLabel");
+    const paymentBox = document.getElementById("paymentBox");
+    const selectedPlanLabel = document.getElementById("selectedPlanLabel");
 
     if (!paymentBox) {
-
-        console.error("paymentBox پیدا نشد.");
-
         alert("خطا در صفحه پرداخت.");
-
         return;
-
     }
 
-    /*
-     * ذخیره شناسه پلن داخل خود paymentBox
-     */
     paymentBox.dataset.planId = String(planId);
+    selectedPlanLabel.textContent = `پلن انتخابی: ${title} — ${price}`;
 
-    console.log(
-        "saved plan id:",
-        paymentBox.dataset.planId
-    );
-
-    /*
-     * نمایش اطلاعات پلن
-     */
-    selectedPlanLabel.textContent =
-        `پلن انتخابی: ${title} — ${price}`;
-
-    /*
-     * نمایش باکس پرداخت
-     */
     paymentBox.style.display = "block";
-
     document.getElementById("successBox").style.display = "none";
 
-    /*
-     * رفتن به قسمت پرداخت
-     */
-    paymentBox.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-
+    paymentBox.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-
 
 async function submitOrder() {
 
-    const paymentBox =
-        document.getElementById("paymentBox");
+    const paymentBox = document.getElementById("paymentBox");
+    const selectedPlanId = paymentBox.dataset.planId;
 
-
-    /*
-     * گرفتن پلن انتخاب شده از paymentBox
-     */
-    const selectedPlanId =
-        paymentBox.dataset.planId;
-
-
-    console.log("========== SUBMIT ORDER ==========");
-    console.log("selectedPlanId:", selectedPlanId);
-
-
-    /*
-     * بررسی پلن
-     */
     if (!selectedPlanId) {
-
-        console.error(
-            "PLAN ID وجود ندارد."
-        );
-
         alert("ابتدا یک پلن انتخاب کنید.");
-
         return;
-
     }
 
+    const tracking = document.getElementById("trackingCode").value.trim();
+    const receiptInput = document.getElementById("receiptInput");
 
-    /*
-     * کد پیگیری
-     */
-    const tracking =
-        document
-            .getElementById("trackingCode")
-            .value
-            .trim();
-
-
-    /*
-     * فایل رسید
-     */
-    const receiptInput =
-        document.getElementById("receiptInput");
-
-
-    /*
-     * بررسی کد پیگیری
-     */
     if (!tracking) {
-
         alert("کد پیگیری واریز را وارد کنید.");
-
         return;
-
     }
 
-
-    /*
-     * بررسی رسید
-     */
-    if (
-        !receiptInput.files ||
-        receiptInput.files.length === 0
-    ) {
-
+    if (!receiptInput.files || receiptInput.files.length === 0) {
         alert("لطفاً تصویر رسید پرداخت را انتخاب کنید.");
-
         return;
-
     }
 
-
-    const receiptFile =
-        receiptInput.files[0];
-
-
-    /*
-     * فرمت‌های مجاز
-     */
-    const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    ];
-
+    const receiptFile = receiptInput.files[0];
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
     if (!allowedTypes.includes(receiptFile.type)) {
-
-        alert(
-            "فقط فایل JPG، PNG و WEBP مجاز است."
-        );
-
+        alert("فقط فایل JPG، PNG و WEBP مجاز است.");
         return;
-
     }
 
-
-    /*
-     * حداکثر ۵ مگابایت
-     */
     if (receiptFile.size > 5 * 1024 * 1024) {
-
-        alert(
-            "حجم تصویر نباید بیشتر از ۵ مگابایت باشد."
-        );
-
+        alert("حجم تصویر نباید بیشتر از ۵ مگابایت باشد.");
         return;
-
     }
 
-
-    /*
-     * ساخت FormData
-     */
     const formData = new FormData();
-
-
-    formData.append(
-        "plan_id",
-        selectedPlanId
-    );
-
-
-    formData.append(
-        "tracking_code",
-        tracking
-    );
-
-
-    formData.append(
-        "receipt",
-        receiptFile
-    );
-
-
-    /*
-     * بررسی نهایی در Console
-     */
-    console.log(
-        "plan_id:",
-        formData.get("plan_id")
-    );
-
-    console.log(
-        "tracking_code:",
-        formData.get("tracking_code")
-    );
-
-    console.log(
-        "receipt:",
-        formData.get("receipt")
-    );
-
+    formData.append("plan_id", selectedPlanId);
+    formData.append("tracking_code", tracking);
+    formData.append("receipt", receiptFile);
 
     try {
-
-        const response =
-            await fetch("/api/order", {
-
-                method: "POST",
-
-                body: formData
-
-            });
-
-
-        const result =
-            await response.json();
-
-
-        console.log(
-            "SERVER RESPONSE:",
-            result
-        );
-
+        const response = await fetch("/api/order", { method: "POST", body: formData });
+        const result = await response.json();
 
         if (!response.ok) {
-
-            alert(
-                result.message ||
-                "خطا در ثبت درخواست."
-            );
-
+            alert(result.message || "خطا در ثبت درخواست.");
             return;
-
         }
 
-
-        /*
-         * موفقیت
-         */
         paymentBox.style.display = "none";
+        document.getElementById("successBox").style.display = "block";
 
-        document.getElementById(
-            "successBox"
-        ).style.display = "block";
-
-
-        /*
-         * پاک کردن فرم
-         */
-        document.getElementById(
-            "trackingCode"
-        ).value = "";
-
-
-        document.getElementById(
-            "receiptInput"
-        ).value = "";
-
-
-        /*
-         * پاک کردن پلن انتخاب شده
-         */
+        document.getElementById("trackingCode").value = "";
+        document.getElementById("receiptInput").value = "";
         paymentBox.dataset.planId = "";
 
-
     } catch (error) {
-
-        console.error(
-            "ORDER ERROR:",
-            error
-        );
-
-        alert(
-            "خطا در ارتباط با سرور."
-        );
-
+        console.error("ORDER ERROR:", error);
+        alert("خطا در ارتباط با سرور.");
     }
-
 }
 
 </script>
