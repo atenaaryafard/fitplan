@@ -75,9 +75,9 @@ def get_plan(plan_id):
 
     conn = get_db()
 
-        plan = conn.execute("""
-            SELECT * FROM plans WHERE id = ?
-        """, (plan_id,)).fetchone()
+    plan = conn.execute("""
+        SELECT * FROM plans WHERE id = ?
+    """, (plan_id,)).fetchone()
 
 
     conn.close()
@@ -256,21 +256,23 @@ def init_db():
             ('premium', 'پلن نامحدود', 'بدون محدودیت زمانی + امکانات ویژه بیشتر', '7,950,000 تومان',
              NULL, NULL, TRUE, TRUE, 5, 5)
         """)
-
-        conn.commit()
-
-         cursor.execute("""
+        
+        cursor.execute("""
             UPDATE plans
             SET price = CASE plan_key
-                WHEN 'basic' THEN '1,980,000 '
-                WHEN 'branded' THEN '4,750,000 '
-                WHEN 'premium' THEN '7,950,000'
+        
+                WHEN 'basic' THEN '1,980,000 تومان'
+        
+                WHEN 'branded' THEN '4,750,000 تومان'
+        
+                WHEN 'premium' THEN '7,950,000 تومان'
+        
                 ELSE price
+        
             END
-         """)
+        """)
     
-        conn.commit()
-
+    conn.commit()
     conn.close()
 
 
