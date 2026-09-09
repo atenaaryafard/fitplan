@@ -74,48 +74,52 @@
 
                 </ul>
 
-                <div class="plan-actions">
-
-                    {% if trial_eligible and plan.plan_key != 'premium' %}
-
-                <button 
-                    type="button"
-                    class="secondary-button" 
-                    onclick="startTrial({{ plan.id }})">
-            
-                    تست رایگان {{ plan.trial_days }} روزه
-            
-                </button>
-            
-            {% elif not trial_eligible %}
-            
-                <button 
-                    type="button"
-                    class="secondary-button" 
-                    disabled 
-                    title="تست رایگان فقط برای کاربران جدید است">
-            
-                    تست رایگان استفاده شده
-            
-                </button>
-            
-                  {% endif %}
-
-                        <button class="secondary-button" disabled title="تست رایگان فقط برای کاربران جدید است">
-                            تست رایگان استفاده شده
-                        </button>
-
-                    {% endif %}
-
-                    <button
-                        class="primary-button"
-                        onclick="selectPlanForPurchase({{ plan.id }}, '{{ plan.title }}', '{{ plan.price }}')">
-
-                        خرید اشتراک
-
-                    </button>
-
-                </div>
+                        <div class="plan-actions">
+                        
+                            {% if plan.plan_key != 'premium' %}
+                        
+                                {% if trial_eligible %}
+                        
+                                    <button
+                                        type="button"
+                                        class="secondary-button"
+                                        onclick="startTrial({{ plan.id }})">
+                        
+                                        تست رایگان {{ plan.trial_days }} روزه
+                        
+                                    </button>
+                        
+                                {% else %}
+                        
+                                    <button
+                                        type="button"
+                                        class="secondary-button"
+                                        disabled
+                                        title="تست رایگان فقط برای کاربران جدید است">
+                        
+                                        تست رایگان استفاده شده
+                        
+                                    </button>
+                        
+                                {% endif %}
+                        
+                            {% endif %}
+                        
+                        
+                            <button
+                                type="button"
+                                class="primary-button"
+                                onclick="selectPlanForPurchase(
+                                    {{ plan.id }},
+                                    {{ plan.title|tojson }},
+                                    {{ plan.price|tojson }}
+                                )">
+                        
+                                خرید اشتراک
+                        
+                            </button>
+                        
+                        </div>
 
             </div>
 
