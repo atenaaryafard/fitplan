@@ -872,151 +872,151 @@ async function viewProgram(id) {
 
 }
 
-// ===================
-//     suborder
-// ===================
+// // ===================
+// //     suborder
+// // ===================
 
 
-async function submitOrder() {
+// async function submitOrder() {
 
-    if (!selectedPlanId) {
+//     if (!selectedPlanId) {
 
-        alert("ابتدا یک پلن انتخاب کنید.");
+//         alert("ابتدا یک پلن انتخاب کنید.");
 
-        return;
+//         return;
 
-    }
+//     }
 
 
-    const tracking = document
-        .getElementById("trackingCode")
-        .value
-        .trim();
+//     const tracking = document
+//         .getElementById("trackingCode")
+//         .value
+//         .trim();
 
 
-    const receiptInput =
-        document.getElementById("receiptInput");
+//     const receiptInput =
+//         document.getElementById("receiptInput");
 
 
-    if (!tracking) {
+//     if (!tracking) {
 
-        alert("کد پیگیری واریز را وارد کنید.");
+//         alert("کد پیگیری واریز را وارد کنید.");
 
-        return;
+//         return;
 
-    }
+//     }
 
 
-    if (!receiptInput.files.length) {
+//     if (!receiptInput.files.length) {
 
-        alert("لطفاً تصویر رسید پرداخت را انتخاب کنید.");
+//         alert("لطفاً تصویر رسید پرداخت را انتخاب کنید.");
 
-        return;
+//         return;
 
-    }
+//     }
 
 
-    const receiptFile = receiptInput.files[0];
+//     const receiptFile = receiptInput.files[0];
 
 
-    const allowedTypes = [
+//     const allowedTypes = [
 
-        "image/jpeg",
-        "image/png",
-        "image/webp"
+//         "image/jpeg",
+//         "image/png",
+//         "image/webp"
 
-    ];
+//     ];
 
 
-    if (!allowedTypes.includes(receiptFile.type)) {
+//     if (!allowedTypes.includes(receiptFile.type)) {
 
-        alert("فقط تصاویر JPG، PNG و WEBP مجاز هستند.");
+//         alert("فقط تصاویر JPG، PNG و WEBP مجاز هستند.");
 
-        return;
+//         return;
 
-    }
+//     }
 
 
-    if (receiptFile.size > 5 * 1024 * 1024) {
+//     if (receiptFile.size > 5 * 1024 * 1024) {
 
-        alert("حجم تصویر رسید نباید بیشتر از ۵ مگابایت باشد.");
+//         alert("حجم تصویر رسید نباید بیشتر از ۵ مگابایت باشد.");
 
-        return;
+//         return;
 
-    }
+//     }
 
 
-    const formData = new FormData();
+//     const formData = new FormData();
 
 
-    formData.append(
-        "plan_id",
-        selectedPlanId
-    );
+//     formData.append(
+//         "plan_id",
+//         selectedPlanId
+//     );
 
 
-    formData.append(
-        "tracking_code",
-        tracking
-    );
+//     formData.append(
+//         "tracking_code",
+//         tracking
+//     );
 
 
-    formData.append(
-        "receipt",
-        receiptFile
-    );
+//     formData.append(
+//         "receipt",
+//         receiptFile
+//     );
 
 
-    try {
+//     try {
 
-        const response = await fetch(
-            "/api/order",
-            {
+//         const response = await fetch(
+//             "/api/order",
+//             {
 
-                method: "POST",
+//                 method: "POST",
 
-                body: formData
+//                 body: formData
 
-            }
-        );
+//             }
+//         );
 
 
-        const result = await response.json();
+//         const result = await response.json();
 
 
-        if (!response.ok) {
+//         if (!response.ok) {
 
-            alert(
-                result.message ||
-                "خطا در ثبت درخواست."
-            );
+//             alert(
+//                 result.message ||
+//                 "خطا در ثبت درخواست."
+//             );
 
-            return;
+//             return;
 
-        }
+//         }
 
 
-        document.getElementById("paymentBox").style.display = "none";
+//         document.getElementById("paymentBox").style.display = "none";
 
-        document.getElementById("successBox").style.display = "block";
+//         document.getElementById("successBox").style.display = "block";
 
 
-        document.getElementById("trackingCode").value = "";
+//         document.getElementById("trackingCode").value = "";
 
-        document.getElementById("receiptInput").value = "";
+//         document.getElementById("receiptInput").value = "";
 
 
-    }
+//     }
 
-    catch (error) {
+//     catch (error) {
 
-        console.error(error);
+//         console.error(error);
 
-        alert("خطا در ارتباط با سرور.");
+//         alert("خطا در ارتباط با سرور.");
 
-    }
+//     }
 
-}
+// }
 
 
 /* =====================================================
