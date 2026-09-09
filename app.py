@@ -433,7 +433,7 @@ def approve_order(order_id):
         order["plan_id"],
         now.isoformat(),
         expires_at,
-        plan["monthly_quota"] or 999999,
+        plan["monthly_quota"] or نامحدود,
         now.strftime("%Y-%m"),
         order["coach_id"]
     ))
