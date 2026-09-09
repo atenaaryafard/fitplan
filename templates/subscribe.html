@@ -133,16 +133,29 @@
         </div>
 
         <div class="form-grid" style="margin-top:20px;">
-
-            <!-- <div class="field" style="grid-column: 1 / -1;">
-                <label>کد پیگیری / ۴ رقم آخر تراکنش</label>
-                <input id="trackingCode" type="text" placeholder="کد پیگیری واریز را وارد کنید"> -->
                 
 
                 <div class="field tracking-field" style="grid-column: 1 / -1;">
                  <label>کد پیگیری / ۴ رقم آخر تراکنش</label>
-                 <input id="trackingCode" type="text" placeholder="کد پیگیری واریز را وارد کنید">
-</div>
+                 <input id="trackingCode" type="text" placeholder="کد پیگیری واریز را وارد کنید"></div>
+
+                <div class="field receipt-field" style="grid-column: 1 / -1;">
+                
+                    <label for="receiptInput">
+                        تصویر رسید پرداخت
+                    </label>
+                
+                    <input
+                        id="receiptInput"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
+                
+                    <small class="receipt-help">
+                        فرمت‌های مجاز: JPG، PNG و WEBP — حداکثر حجم ۵ مگابایت
+                    </small>
+                
+                </div>
             </div>
 
         </div>
