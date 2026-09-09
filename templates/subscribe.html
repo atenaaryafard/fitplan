@@ -108,13 +108,19 @@
                             {% endif %}
                         
                         
-                <button
-                    type="button"
-                    class="primary-button"
-                    onclick='selectPlanForPurchase({{ plan.id }}, {{ plan.title|tojson }}, {{ plan.price|tojson }})'>
-                    خرید اشتراک
-                </button>
-
+                            <button
+                                type="button"
+                                class="primary-button"
+                                onclick="selectPlanForPurchase(
+                                    {{ plan.id }},
+                                    {{ plan.title|tojson }},
+                                    {{ plan.price|tojson }}
+                                )">
+                        
+                                خرید اشتراک
+                        
+                            </button>
+                    </div>
             </div>
 
             {% endfor %}
