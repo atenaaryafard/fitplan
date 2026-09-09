@@ -214,6 +214,21 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        ALTER TABLE orders
+        ADD COLUMN IF NOT EXISTS receipt_data BYTEA
+    """)
+    
+    cursor.execute("""
+        ALTER TABLE orders
+        ADD COLUMN IF NOT EXISTS receipt_filename TEXT
+    """)
+    
+    cursor.execute("""
+        ALTER TABLE orders
+        ADD COLUMN IF NOT EXISTS receipt_mimetype TEXT
+    """)
+
     conn.commit()
 
     # =========================================================
@@ -289,18 +304,92 @@ def admin_orders():
 
     conn = get_db()
 
+
     orders = conn.execute("""
-        SELECT o.id, o.coach_id, o.plan_id, o.amount, o.tracking_code,
-               o.status, o.created_at, c.name as coach_name, p.title as plan_title
+        SELECT
+            o.id,
+            o.coach_id,
+            o.plan_id,
+            o.amount,
+            o.tracking_code,
+            o.status,
+            o.created_at,
+            o.reviewed_at,
+            o.receipt_filename,
+
+            c.name AS coach_name,
+            c.email AS coach_email,
+
+            p.title AS plan_title
+
         FROM orders o
-        JOIN coaches c ON o.coach_id = c.id
-        JOIN plans p ON o.plan_id = p.id
+
+        JOIN coaches c
+            ON o.coach_id = c.id
+
+        JOIN plans p
+            ON o.plan_id = p.id
+
         ORDER BY o.created_at DESC
     """).fetchall()
 
+
     conn.close()
 
-    return render_template("admin_orders.html", orders=orders)
+
+    return render_template(
+
+        "admin_orders.html",
+
+        orders=orders
+
+    )
+
+# =========================================================
+# VIEW PAYMENT RECEIPT
+# =========================================================
+
+@app.route("/admin/orders/<int:order_id>/receipt")
+@admin_required
+def view_order_receipt(order_id):
+
+    conn = get_db()
+
+
+    order = conn.execute("""
+        SELECT
+            id,
+            receipt_data,
+            receipt_filename,
+            receipt_mimetype
+        FROM orders
+        WHERE id = ?
+    """, (order_id,)).fetchone()
+
+
+    conn.close()
+
+
+    if not order:
+
+        return "رسید پیدا نشد.", 404
+
+
+    if not order["receipt_data"]:
+
+        return "برای این سفارش رسیدی ثبت نشده است.", 404
+
+
+    return send_file(
+
+        BytesIO(bytes(order["receipt_data"])),
+
+        mimetype=order["receipt_mimetype"] or "image/jpeg",
+
+        download_name=order["receipt_filename"] or "receipt.jpg"
+
+    )
+
 
 # ============
 
@@ -356,6 +445,7 @@ def approve_order(order_id):
     conn.close()
 
     return jsonify({"success": True})
+
 
 # ===================
 
@@ -741,43 +831,208 @@ def activate_trial(plan_id):
 
 
 # =========================================================
-# CREATE ORDER (خرید واقعی)
+# CREATE ORDER + PAYMENT RECEIPT
 # =========================================================
+
+ALLOWED_RECEIPT_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
+
+MAX_RECEIPT_SIZE = 5 * 1024 * 1024
+
 
 @app.route("/api/order", methods=["POST"])
 @login_required
 def create_order():
 
-    data = request.get_json()
+    try:
 
-    if not data or not data.get("tracking_code"):
-        return jsonify({"success": False, "message": "کد پیگیری را وارد کنید."}), 400
+        plan_id = request.form.get("plan_id")
+        tracking_code = request.form.get("tracking_code", "").strip()
+        receipt = request.files.get("receipt")
 
-    plan_id = data.get("plan_id")
 
-    plan = get_plan(plan_id)
+        # بررسی پلن
 
-    if not plan:
-        return jsonify({"success": False, "message": "پلن نامعتبر است."}), 400
+        if not plan_id:
 
-    conn = get_db()
+            return jsonify({
+                "success": False,
+                "message": "پلن انتخاب نشده است."
+            }), 400
 
-    conn.execute("""
-        INSERT INTO orders
-        (coach_id, plan_id, amount, tracking_code, status, created_at)
-        VALUES (?, ?, ?, ?, 'pending', ?)
-    """, (
-        session["coach_id"],
-        plan_id,
-        plan["price"],
-        data.get("tracking_code", ""),
-        datetime.now().isoformat()
-    ))
 
-    conn.commit()
-    conn.close()
+        try:
 
-    return jsonify({"success": True})
+            plan_id = int(plan_id)
+
+        except ValueError:
+
+            return jsonify({
+                "success": False,
+                "message": "شناسه پلن نامعتبر است."
+            }), 400
+
+
+        plan = get_plan(plan_id)
+
+
+        if not plan:
+
+            return jsonify({
+                "success": False,
+                "message": "پلن نامعتبر است."
+            }), 400
+
+
+        # بررسی کد پیگیری
+
+        if not tracking_code:
+
+            return jsonify({
+                "success": False,
+                "message": "کد پیگیری پرداخت را وارد کنید."
+            }), 400
+
+
+        # بررسی رسید
+
+        if not receipt or receipt.filename == "":
+
+            return jsonify({
+                "success": False,
+                "message": "لطفاً تصویر رسید پرداخت را انتخاب کنید."
+            }), 400
+
+
+        # بررسی پسوند فایل
+
+        if "." not in receipt.filename:
+
+            return jsonify({
+                "success": False,
+                "message": "فرمت فایل معتبر نیست."
+            }), 400
+
+
+        extension = receipt.filename.rsplit(".", 1)[1].lower()
+
+
+        if extension not in ALLOWED_RECEIPT_EXTENSIONS:
+
+            return jsonify({
+                "success": False,
+                "message": "فقط تصاویر JPG، JPEG، PNG و WEBP مجاز هستند."
+            }), 400
+
+
+        # خواندن فایل
+
+        receipt_data = receipt.read()
+
+
+        # بررسی حجم
+
+        if len(receipt_data) == 0:
+
+            return jsonify({
+                "success": False,
+                "message": "فایل رسید خالی است."
+            }), 400
+
+
+        if len(receipt_data) > MAX_RECEIPT_SIZE:
+
+            return jsonify({
+                "success": False,
+                "message": "حجم تصویر رسید نباید بیشتر از ۵ مگابایت باشد."
+            }), 400
+
+
+        # جلوگیری از ارسال سفارش تکراری pending
+
+        conn = get_db()
+
+
+        existing_order = conn.execute("""
+            SELECT id
+            FROM orders
+            WHERE coach_id = ?
+              AND plan_id = ?
+              AND status = 'pending'
+            LIMIT 1
+        """, (
+            session["coach_id"],
+            plan_id
+        )).fetchone()
+
+
+        if existing_order:
+
+            conn.close()
+
+            return jsonify({
+                "success": False,
+                "message": "شما قبلاً یک درخواست در حال بررسی برای این پلن دارید."
+            }), 400
+
+
+        # ذخیره سفارش و تصویر رسید
+
+        conn.execute("""
+            INSERT INTO orders
+            (
+                coach_id,
+                plan_id,
+                amount,
+                tracking_code,
+                receipt_data,
+                receipt_filename,
+                receipt_mimetype,
+                status,
+                created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+        """, (
+            session["coach_id"],
+            plan_id,
+            plan["price"],
+            tracking_code,
+            psycopg2.Binary(receipt_data),
+            secure_filename(receipt.filename),
+            receipt.mimetype or "image/jpeg",
+            datetime.now().isoformat()
+        ))
+
+
+        conn.commit()
+
+        conn.close()
+
+
+        return jsonify({
+            "success": True,
+            "message": "رسید پرداخت با موفقیت ارسال شد و پس از بررسی، اشتراک شما فعال خواهد شد."
+        })
+
+
+    except Exception as e:
+
+        print("ORDER ERROR:", repr(e))
+
+
+        try:
+
+            conn.rollback()
+            conn.close()
+
+        except:
+
+            pass
+
+
+        return jsonify({
+            "success": False,
+            "message": "خطایی در ثبت درخواست پرداخت رخ داد."
+        }), 500
 
 
 # =========================================================
