@@ -60,33 +60,46 @@
                         {% if plan.duration_days %}
                             اعتبار {{ plan.duration_days }} روزه
                         {% else %}
-                            بدون محدودیت زمانی
+                            مناسب باشکاه های بزرگ
                         {% endif %}
                     </li>
 
                     <li class="{% if plan.has_custom_logo %}feature-yes{% else %}feature-no{% endif %}">
-                        لوگوی شخصی روی PDF
+                       درج برند و شخصی باشگاه
                     </li>
 
                     <li class="{% if plan.has_extra_features %}feature-yes{% else %}feature-no{% endif %}">
-                        امکانات ویژه بیشتر
+                        ثبت تغییرات شاگرد
                     </li>
 
                 </ul>
 
                 <div class="plan-actions">
 
-                    {% if trial_eligible %}
+                    {% if trial_eligible and plan.plan_key != 'premium' %}
 
-                        <button
-                            class="secondary-button"
-                            onclick="startTrial({{ plan.id }})">
-
-                            تست رایگان {{ plan.trial_days }} روزه
-
-                        </button>
-
-                    {% else %}
+                <button 
+                    type="button"
+                    class="secondary-button" 
+                    onclick="startTrial({{ plan.id }})">
+            
+                    تست رایگان {{ plan.trial_days }} روزه
+            
+                </button>
+            
+            {% elif not trial_eligible %}
+            
+                <!-- <button 
+                    type="button"
+                    class="secondary-button" 
+                    disabled 
+                    title="تست رایگان فقط برای کاربران جدید است">
+            
+                    تست رایگان استفاده شده
+            
+                </button>
+            
+            {% endif %} -->
 
                         <button class="secondary-button" disabled title="تست رایگان فقط برای کاربران جدید است">
                             تست رایگان استفاده شده
@@ -128,21 +141,21 @@
 
         <div class="card-info-box">
             <span>شماره کارت</span>
-            <strong id="cardNumber">6104-XXXX-XXXX-XXXX</strong>
-            <span>به نام: نام و نام خانوادگی</span>
+            <strong id="cardNumber">6219-8619-7836-6051</strong>
+            <span>به نام: آتنا آریافرد</span>
         </div>
 
         <div class="form-grid" style="margin-top:20px;">
                 
 
                 <div class="field tracking-field" style="grid-column: 1 / -1;">
-                 <label>کد پیگیری / ۴ رقم آخر تراکنش</label>
-                 <input id="trackingCode" type="text" placeholder="کد پیگیری واریز را وارد کنید"></div>
+                 <label>کد پیگیری:</label>
+                 <input id="trackingCode" type="text" placeholder=" /در صورت نبود, عدد 1111 را وارد کنیدکد پیگیری واریز را وارد کنید"></div>
 
                 <div class="field receipt-field" style="grid-column: 1 / -1;">
                 
                     <label for="receiptInput">
-                        تصویر رسید پرداخت
+                         تصویر رسید پرداخت
                     </label>
                 
                     <input
@@ -171,7 +184,7 @@
 
     <section class="section-card" id="successBox" style="display:none;">
         <div class="empty-workout">
-            ✅ درخواست شما ثبت شد. پس از تایید پرداخت، اشتراک شما فعال خواهد شد.
+            ✅ درخواست شما ثبت شد. پس از تایید پرداخت، اشتراک شما تا ساعات آینده فعال خواهد شد.
         </div>
     </section>
 
