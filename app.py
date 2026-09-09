@@ -253,7 +253,7 @@ def init_db():
              60, 30, TRUE, FALSE, 3, 3),
 
             ('premium', 'پلن نامحدود', 'بدون محدودیت زمانی + امکانات ویژه بیشتر', '7,950,000 تومان',
-             NULL, NULL, TRUE, TRUE, 0, 0)
+             NULL, NULL, TRUE, TRUE, 5, 5)
         """)
 
         conn.commit()
