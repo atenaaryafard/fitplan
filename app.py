@@ -1036,33 +1036,6 @@ def create_order():
         }), 500
 
 
-# =======================
-# مشاهده عکس واریزی
-# =======================
-
-@app.route("/admin/order/<int:order_id>/receipt")
-@login_required
-def view_order_receipt(order_id):
-
-    conn = get_db()
-
-    order = conn.execute("""
-        SELECT receipt_data, receipt_mimetype
-        FROM orders
-        WHERE id = ?
-    """, (order_id,)).fetchone()
-
-    conn.close()
-
-    if not order or not order["receipt_data"]:
-        return "رسید پیدا نشد.", 404
-
-    return Response(
-        bytes(order["receipt_data"]),
-        mimetype=order["receipt_mimetype"] or "image/jpeg"
-    )
-
-
 # =========================================================
 # PLANNER
 # =========================================================
