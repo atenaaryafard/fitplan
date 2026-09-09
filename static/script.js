@@ -885,6 +885,22 @@ async function submitOrder() {
         return;
 
     }
+    function selectPlanForPurchase(planId, title, price) {
+
+    console.log("PLAN SELECTED:", planId);
+
+    selectedPlanId = planId;
+
+    document.getElementById("selectedPlanLabel").textContent =
+        `پلن انتخابی: ${title} — ${price}`;
+
+    document.getElementById("paymentBox").style.display = "block";
+    document.getElementById("successBox").style.display = "none";
+
+    document.getElementById("paymentBox").scrollIntoView({
+        behavior: "smooth"
+    });
+}
 
 
     const tracking = document
