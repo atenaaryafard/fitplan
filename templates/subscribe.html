@@ -20,10 +20,10 @@
         <div class="section-title">
             <div>
                 <h2>پلن‌های اشتراک</h2>
-                <span>پلن مناسب خودتان را انتخاب کنید و همین حالا شروع کنید</span>
+                <span style="font-size: 11px;">پلن مناسب خودتان را انتخاب کنید و همین حالا شروع کنید</span>
                 <br>
                 <br>
-                <span>توجه: هر کدام از پلن هایی که انتخاب کنید همان فعال میشود و قابل تغییر نیست. میتوانید با خرید اشتراک پلن انتخابی تجربه جدیدی را داشته باشید.</span>
+                <span style="color: #f3d69b;">توجه: هر کدام از پلن هایی که انتخاب کنید همان فعال میشود و قابل تغییر نیست. میتوانید با خرید اشتراک پلن انتخابی تجربه جدیدی را داشته باشید.</span>
 
                 {% if not trial_eligible %}
                 <p class="trial-used-note">
@@ -139,7 +139,10 @@
         <div class="section-title">
             <div>
                 <h2>اطلاعات واریز</h2>
-                <span id="selectedPlanLabel"></span><br>
+                <span id="selectedPlanLabel"></span>
+                <br>
+                <br>
+                
                  <span>
         راهنمای واریز: ابتدا پلن خود را انتخاب و دکمه خرید اشتراک را بزنید.<br>
         سپس هزینه را با توجه به شماره کارت درج شده واریز کرده و شماره تماس خود را به همراه عکس یا شات واریزی ارسال کنید.<br>
@@ -161,6 +164,7 @@
                 <div class="field tracking-field" style="grid-column: 1 / -1;">
                  <label>شماره تماس:</label>
                  <input id="trackingCode" type="text" placeholder=" شماره تماس خود را وارد کنید"></div>
+            <br>
 
                 <div class="field receipt-field" style="grid-column: 1 / -1;">
                 
@@ -171,31 +175,25 @@
                     <input
                         id="receiptInput"
                         type="file"
-                        accept=".jpg,.jpeg,.png,.webp
+                        accept=".jpg,.jpeg,.png,.webp"
                         style= "    width: 100%;
 
                         margin-top: 15px;
-                        
                         border: none;
-                        
                         padding: 14px;
-                        
                         border-radius: 10px;
-                        
                         font-size: 14px;
-                        
                         background: #f1ae56;
-                        
                         color: white;"
-                        
                     >
                 
-                    <small class="receipt-help" style='font-size: 8px;'>
+                    <small class="receipt-help" style='font-size: 9px;'>
                         فرمت‌های مجاز: JPG، PNG و WEBP — حداکثر حجم ۵ مگابایت
                     </small>
                 
                 </div>
             </div>
+        <br>
 
         <button class="submit-order-btn" onclick="submitOrder()">
                ثبت درخواست و ارسال برای بررسی
