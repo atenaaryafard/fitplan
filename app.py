@@ -237,46 +237,34 @@ def init_db():
     # SEED کردن ۳ پلن (فقط اگر خالی باشه)
     # =========================================================
 
-    cursor.execute("SELECT COUNT(*) FROM plans")
-    count = cursor.fetchone()[0]
+       cursor.execute("""
+        INSERT INTO plans
+        (plan_key, title, description, price, monthly_quota, duration_days,
+         has_custom_logo, has_extra_features, trial_days, trial_quota)
+        VALUES
+        ('basic', 'پلن ساده', 'ساخت برنامه تمرینی با سهمیه ماهانه', '1,980,000 تومان',
+         30, 30, FALSE, FALSE, 3, 3),
 
-    if count == 0:
+        ('branded', 'پلن با لوگوی شخصی', 'همه امکانات پایه به‌علاوه درج لوگوی خودتان روی PDF', '4,750,000 تومان',
+         60, 30, TRUE, FALSE, 3, 3),
 
-        cursor.execute("""
-            INSERT INTO plans
-            (plan_key, title, description, price, monthly_quota, duration_days,
-             has_custom_logo, has_extra_features, trial_days, trial_quota)
-            VALUES
-            ('basic', 'پلن ساده', 'ساخت برنامه تمرینی با سهمیه ماهانه', '1,980,000 تومان',
-             30, 30, FALSE, FALSE, 3, 3),
+        ('premium', 'پلن نامحدود', 'بدون محدودیت زمانی + امکانات ویژه بیشتر', '7,950,000 تومان',
+         NULL, NULL, TRUE, TRUE, 5, 5)
 
-            ('branded', 'پلن با لوگوی شخصی', 'همه امکانات پایه به‌علاوه درج لوگوی خودتان روی PDF', '4,750,000 تومان',
-             60, 30, TRUE, FALSE, 3, 3),
+        ON CONFLICT (plan_key) DO UPDATE SET
+            title = EXCLUDED.title,
+            description = EXCLUDED.description,
+            price = EXCLUDED.price,
+            monthly_quota = EXCLUDED.monthly_quota,
+            duration_days = EXCLUDED.duration_days,
+            has_custom_logo = EXCLUDED.has_custom_logo,
+            has_extra_features = EXCLUDED.has_extra_features,
+            trial_days = EXCLUDED.trial_days,
+            trial_quota = EXCLUDED.trial_quota
+    """)
 
-            ('premium', 'پلن نامحدود', 'بدون محدودیت زمانی + امکانات ویژه بیشتر', '7,950,000 تومان',
-             NULL, NULL, TRUE, TRUE, 5, 5)
-        """)
-
-        conn.commit()
-        
-        cursor.execute("""
-            UPDATE plans
-            SET price = CASE plan_key
-        
-                WHEN 'basic' THEN '1,980,000 تومان'
-        
-                WHEN 'branded' THEN '4,750,000 تومان'
-        
-                WHEN 'premium' THEN '7,950,000 تومان'
-        
-                ELSE price
-        
-            END
-        """)
-    
-        conn.commit()
-        conn.close()
-
+    conn.commit()
+    conn.close()
 
 # =========================================================
 # LOGIN REQUIRED
