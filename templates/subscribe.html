@@ -109,17 +109,15 @@
                             {% endif %}
                         
                         
-                            <button
-                                type="button"
-                                class="primary-button"
-                                onclick="selectPlanForPurchase(
-                                    {{ plan.id }},
-                                    {{ plan.title|tojson }},
-                                    {{ plan.price|tojson }}
-                                )">
-                        
+                            <button 
+                                type="button" 
+                                class="primary-button buy-plan-btn"
+                                data-plan-id="{{ plan.id }}"
+                                data-plan-title="{{ plan.title }}"
+                                data-plan-price="{{ plan.price }}">
+                            
                                 خرید اشتراک
-                        
+                            
                             </button>
                     </div>
             </div>
@@ -141,7 +139,7 @@
         <div class="section-title">
             <div>
                 <h2>اطلاعات واریز</h2>
-                <span id="selectedPlanLabel"></span><br><br>
+                <span id="selectedPlanLabel"></span><br>
                  <span>
         راهنمای واریز: ابتدا پلن خود را انتخاب و دکمه خرید اشتراک را بزنید.<br>
         سپس هزینه را با توجه به شماره کارت درج شده واریز کرده و شماره تماس خود را به همراه عکس یا شات واریزی ارسال کنید.<br>
@@ -367,6 +365,45 @@ console.log("PLAN ID BEFORE SEND:", planId);
         alert("خطا در ارتباط با سرور.");
     }
 }
+
+    document.querySelectorAll(".buy-plan-btn").forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        const planId = this.dataset.planId;
+        const title = this.dataset.planTitle;
+        const price = this.dataset.planPrice;
+
+        const paymentBox = document.getElementById("paymentBox");
+        const selectedPlanId = document.getElementById("selectedPlanId");
+        const selectedPlanLabel = document.getElementById("selectedPlanLabel");
+        const successBox = document.getElementById("successBox");
+
+        if (!paymentBox || !selectedPlanId || !selectedPlanLabel) {
+            alert("خطا در بخش پرداخت.");
+            return;
+        }
+
+        selectedPlanId.value = planId;
+
+        selectedPlanLabel.textContent =
+            `پلن انتخابی: ${title} — ${price}`;
+
+        paymentBox.style.display = "block";
+
+        if (successBox) {
+            successBox.style.display = "none";
+        }
+
+        paymentBox.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        console.log("SELECTED PLAN:", planId, title, price);
+    });
+
+});
 
 </script>
 
