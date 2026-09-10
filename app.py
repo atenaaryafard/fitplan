@@ -844,7 +844,7 @@ def activate_trial(plan_id):
 
     return jsonify({
         "success": True,
-        "message": f"تست رایگان {trial_days} روزه فعال شد."
+        "message": f"تست رایگان برای {trial_days} بار فعال شد."
     })
 
 
@@ -907,7 +907,7 @@ def create_order():
 
             return jsonify({
                 "success": False,
-                "message": "کد پیگیری پرداخت را وارد کنید."
+                "message": "شماره تماس را وارد کنید."
             }), 400
 
 
@@ -1049,7 +1049,7 @@ def create_order():
 
         return jsonify({
             "success": False,
-            "message": "خطایی در ثبت درخواست پرداخت رخ داد."
+            "message": ".خطایی در ثبت درخواست پرداخت رخ داد. در صورت عدم حل مشکل با پشتیبانی ارتباط بگبرید."
         }), 500
 
 
@@ -1169,7 +1169,7 @@ def save_program():
     if remaining <= 0:
         return jsonify({
             "success": False,
-            "message": "سهمیه ساخت برنامه این ماه شما تمام شده است."
+            "message": "سهمیه ساخت برنامه این ماه شما تمام شده است. برای تمدید به صفحه خرید اشتراک بروید."
         }), 403
 
     data = request.get_json()
