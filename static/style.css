@@ -2166,9 +2166,11 @@ button {
 
     letter-spacing: 1px;
 
-    border: 1.5px dashed #d5d9df;
+    border-style: solid;
 
-    background: #fafbfc;
+    border-color: #111827;
+
+    background: white;
 
 }
 
