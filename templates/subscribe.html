@@ -238,37 +238,37 @@ async function startTrial(planId) {
 
 function selectPlanForPurchase(planId, title, price) {
 
-    console.log("SELECTED PLAN:", planId, title, price);
-
     const paymentBox = document.getElementById("paymentBox");
+    const selectedPlanId = document.getElementById("selectedPlanId");
     const selectedPlanLabel = document.getElementById("selectedPlanLabel");
     const successBox = document.getElementById("successBox");
 
-    if (!paymentBox) {
-        alert("خطا: paymentBox پیدا نشد.");
+    if (!paymentBox || !selectedPlanId || !selectedPlanLabel) {
+        alert("خطا در انتخاب پلن.");
         return;
     }
 
-    paymentBox.dataset.planId = String(planId);
+    // ذخیره پلن انتخاب شده
+    selectedPlanId.value = String(planId);
 
+    // نمایش نام و قیمت پلن
     selectedPlanLabel.textContent =
         `پلن انتخابی: ${title} — ${price}`;
 
+    // نمایش بخش پرداخت
     paymentBox.style.display = "block";
 
     if (successBox) {
         successBox.style.display = "none";
     }
 
-    console.log(
-        "PAYMENT BOX PLAN ID:",
-        paymentBox.dataset.planId
-    );
-
+    // رفتن به قسمت پرداخت
     paymentBox.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
+
+    console.log("SELECTED PLAN ID:", selectedPlanId.value);
 }
 
 async function submitOrder() {
@@ -280,9 +280,10 @@ async function submitOrder() {
         return;
     }
 
-    const planId = paymentBox.dataset.planId;
+    const selectedPlanId = document.getElementById("selectedPlanId");
+    const planId = selectedPlanId ? selectedPlanId.value : "";
 
-    console.log("PLAN ID BEFORE SEND:", planId);
+console.log("PLAN ID BEFORE SEND:", planId);
 
     if (!planId) {
         alert("ابتدا یک پلن انتخاب کنید.");
@@ -357,7 +358,7 @@ async function submitOrder() {
         trackingInput.value = "";
         receiptInput.value = "";
 
-        paymentBox.dataset.planId = "";
+        selectedPlanId.value = "";
 
     } catch (error) {
 
