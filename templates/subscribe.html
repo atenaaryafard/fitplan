@@ -22,6 +22,7 @@
                 <h2>پلن‌های اشتراک</h2>
                 <span>پلن مناسب خودتان را انتخاب کنید و همین حالا شروع کنید</span>
                 <br>
+                <br>
                 <span>توجه: هر کدام از پلن هایی که انتخاب کنید همان فعال میشود و قابل تغییر نیست. میتوانید با خرید اشتراک پلن انتخابی تجربه جدیدی را داشته باشید.</span>
 
                 {% if not trial_eligible %}
@@ -153,8 +154,8 @@
                 
 
                 <div class="field tracking-field" style="grid-column: 1 / -1;">
-                 <label>کد پیگیری:</label>
-                 <input id="trackingCode" type="text" placeholder=" /کد پیگیری را وارد کنید. درصورت نبود عدد 1111 را وارد کنید"></div>
+                 <label>شماره تماس:</label>
+                 <input id="trackingCode" type="text" placeholder=" شماره تماس خود را وارد کنید"></div>
 
                 <div class="field receipt-field" style="grid-column: 1 / -1;">
                 
@@ -281,7 +282,7 @@ async function submitOrder() {
     const tracking = trackingInput.value.trim();
 
     if (!tracking) {
-        alert("کد پیگیری واریز را وارد کنید.");
+        alert("شماره تماس را وارد کنید.");
         return;
     }
 
