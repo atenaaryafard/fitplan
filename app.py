@@ -128,6 +128,7 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone TEXT")
 
     # =========================================================
     # PROGRAMS
