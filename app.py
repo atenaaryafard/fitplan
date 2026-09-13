@@ -523,10 +523,15 @@ def register():
 
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip().lower()
+        phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
 
         if not name or not email or not password:
             error = "همه فیلدها را تکمیل کنید."
+            return render_template("register.html", error=error)
+
+        if not phone.replace("+", "").isdigit():
+            error = "شماره تماس فقط باید شامل عدد باشد."
             return render_template("register.html", error=error)
 
         if len(password) < 8:
@@ -539,11 +544,12 @@ def register():
 
             cursor = conn.execute("""
                 INSERT INTO coaches
-                (name, email, password, monthly_limit, monthly_used, usage_month, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                (name, email, phone, password, monthly_limit, monthly_used, usage_month, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 name,
                 email,
+                phone,
                 generate_password_hash(password),
                 0,
                 0,
@@ -559,7 +565,7 @@ def register():
 
             conn.rollback()
             conn.close()
-            error = "این ایمیل قبلاً ثبت شده است."
+            error = "این ایمیل یا شماره قبلاً ثبت شده است."
             return render_template("register.html", error=error)
 
         session["coach_id"] = new_coach_id
@@ -585,19 +591,19 @@ def login():
 
     if request.method == "POST":
 
-        email = request.form.get("email", "").strip().lower()
+        identifier = request.form.get("identifier", "").strip().lower()
         password = request.form.get("password", "")
 
         conn = get_db()
 
         coach = conn.execute("""
-            SELECT * FROM coaches WHERE email = ?
-        """, (email,)).fetchone()
+            SELECT * FROM coaches WHERE email = ? OR phone = ?
+        """, (identifier, identifier)).fetchone()
 
         conn.close()
 
         if not coach or not check_password_hash(coach["password"], password):
-            error = "ایمیل یا رمز عبور اشتباه است."
+            error = "اطلاعات ورود اشتباه است."
             return render_template("login.html", error=error)
 
         session["coach_id"] = coach["id"]
