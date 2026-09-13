@@ -526,13 +526,14 @@ def register():
         phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
 
-        if not name or not email or not password:
+        if not name or not email or not phone or not password:
             error = "همه فیلدها را تکمیل کنید."
             return render_template("register.html", error=error)
 
         if not phone.replace("+", "").isdigit():
             error = "شماره تماس فقط باید شامل عدد باشد."
             return render_template("register.html", error=error)
+            
 
         if len(password) < 8:
             error = "رمز عبور باید حداقل ۸ کاراکتر باشد."
@@ -546,6 +547,7 @@ def register():
                 INSERT INTO coaches
                 (name, email, phone, password, monthly_limit, monthly_used, usage_month, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                RETURNING id
             """, (
                 name,
                 email,
@@ -557,7 +559,7 @@ def register():
                 datetime.now().isoformat()
             ))
 
-            new_coach_id = cursor.lastrowid
+            new_coach_id = cursor.fetchone()["id"]
 
             conn.commit()
 
