@@ -533,6 +533,10 @@ def register():
         if not phone.replace("+", "").isdigit():
             error = "شماره تماس فقط باید شامل عدد باشد."
             return render_template("register.html", error=error)
+
+        if not re.match(r"^09\d{9}$", phone):
+           error = "شماره تماس باید ۱۱ رقم باشد و با 09 شروع شود (مثل 09123456789)."
+           return render_template("register.html", error=error)
             
 
         if len(password) < 8:
