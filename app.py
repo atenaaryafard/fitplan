@@ -1104,7 +1104,7 @@ def get_programs():
 
     conn = get_db()
 
-    programs = conn.fetchall("""
+    cursor = conn.execute("""
         SELECT
             id,
             athlete_name,
@@ -1123,6 +1123,8 @@ def get_programs():
         ORDER BY id DESC
     """, (coach_id,))
 
+    programs = cursor.fetchall()
+
     result = []
 
     for program in programs:
@@ -1135,15 +1137,20 @@ def get_programs():
             "athlete_weight": program["athlete_weight"],
             "athlete_goal": program["athlete_goal"],
             "athlete_gender": program["athlete_gender"],
+
             "program_data": json.loads(program["program_data"])
                 if isinstance(program["program_data"], str)
                 else program["program_data"],
+
             "notes": program["notes"],
+
             "sizes": json.loads(program["sizes"])
                 if isinstance(program["sizes"], str)
                 else program["sizes"],
+
             "created_at": program["created_at"],
             "share_token": program["share_token"],
+
             "program_url": url_for(
                 "public_program",
                 share_token=program["share_token"],
