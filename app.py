@@ -11,6 +11,7 @@ from flask import (
 
 import os
 import re
+import secrets
 import psycopg2
 import psycopg2.extras
 import json
@@ -118,7 +119,6 @@ def init_db():
         )
     """)
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
-
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_id INTEGER")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_started_at TEXT")
@@ -152,6 +152,8 @@ def init_db():
             FOREIGN KEY(coach_id) REFERENCES coaches(id)
         )
     """)
+    
+    cursor.execute("""ALTER TABLE programsADD COLUMN IF NOT EXISTS share_token TEXT UNIQUE""")
 
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT")
 
@@ -1085,11 +1087,6 @@ def planner():
 
     return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,plan_key=plan_key)
 
-
-# =========================================================
-# GET PROGRAM HISTORY
-# =========================================================
-
 # =========================================================
 # GET PROGRAM HISTORY
 # =========================================================
@@ -1194,8 +1191,8 @@ def save_program():
     conn.execute("""
         INSERT INTO programs
         (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
-         athlete_goal,athlete_gender,sizes, program_name, program_data, notes, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         athlete_goal,athlete_gender,sizes, program_name, program_data, notes, created_at, share_token)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         coach["id"],
         data.get("athlete_name", ""),
@@ -1209,6 +1206,7 @@ def save_program():
         json.dumps(days, ensure_ascii=False),
         data.get("notes", ""),
         datetime.now().isoformat()
+        share_token
     ))
 
     conn.execute("""
@@ -1223,9 +1221,51 @@ def save_program():
     plan = get_active_plan(coach)
     remaining_display = "نامحدود" if (plan and plan["monthly_quota"] is None) else (remaining - 1)
 
-    return jsonify({"success": True, "remaining": remaining - 1})
+
+    program_url = url_for(
+    "public_program",
+    share_token=share_token,
+    _external=True
+    )
+    return jsonify({"success": True, "remaining": remaining - 1, "program_url": program_url})
 
 
+# =========================================================
+# PUBLIC PROGRAM PAGE
+# =========================================================
+
+@app.route("/program/<share_token>")
+def public_program(share_token):
+
+    conn = get_db()
+
+    program = conn.execute("""
+        SELECT *
+        FROM programs
+        WHERE share_token = ?
+    """, (share_token,)).fetchone()
+
+    conn.close()
+
+    if not program:
+        return "برنامه پیدا نشد یا لینک آن معتبر نیست.", 404
+
+    data = dict(program)
+
+    try:
+        data["program_data"] = json.loads(data["program_data"])
+    except:
+        data["program_data"] = []
+
+    try:
+        data["sizes"] = json.loads(data["sizes"] or "{}")
+    except:
+        data["sizes"] = {}
+
+    return render_template(
+        "student_program.html",
+        program=data
+    )
 # =========================================================
 # DELETE PROGRAM
 # =========================================================
