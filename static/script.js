@@ -757,7 +757,9 @@ async function saveProgram() {
 
         loadHistory();
 
-        openPreview(data);
+        if (result.program_url) {
+            window.open(result.program_url, "_blank");
+        }
 
         resetProgramForm();
 
