@@ -1199,20 +1199,15 @@ def get_program(program_id):
 # =========================================================
 # SAVE PROGRAM
 # =========================================================
-
 @app.route("/api/program", methods=["POST"])
 @login_required
 def save_program():
 
-    conn = get_db()
+    data = request.get_json()
 
-    coach = conn.execute("""
-        SELECT * FROM coaches WHERE id = ?
-    """, (session["coach_id"],)).fetchone()
+    coach_id = session["coach_id"]
 
-    conn.close()
-
-    coach = reset_monthly_usage(coach)
+    share_token = secrets.token_urlsafe(16)
 
     remaining = coach["monthly_limit"] - coach["monthly_used"]
 
