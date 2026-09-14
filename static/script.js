@@ -779,62 +779,91 @@ async function saveProgram() {
 
 async function loadHistory() {
 
-    const container = document.getElementById("historyList");
+    const historyList = document.getElementById("historyList");
 
     try {
 
         const response = await fetch("/api/programs");
-
         const programs = await response.json();
 
-        if (programs.length === 0) {
+        if (!programs || programs.length === 0) {
 
-            container.innerHTML = `
+            historyList.innerHTML = `
                 <div class="empty-history">
-                    هنوز برنامه‌ای ذخیره نشده است.
+                    هنوز برنامه‌ای ثبت نشده است.
                 </div>
             `;
 
             return;
-
         }
 
-        container.innerHTML = "";
+        historyList.innerHTML = programs.map(program => {
 
-        programs.forEach(program => {
+            return `
+                <div class="history-item">
 
-            const item = document.createElement("div");
+                    <div class="history-info">
 
-            item.className = "history-item";
+                        <strong>
+                            ${program.athlete_name || "بدون نام"}
+                        </strong>
 
-            const date = new Date(program.created_at);
-            const dateText = date.toLocaleDateString("fa-IR");
+                        <span>
+                            ${program.created_at
+                                ? new Date(program.created_at).toLocaleDateString("fa-IR")
+                                : ""}
+                        </span>
 
-            item.innerHTML = `
+                    </div>
 
-                <div class="history-info">
-                    <strong>${escapeHTML(program.athlete_name)}</strong>
-                    <small>${dateText}</small>
+                    <div class="history-actions">
+
+                        <button
+                            type="button"
+                            class="primary-button"
+                            onclick="openProgramLink('${program.program_url}')">
+
+                            مشاهده برنامه
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="history-delete"
+                            onclick="deleteProgram(${program.id})">
+
+                            حذف
+
+                        </button>
+
+                    </div>
+
                 </div>
-
-                <div class="history-actions">
-                    <button onclick="viewProgram(${program.id})">مشاهده</button>
-                    <button onclick="deleteProgram(${program.id})" class="history-delete">حذف</button>
-                </div>
-
             `;
 
-            container.appendChild(item);
-
-        });
+        }).join("");
 
     } catch (error) {
 
-        console.error(error);
-        container.innerHTML = "خطا در دریافت تاریخچه.";
+        console.error("History error:", error);
 
+        historyList.innerHTML = `
+            <div class="empty-history">
+                خطا در دریافت آرشیو برنامه‌ها
+            </div>
+        `;
+    }
+}
+
+
+function openProgramLink(url) {
+
+    if (!url) {
+        alert("لینک برنامه پیدا نشد.");
+        return;
     }
 
+    window.open(url, "_blank");
 }
 
 
