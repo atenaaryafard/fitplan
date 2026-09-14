@@ -153,7 +153,10 @@ def init_db():
         )
     """)
     
-    cursor.execute("""ALTER TABLE programsADD COLUMN IF NOT EXISTS share_token TEXT UNIQUE""")
+    cursor.execute("""
+    ALTER TABLE programs
+    ADD COLUMN IF NOT EXISTS share_token TEXT
+    """)
 
     cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS athlete_gender TEXT")
 
@@ -1205,7 +1208,7 @@ def save_program():
         data.get("program_name", ""),
         json.dumps(days, ensure_ascii=False),
         data.get("notes", ""),
-        datetime.now().isoformat()
+        datetime.now().isoformat(),
         share_token
     ))
 
