@@ -128,7 +128,7 @@ def init_db():
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS social_address TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone_number TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS footer_text TEXT")
-    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
+    
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS phone TEXT")
 
     # =========================================================
@@ -152,6 +152,8 @@ def init_db():
             FOREIGN KEY(coach_id) REFERENCES coaches(id)
         )
     """)
+
+    cursor.execute("ALTER TABLE programs ADD COLUMN IF NOT EXISTS sizes TEXT")
     
     cursor.execute("""
     ALTER TABLE programs
@@ -1199,62 +1201,177 @@ def get_program(program_id):
 # =========================================================
 # SAVE PROGRAM
 # =========================================================
+# =========================================================
+# SAVE PROGRAM
+# =========================================================
+
 @app.route("/api/program", methods=["POST"])
 @login_required
 def save_program():
 
     data = request.get_json()
 
-    coach_id = session["coach_id"]
-
-    share_token = secrets.token_urlsafe(16)
-
-    remaining = coach["monthly_limit"] - coach["monthly_used"]
-
-    if remaining <= 0:
+    if not data:
         return jsonify({
             "success": False,
-            "message": "سهمیه ساخت برنامه این ماه شما تمام شده است. برای تمدید به صفحه خرید اشتراک بروید."
-        }), 403
+            "message": "اطلاعات برنامه دریافت نشد."
+        }), 400
 
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"success": False, "message": "اطلاعات برنامه دریافت نشد."}), 400
-
-    if not data.get("athlete_name"):
-        return jsonify({"success": False, "message": "نام ورزشکار را وارد کنید."}), 400
-
-    if not data.get("program_name"):
-        return jsonify({"success": False, "message": "نام برنامه را وارد کنید."}), 400
-
-    days = data.get("days", [])
-
-    if not days:
-        return jsonify({"success": False, "message": "حداقل یک روز تمرین انتخاب کنید."}), 400
+    # ---------------------------------------------------------
+    # دریافت مربی
+    # ---------------------------------------------------------
 
     conn = get_db()
 
+    coach = conn.execute("""
+        SELECT *
+        FROM coaches
+        WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
+
+    if not coach:
+        conn.close()
+
+        return jsonify({
+            "success": False,
+            "message": "اطلاعات مربی پیدا نشد."
+        }), 404
+
+    # ---------------------------------------------------------
+    # بررسی پلن و سهمیه
+    # ---------------------------------------------------------
+
+    plan = get_active_plan(coach)
+
+    if not plan:
+        conn.close()
+
+        return jsonify({
+            "success": False,
+            "message": "اشتراک فعال ندارید. ابتدا اشتراک خود را فعال کنید."
+        }), 403
+
+    # پلن نامحدود
+    if plan["monthly_quota"] is None:
+
+        remaining = None
+
+    # پلن دارای سهمیه
+    else:
+
+        remaining = max(
+            0,
+            coach["monthly_limit"] - coach["monthly_used"]
+        )
+
+        if remaining <= 0:
+
+            conn.close()
+
+            return jsonify({
+                "success": False,
+                "message": "سهمیه ساخت برنامه این ماه شما تمام شده است. برای تمدید به صفحه خرید اشتراک بروید."
+            }), 403
+
+    # ---------------------------------------------------------
+    # اطلاعات برنامه
+    # ---------------------------------------------------------
+
+    athlete_name = (data.get("athlete_name") or "").strip()
+    athlete_age = data.get("athlete_age", "")
+    athlete_height = data.get("athlete_height", "")
+    athlete_weight = data.get("athlete_weight", "")
+    athlete_goal = data.get("athlete_goal", "")
+    athlete_gender = data.get("athlete_gender", "")
+
+    notes = data.get("notes", "")
+
+    days = data.get("days", [])
+
+    sizes = data.get("sizes", {})
+
+    # چون در فرم فعلی program_name نداریم،
+    # یک نام پیش‌فرض برای برنامه قرار می‌دهیم.
+    program_name = (
+        data.get("program_name")
+        or f"برنامه {athlete_name}"
+    )
+
+    # ---------------------------------------------------------
+    # اعتبارسنجی
+    # ---------------------------------------------------------
+
+    if not athlete_name:
+
+        conn.close()
+
+        return jsonify({
+            "success": False,
+            "message": "نام ورزشکار را وارد کنید."
+        }), 400
+
+    if not days:
+
+        conn.close()
+
+        return jsonify({
+            "success": False,
+            "message": "حداقل یک روز تمرین انتخاب کنید."
+        }), 400
+
+    # ---------------------------------------------------------
+    # ساخت لینک اختصاصی
+    # ---------------------------------------------------------
+
+    share_token = secrets.token_urlsafe(16)
+
+    # ---------------------------------------------------------
+    # ذخیره برنامه
+    # ---------------------------------------------------------
+
     conn.execute("""
         INSERT INTO programs
-        (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
-         athlete_goal,athlete_gender,sizes, program_name, program_data, notes, created_at, share_token)
+        (
+            coach_id,
+            athlete_name,
+            athlete_age,
+            athlete_height,
+            athlete_weight,
+            athlete_goal,
+            athlete_gender,
+            sizes,
+            program_name,
+            program_data,
+            notes,
+            created_at,
+            share_token
+        )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         coach["id"],
-        data.get("athlete_name", ""),
-        data.get("athlete_age", ""),
-        data.get("athlete_height", ""),
-        data.get("athlete_weight", ""),
-        data.get("athlete_goal", ""),
-        data.get("athlete_gender", ""),
-        json.dumps(data.get("sizes", {}), ensure_ascii=False),
-        data.get("program_name", ""),
-        json.dumps(days, ensure_ascii=False),
-        data.get("notes", ""),
+        athlete_name,
+        athlete_age,
+        athlete_height,
+        athlete_weight,
+        athlete_goal,
+        athlete_gender,
+        json.dumps(
+            sizes,
+            ensure_ascii=False
+        ),
+        program_name,
+        json.dumps(
+            days,
+            ensure_ascii=False
+        ),
+        notes,
         datetime.now().isoformat(),
         share_token
     ))
+
+    # ---------------------------------------------------------
+    # افزایش مصرف سهمیه
+    # ---------------------------------------------------------
 
     conn.execute("""
         UPDATE coaches
@@ -1263,18 +1380,40 @@ def save_program():
     """, (coach["id"],))
 
     conn.commit()
+
     conn.close()
 
-    plan = get_active_plan(coach)
-    remaining_display = "نامحدود" if (plan and plan["monthly_quota"] is None) else (remaining - 1)
-
+    # ---------------------------------------------------------
+    # ساخت لینک نهایی برنامه
+    # ---------------------------------------------------------
 
     program_url = url_for(
-    "public_program",
-    share_token=share_token,
-    _external=True
+        "public_program",
+        share_token=share_token,
+        _external=True
     )
-    return jsonify({"success": True, "remaining": remaining - 1, "program_url": program_url})
+
+    # ---------------------------------------------------------
+    # محاسبه سهمیه باقی‌مانده
+    # ---------------------------------------------------------
+
+    if plan["monthly_quota"] is None:
+
+        remaining_display = "نامحدود"
+
+    else:
+
+        remaining_display = remaining - 1
+
+    # ---------------------------------------------------------
+    # پاسخ
+    # ---------------------------------------------------------
+
+    return jsonify({
+        "success": True,
+        "remaining": remaining_display,
+        "program_url": program_url
+    })
 
 
 # =========================================================
