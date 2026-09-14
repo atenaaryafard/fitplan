@@ -1095,21 +1095,63 @@ def planner():
 # =========================================================
 
 @app.route("/api/programs")
-@login_required
 def get_programs():
+
+    if "coach_id" not in session:
+        return jsonify([])
+
+    coach_id = session["coach_id"]
 
     conn = get_db()
 
-    programs = conn.execute("""
-        SELECT id, athlete_name, program_name, created_at
+    programs = conn.fetchall("""
+        SELECT
+            id,
+            athlete_name,
+            athlete_age,
+            athlete_height,
+            athlete_weight,
+            athlete_goal,
+            athlete_gender,
+            program_data,
+            notes,
+            sizes,
+            created_at,
+            share_token
         FROM programs
         WHERE coach_id = ?
         ORDER BY id DESC
-    """, (session["coach_id"],)).fetchall()
+    """, (coach_id,))
 
-    conn.close()
+    result = []
 
-    return jsonify([dict(program) for program in programs])
+    for program in programs:
+
+        result.append({
+            "id": program["id"],
+            "athlete_name": program["athlete_name"],
+            "athlete_age": program["athlete_age"],
+            "athlete_height": program["athlete_height"],
+            "athlete_weight": program["athlete_weight"],
+            "athlete_goal": program["athlete_goal"],
+            "athlete_gender": program["athlete_gender"],
+            "program_data": json.loads(program["program_data"])
+                if isinstance(program["program_data"], str)
+                else program["program_data"],
+            "notes": program["notes"],
+            "sizes": json.loads(program["sizes"])
+                if isinstance(program["sizes"], str)
+                else program["sizes"],
+            "created_at": program["created_at"],
+            "share_token": program["share_token"],
+            "program_url": url_for(
+                "public_program",
+                share_token=program["share_token"],
+                _external=True
+            )
+        })
+
+    return jsonify(result)
 
 
 # =========================================================
