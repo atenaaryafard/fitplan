@@ -6,27 +6,6 @@
 
 const exercises = [
 
-    // { name: "پرس سرشانه باربل", muscle: "سرشانه", gif: "" },
-    // { name: "لانج دمبل", muscle: "چهارسر ران", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/dumbbell-lunges.gif" },
-    // { name: "استپ آپ", muscle: "چهارسر ران", gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/step-up8.gif" },
-    // { name: "پرس سینه دمبل", muscle: "سینه", gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/incline-dumbbell-bench-press1.gif" },
-    // { name: "پرس بالا سینه دمبل", muscle: "سینه", gif: "https://fa.pelank.com/wp-content/uploads/2026/02/Dumbbell-Reverse-Grip-30-Degrees-Incline-Bench-Press.gif" },
-    // { name: "فلای سینه دستگاه", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/10/Pec-Deck-Fly12.gif" },
-    // { name: "پوش آپ", muscle: "سینه", gif: "https://routination.com/wp-content/uploads/2023/11/exercises-chest7.gif" },
-    // { name: "ددلیفت دمبل", muscle: "همسترینگ", gif: "https://fitnessia.ir/wp-content/uploads/2023/09/dumbbell-deadlift.gif" },
-    // { name: "قایقی دست باز", muscle: "پشت", gif: "https://fitnessia.ir/wp-content/uploads/2023/09/wide-grip-row.gif" },
-    // { name: "پرس سرشانه دمبل", muscle: "سرشانه", gif: "https://cdnfa.ir/mokamelshope/8ed3/uploads/dumbbell-shoulder-press-gif.gif" },
-    // { name: "نشر جانب", muscle: "سرشانه", gif:"https://cdnfa.ir/mokamelshope/8ed3/uploads/leg/1-nashr-janb-dmbl-aistadh.gif" },
-    // { name: "نشر خم", muscle: "سرشانه", gif:"https://fa.pelank.com/wp-content/uploads/2025/01/Bent-Over-Lateral-Raise.gif" },
-    // { name: " جلو بازو دمبل لاری", muscle: "جلو بازو", gif:"https://routination.com/wp-content/uploads/2023/11/exercises-biceps23.gif" },
-    // { name: "پشت بازو دمبل", muscle: "پشت بازو" },
-    // { name: "پشت بازو بالای سر", muscle: "پشت بازو", gif: "https://morabihamrah.com/wp-content/uploads/2023/09/Dumbbell-Triceps-Extension12.gif" },
-    // { name: "پل باسن", muscle: "باسن", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Barbell-Hip-Thrust.gif" },
-    // { name: "ساق پا", muscle: "ساق", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Calf-Raise123.gif" },
-    // { name: "کرانچ", muscle: "شکم", gif: "https://mojekooh.com/wp-content/uploads/2023/09/crunch.gif" },
-    // { name: "پلانک", muscle: "شکم", Image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqoBxh0AilvQIxLFgT1rjRF42cBcA3419_ular6qOTaQ&s=10" },
-
-
 
       { name: "پرس سینه هالتر", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0045.gif" },
       { name: "پرس سینه دمبل", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0289.gif" },
@@ -36,6 +15,7 @@ const exercises = [
       { name: "فلای سیم‌کش", muscle: "سینه", gif: "https://static.exercisedb.dev/media/xLYSdtg.gif" },
       { name: "شنا", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0662.gif" },
       { name: "شنا دست جمع", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/2398.gif" },
+      { name: "شنا دست جمع", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Fly123.gif" },
       
       { name: "بارفیکس", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0652.gif" },
       { name: "بارفیکس دست برعکس", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/uploads/exercises/1080/chin-up-1326.gif" },
@@ -48,6 +28,7 @@ const exercises = [
       { name: "پول‌اور سیم‌کش", muscle: "زیربغل", gif: "https://i.pinimg.com/originals/28/41/d4/2841d494a3adb9366896e14cc0291254.gif" },
       { name: "پول‌اور دمبل", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0375.gif" },
       { name: "زیربغل دستگاه H", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1350.gif" },
+      { name: "زیربغل دستگاه H", muscle: "زیربغل", gif: "https://routination.com/wp-content/uploads/2023/12/exercises-back85.gif" },
       
       { name: "پرس سرشانه هالتر", muscle: "سرشانه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1457.gif" },
       { name: "پرس سرشانه دمبل", muscle: "سرشانه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0426.gif" },
@@ -59,6 +40,7 @@ const exercises = [
       { name: "فیس پول ", muscle: "سرشانه", gif: "https://i.pinimg.com/originals/8b/7b/24/8b7b24d4b18312191cd4ab21f8a0a66e.gif" },
       { name: "کول هالتر", muscle: "کول", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0121.gif" },
       { name: "پرس سرشانه دستگاه", muscle: "سرشانه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/2318.gif" },
+      { name: "سرشانه سیمکش دست صاف", muscle: "سرشانه", gif: "https://gymvisual.com/img/p/2/8/3/3/5/28335.gif" },
       
       { name: "جلو بازو هالتر", muscle: "جلو بازو", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0031.gif" },
       { name: "جلو بازو دمبل", muscle: "جلو بازو", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0285.gif" },
@@ -77,6 +59,7 @@ const exercises = [
       { name: "دیپ پشت بازو", muscle: "پشت بازو", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1399.gif" },
       { name: "پشت بازو بالای سر سیم‌کش", muscle: "پشت بازو", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Cable-Rope-Overhead-Triceps-Extension.gif" },
       { name: "فیله دستگاه", muscle: "پشت میانی", gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/hyperextension.gif" },
+      { name: "فیله دستگاه", muscle: "پشت میانی", gif: "https://fitnessia.ir/wp-content/uploads/2023/09/%D9%81%DB%8C%D9%84%D9%87-%DA%A9%D9%85%D8%B1-%D8%AF%D8%B3%D8%AA%DA%AF%D8%A7%D9%87.gif" },
 
       
       { name: "اسکوات هالتر", muscle: "چهارسر و سرینی", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1435.gif" },
@@ -102,6 +85,8 @@ const exercises = [
       { name: "اسکوات سومو", muscle: "سرینی", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0117.gif" },
       { name: "ددلیفت سومو", muscle: "همسترینگ و سرینی", gif: "https://burnfit.io/en/wp-content/uploads/sites/3/2026/01/DB_SM_DL.gif" },
       { name: "لانج کراس", muscle: "چهارسر ران", gif: "https://liftmanual.com/wp-content/uploads/2023/04/crossover-reverse-lunge.gif" },
+      { name: "بغل پا دستگاه", muscle: "سرینی", gif: "https://gymfitclub.ir/public/images/articles/upload/hip-abduction-machine.gif" },
+      { name: "اسکات صفحه", muscle: "چهارسر ران", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Dumbbell-Goblet-Squat.gif" },
       
       { name: "کرانچ", muscle: "شکم", gif: "https://fitnessprogramer.com/wp-content/uploads/2022/07/Full-Crunch-Machine.gif" },
       { name: "شکم خلبانی", muscle: "شکم", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0826.gif" },
