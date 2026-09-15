@@ -15,7 +15,7 @@ const exercises = [
       { name: "فلای سیم‌کش", muscle: "سینه", gif: "https://static.exercisedb.dev/media/xLYSdtg.gif" },
       { name: "شنا", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0662.gif" },
       { name: "شنا دست جمع", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/2398.gif" },
-      { name: "شنا دست جمع", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Fly123.gif" },
+      { name: "قفسه سینه دمیبل", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Fly123.gif" },
       
       { name: "بارفیکس", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0652.gif" },
       { name: "بارفیکس دست برعکس", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/uploads/exercises/1080/chin-up-1326.gif" },
@@ -28,7 +28,7 @@ const exercises = [
       { name: "پول‌اور سیم‌کش", muscle: "زیربغل", gif: "https://i.pinimg.com/originals/28/41/d4/2841d494a3adb9366896e14cc0291254.gif" },
       { name: "پول‌اور دمبل", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0375.gif" },
       { name: "زیربغل دستگاه H", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1350.gif" },
-      { name: "زیربغل دستگاه H", muscle: "زیربغل", gif: "https://routination.com/wp-content/uploads/2023/12/exercises-back85.gif" },
+      { name: "زیربغل دمبل خم H", muscle: "زیربغل", gif: "https://routination.com/wp-content/uploads/2023/12/exercises-back85.gif" },
       
       { name: "پرس سرشانه هالتر", muscle: "سرشانه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1457.gif" },
       { name: "پرس سرشانه دمبل", muscle: "سرشانه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0426.gif" },
