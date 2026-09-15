@@ -76,6 +76,8 @@ const exercises = [
       { name: "پشت بازو خوابیده دمبل", muscle: "پشت بازو", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0351.gif" },
       { name: "دیپ پشت بازو", muscle: "پشت بازو", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1399.gif" },
       { name: "پشت بازو بالای سر سیم‌کش", muscle: "پشت بازو", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Cable-Rope-Overhead-Triceps-Extension.gif" },
+      { name: "فیله دستگاه", muscle: "پشت میانی", gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/hyperextension.gif" },
+
       
       { name: "اسکوات هالتر", muscle: "چهارسر و سرینی", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1435.gif" },
       { name: "اسکوات جام", muscle: "چهارسر و سرینی", gif: "https://fitnessvolt.com/wp-content/uploads/2020/07/Goblet-Squat.gif" },
