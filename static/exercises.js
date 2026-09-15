@@ -15,7 +15,7 @@ const exercises = [
       { name: "فلای سیم‌کش", muscle: "سینه", gif: "https://static.exercisedb.dev/media/xLYSdtg.gif" },
       { name: "شنا", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0662.gif" },
       { name: "شنا دست جمع", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/2398.gif" },
-      { name: "قفسه سینه دمیبل", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Fly123.gif" },
+      { name: "قفسه سینه دمبل", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Fly123.gif" },
       
       { name: "بارفیکس", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0652.gif" },
       { name: "بارفیکس دست برعکس", muscle: "زیربغل", gif: "https://fitnessvolt.com/wp-content/uploads/exercises/1080/chin-up-1326.gif" },
@@ -59,7 +59,7 @@ const exercises = [
       { name: "دیپ پشت بازو", muscle: "پشت بازو", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1399.gif" },
       { name: "پشت بازو بالای سر سیم‌کش", muscle: "پشت بازو", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Cable-Rope-Overhead-Triceps-Extension.gif" },
       { name: "فیله دستگاه", muscle: "پشت میانی", gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/hyperextension.gif" },
-      { name: "فیله دستگاه", muscle: "پشت میانی", gif: "https://fitnessia.ir/wp-content/uploads/2023/09/%D9%81%DB%8C%D9%84%D9%87-%DA%A9%D9%85%D8%B1-%D8%AF%D8%B3%D8%AA%DA%AF%D8%A7%D9%87.gif" },
+      { name: "فیله دستگاه با وزنه", muscle: "پشت میانی", gif: "https://fitnessia.ir/wp-content/uploads/2023/09/%D9%81%DB%8C%D9%84%D9%87-%DA%A9%D9%85%D8%B1-%D8%AF%D8%B3%D8%AA%DA%AF%D8%A7%D9%87.gif" },
 
       
       { name: "اسکوات هالتر", muscle: "چهارسر و سرینی", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1435.gif" },
