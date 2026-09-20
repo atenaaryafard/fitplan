@@ -816,6 +816,7 @@ async function loadHistory() {
 
                 <div class="history-actions">
                     <button onclick="viewProgram(${program.id})">مشاهده</button>
+                    <button onclick="openSendProgramModal(${program.id})"class="history-send">ارسال به</button>
                     <button onclick="deleteProgram(${program.id})" class="history-delete">حذف</button>
                 </div>
 
@@ -1192,6 +1193,342 @@ async function exportPDF() {
         alert("خطا در ساخت PDF: " + error.message);
 
     }
+
+}
+
+/* =====================================================
+   SEND PROGRAM TO STUDENT
+===================================================== */
+
+let currentSendProgramId = null;
+
+
+/* =====================================================
+   OPEN SEND MODAL
+===================================================== */
+
+async function openSendProgramModal(programId) {
+
+    currentSendProgramId = programId;
+
+    let modal = document.getElementById("sendProgramModal");
+
+    if (!modal) {
+
+        modal = document.createElement("div");
+
+        modal.id = "sendProgramModal";
+
+        modal.className = "modal-overlay";
+
+        modal.innerHTML = `
+
+            <div class="modal-box" style="max-width:500px;">
+
+                <div class="modal-header">
+
+                    <h2>
+                        ارسال برنامه به شاگرد
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeSendProgramModal()">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="modal-body"
+                    id="sendProgramModalBody">
+
+                    <div style="
+                        text-align:center;
+                        padding:30px;
+                        color:#777;
+                    ">
+                        در حال دریافت لیست شاگردان...
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+        modal.addEventListener("click", function(event) {
+
+            if (event.target === modal) {
+                closeSendProgramModal();
+            }
+
+        });
+
+        document.body.appendChild(modal);
+    }
+
+    modal.classList.remove("hidden");
+
+    const body = document.getElementById("sendProgramModalBody");
+
+    body.innerHTML = `
+        <div style="
+            text-align:center;
+            padding:30px;
+            color:#777;
+        ">
+            در حال دریافت لیست شاگردان...
+        </div>
+    `;
+
+
+    try {
+
+        const response = await fetch("/api/my-students");
+
+        const students = await response.json();
+
+
+        if (!response.ok) {
+
+            body.innerHTML = `
+                <div style="
+                    text-align:center;
+                    color:#dc2626;
+                    padding:20px;
+                ">
+                    خطا در دریافت لیست شاگردان.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        if (students.length === 0) {
+
+            body.innerHTML = `
+
+                <div style="
+                    text-align:center;
+                    padding:25px;
+                ">
+
+                    <div style="
+                        font-size:35px;
+                        margin-bottom:10px;
+                    ">
+                        👤
+                    </div>
+
+                    <strong>
+                        هنوز شاگردی ثبت نشده است.
+                    </strong>
+
+                    <p style="
+                        color:#777;
+                        font-size:13px;
+                        margin-top:10px;
+                    ">
+                        ابتدا شاگرد خود را از بخش «لیست شاگردان»
+                        اضافه کنید.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        body.innerHTML = `
+
+            <p style="
+                margin-top:0;
+                color:#666;
+                font-size:13px;
+            ">
+                شاگرد مورد نظر را برای دریافت این برنامه انتخاب کنید:
+            </p>
+
+            <div id="sendStudentsList"></div>
+
+        `;
+
+
+        const list = document.getElementById("sendStudentsList");
+
+
+        students.forEach(student => {
+
+            const item = document.createElement("div");
+
+            item.style.cssText = `
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                gap:10px;
+                padding:12px;
+                margin-bottom:8px;
+                border:1px solid #e5e7eb;
+                border-radius:10px;
+                background:#fafafa;
+            `;
+
+
+            item.innerHTML = `
+
+                <div style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:4px;
+                ">
+
+                    <strong>
+                        ${escapeHTML(student.name)}
+                    </strong>
+
+                    <small style="
+                        color:#888;
+                    ">
+                        ${escapeHTML(student.phone)}
+                    </small>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    onclick="sendProgramToStudent(${student.id})"
+                    style="
+                        border:none;
+                        background:#111827;
+                        color:white;
+                        border-radius:8px;
+                        padding:9px 14px;
+                        cursor:pointer;
+                        white-space:nowrap;
+                    "
+                >
+                    ارسال
+                </button>
+
+            `;
+
+
+            list.appendChild(item);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        body.innerHTML = `
+            <div style="
+                text-align:center;
+                color:#dc2626;
+                padding:20px;
+            ">
+                خطا در ارتباط با سرور.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   SEND PROGRAM
+===================================================== */
+
+async function sendProgramToStudent(studentId) {
+
+    if (!currentSendProgramId) {
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            `/api/program/${currentSendProgramId}/send`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    student_id: studentId
+                })
+            }
+        );
+
+
+        const result = await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                result.message ||
+                "ارسال برنامه انجام نشد."
+            );
+
+            return;
+        }
+
+
+        closeSendProgramModal();
+
+
+        alert(
+            `برنامه با موفقیت برای ${result.student_name} ارسال شد.`
+        );
+
+
+        loadHistory();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "خطا در ارتباط با سرور."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CLOSE SEND MODAL
+===================================================== */
+
+function closeSendProgramModal() {
+
+    const modal =
+        document.getElementById("sendProgramModal");
+
+    if (modal) {
+
+        modal.classList.add("hidden");
+
+    }
+
+    currentSendProgramId = null;
 
 }
 
