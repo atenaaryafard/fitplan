@@ -136,12 +136,15 @@ CREATE TABLE IF NOT EXISTS students (
     password TEXT NOT NULL,
     created_at TEXT
 );
+
  
 -- اتصال برنامه به شاگرد + توکن اشتراک‌گذاری + وضعیت ارسال
 ALTER TABLE programs ADD COLUMN IF NOT EXISTS student_id INTEGER REFERENCES students(id);
 ALTER TABLE programs ADD COLUMN IF NOT EXISTS share_token TEXT UNIQUE;
 ALTER TABLE programs ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft';
 """
+    cursor.execute(SCHEMA_ADDITIONS)
+    conn.commit()
 
     
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
