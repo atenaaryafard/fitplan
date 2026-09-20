@@ -5,3 +5,4 @@ werkzeug
 playwright
 Pillow
 beautifulsoup4
+qrcode[pil]
