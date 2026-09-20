@@ -973,6 +973,35 @@ def subscribe():
         trial_eligible=trial_eligible
     )
 
+# =========================================================
+# GET MY STUDENTS
+# =========================================================
+
+@app.route("/api/my-students")
+@login_required
+def get_my_students():
+
+    conn = get_db()
+
+    students = conn.execute("""
+        SELECT id, name, phone
+        FROM students
+        WHERE coach_id = ?
+        ORDER BY name ASC
+    """, (session["coach_id"],)).fetchall()
+
+    conn.close()
+
+    return jsonify([
+        {
+            "id": student["id"],
+            "name": student["name"],
+            "phone": student["phone"]
+        }
+        for student in students
+    ])
+
+
 
 @app.route("/api/program/<int:program_id>/send", methods=["POST"])
 @login_required
