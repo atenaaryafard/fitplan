@@ -123,28 +123,85 @@ def init_db():
 
 
 
-    SCHEMA_ADDITIONS = """
--- کد یکتای هر مربی برای ساخت لینک/QR ثبت‌نام
-ALTER TABLE coaches ADD COLUMN IF NOT EXISTS coach_code TEXT UNIQUE;
- 
--- جدول شاگردها (کاملاً جدا از coaches)
-CREATE TABLE IF NOT EXISTS students (
-    id SERIAL PRIMARY KEY,
-    coach_id INTEGER NOT NULL REFERENCES coaches(id),
-    name TEXT NOT NULL,
-    phone TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    created_at TEXT
-);
+    # =========================================================
+    # SAFE SCHEMA UPDATES
+    # =========================================================
 
- 
--- اتصال برنامه به شاگرد + توکن اشتراک‌گذاری + وضعیت ارسال
-ALTER TABLE programs ADD COLUMN IF NOT EXISTS student_id INTEGER REFERENCES students(id);
-ALTER TABLE programs ADD COLUMN IF NOT EXISTS share_token TEXT UNIQUE;
-ALTER TABLE programs ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft';
-"""
-    cursor.execute(SCHEMA_ADDITIONS)
-    conn.commit()
+    schema_updates = [
+        """
+        ALTER TABLE coaches
+        ADD COLUMN IF NOT EXISTS coach_code TEXT
+        """,
+
+        """
+        CREATE TABLE IF NOT EXISTS students (
+            id SERIAL PRIMARY KEY,
+            coach_id INTEGER NOT NULL REFERENCES coaches(id),
+            name TEXT NOT NULL,
+            phone TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            created_at TEXT
+        )
+        """,
+
+        """
+        ALTER TABLE programs
+        ADD COLUMN IF NOT EXISTS student_id INTEGER
+        """,
+
+        """
+        ALTER TABLE programs
+        ADD COLUMN IF NOT EXISTS share_token TEXT
+        """,
+
+        """
+        ALTER TABLE programs
+        ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft'
+        """
+    ]
+
+    for sql in schema_updates:
+        try:
+            cursor.execute(sql)
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            print("SCHEMA UPDATE ERROR:", repr(e))
+
+    # ایجاد UNIQUE index جداگانه
+    try:
+        cursor.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS
+            coaches_coach_code_unique
+            ON coaches(coach_code)
+        """)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print("COACH CODE INDEX ERROR:", repr(e))
+
+    try:
+        cursor.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS
+            programs_share_token_unique
+            ON programs(share_token)
+        """)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print("SHARE TOKEN INDEX ERROR:", repr(e))
+
+    try:
+        cursor.execute("""
+            ALTER TABLE programs
+            ADD CONSTRAINT programs_student_id_fkey
+            FOREIGN KEY (student_id)
+            REFERENCES students(id)
+        """)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print("STUDENT FK ERROR:", repr(e))
 
     
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
