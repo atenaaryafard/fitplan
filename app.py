@@ -15,6 +15,9 @@ import psycopg2
 import psycopg2.extras
 import json
 import base64
+import secrets
+import qrcode
+from io import BytesIO as QRBytesIO
 from bs4 import BeautifulSoup
 
 from PIL import Image
@@ -117,8 +120,31 @@ def init_db():
             created_at TEXT
         )
     """)
-    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
 
+
+
+    SCHEMA_ADDITIONS = """
+-- کد یکتای هر مربی برای ساخت لینک/QR ثبت‌نام
+ALTER TABLE coaches ADD COLUMN IF NOT EXISTS coach_code TEXT UNIQUE;
+ 
+-- جدول شاگردها (کاملاً جدا از coaches)
+CREATE TABLE IF NOT EXISTS students (
+    id SERIAL PRIMARY KEY,
+    coach_id INTEGER NOT NULL REFERENCES coaches(id),
+    name TEXT NOT NULL,
+    phone TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TEXT
+);
+ 
+-- اتصال برنامه به شاگرد + توکن اشتراک‌گذاری + وضعیت ارسال
+ALTER TABLE programs ADD COLUMN IF NOT EXISTS student_id INTEGER REFERENCES students(id);
+ALTER TABLE programs ADD COLUMN IF NOT EXISTS share_token TEXT UNIQUE;
+ALTER TABLE programs ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft';
+"""
+
+    
+    cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_id INTEGER")
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS plan_started_at TEXT")
@@ -620,6 +646,21 @@ def login():
 
     return render_template("login.html", error=error)
 
+# ==============
+# لاگین شاگرد
+# ==============
+
+def student_login_required(function):
+    from functools import wraps
+ 
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        if "student_id" not in session:
+            return redirect(url_for("student_login"))
+        return function(*args, **kwargs)
+ 
+    return wrapper
+
 
 # =========================================================
 # LOGOUT
@@ -629,6 +670,207 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
+
+
+# =========================================================
+# 3) پنل مربی — لیست شاگردان + QR ثبت‌نام
+# =========================================================
+ 
+@app.route("/students")
+@login_required
+def students_list():
+ 
+    conn = get_db()
+ 
+    coach = conn.execute("""
+        SELECT * FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
+ 
+    if not coach["coach_code"]:
+        new_code = secrets.token_urlsafe(6)
+        conn.execute("""
+            UPDATE coaches SET coach_code = ? WHERE id = ?
+        """, (new_code, coach["id"]))
+        conn.commit()
+        coach = conn.execute("""
+            SELECT * FROM coaches WHERE id = ?
+        """, (session["coach_id"],)).fetchone()
+ 
+    students = conn.execute("""
+        SELECT id, name, phone FROM students
+        WHERE coach_id = ?
+        ORDER BY id DESC
+    """, (coach["id"],)).fetchall()
+ 
+    conn.close()
+ 
+    register_url = url_for("student_register", coach_code=coach["coach_code"], _external=True)
+ 
+    return render_template(
+        "students_list.html",
+        students=[dict(s) for s in students],
+        register_url=register_url
+    )
+ 
+ 
+@app.route("/coach/qrcode.png")
+@login_required
+def coach_qrcode():
+ 
+    conn = get_db()
+    coach = conn.execute("""
+        SELECT coach_code FROM coaches WHERE id = ?
+    """, (session["coach_id"],)).fetchone()
+    conn.close()
+ 
+    url = url_for("student_register", coach_code=coach["coach_code"], _external=True)
+ 
+    img = qrcode.make(url)
+    buf = QRBytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+ 
+    return send_file(buf, mimetype="image/png")
+ 
+ 
+# =========================================================
+# 4) ثبت‌نام شاگرد از طریق QR/لینک مربی
+# =========================================================
+ 
+@app.route("/register/student/<coach_code>", methods=["GET", "POST"])
+def student_register(coach_code):
+ 
+    conn = get_db()
+ 
+    coach = conn.execute("""
+        SELECT id, name, phone FROM coaches WHERE coach_code = ?
+    """, (coach_code,)).fetchone()
+ 
+    if not coach:
+        conn.close()
+        return "لینک ثبت‌نام نامعتبر است.", 404
+ 
+    error = None
+ 
+    if request.method == "POST":
+ 
+        name = request.form.get("name", "").strip()
+        phone = request.form.get("phone", "").strip()
+        password = request.form.get("password", "")
+ 
+        if not name or not phone or not password:
+            conn.close()
+            return render_template("student_register.html", coach=coach,
+                                    error="همه فیلدها را تکمیل کنید.")
+ 
+        if not re.match(r"^09\d{9}$", phone):
+            conn.close()
+            return render_template("student_register.html", coach=coach,
+                                    error="شماره تماس باید ۱۱ رقم باشد و با 09 شروع شود.")
+ 
+        if len(password) < 8:
+            conn.close()
+            return render_template("student_register.html", coach=coach,
+                                    error="رمز عبور باید حداقل ۸ کاراکتر باشد.")
+ 
+        try:
+            cursor = conn.execute("""
+                INSERT INTO students (coach_id, name, phone, password, created_at)
+                VALUES (?, ?, ?, ?, ?)
+                RETURNING id
+            """, (
+                coach["id"], name, phone,
+                generate_password_hash(password),
+                datetime.now().isoformat()
+            ))
+            new_student_id = cursor.fetchone()["id"]
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            conn.close()
+            return render_template("student_register.html", coach=coach,
+                                    error="این شماره قبلاً ثبت شده است.")
+ 
+        session["student_id"] = new_student_id
+        conn.close()
+ 
+        return redirect(url_for("student_panel"))
+ 
+    conn.close()
+    return render_template("student_register.html", coach=coach, error=error)
+ 
+ 
+# =========================================================
+# 5) ورود شاگرد
+# =========================================================
+ 
+@app.route("/student/login", methods=["GET", "POST"])
+def student_login():
+ 
+    error = None
+ 
+    if "student_id" in session:
+        return redirect(url_for("student_panel"))
+ 
+    if request.method == "POST":
+ 
+        phone = request.form.get("phone", "").strip()
+        password = request.form.get("password", "")
+ 
+        conn = get_db()
+        student = conn.execute("""
+            SELECT * FROM students WHERE phone = ?
+        """, (phone,)).fetchone()
+        conn.close()
+ 
+        if not student or not check_password_hash(student["password"], password):
+            return render_template("student_login.html", error="اطلاعات ورود اشتباه است.")
+ 
+        session["student_id"] = student["id"]
+        return redirect(url_for("student_panel"))
+ 
+    return render_template("student_login.html", error=error)
+ 
+ 
+@app.route("/student/logout")
+def student_logout():
+    session.pop("student_id", None)
+    return redirect(url_for("student_login"))
+ 
+ 
+# =========================================================
+# 6) پنل شاگرد — اطلاعات مربی + لیست برنامه‌های ارسال‌شده
+# =========================================================
+ 
+@app.route("/student/panel")
+@student_login_required
+def student_panel():
+ 
+    conn = get_db()
+ 
+    student = conn.execute("""
+        SELECT * FROM students WHERE id = ?
+    """, (session["student_id"],)).fetchone()
+ 
+    coach = conn.execute("""
+        SELECT name, phone FROM coaches WHERE id = ?
+    """, (student["coach_id"],)).fetchone()
+ 
+    programs = conn.execute("""
+        SELECT id, program_name, share_token, created_at
+        FROM programs
+        WHERE student_id = ? AND status = 'sent'
+        ORDER BY created_at DESC
+    """, (student["id"],)).fetchall()
+ 
+    conn.close()
+ 
+    return render_template(
+        "student_panel.html",
+        coach=dict(coach),
+        programs=[dict(p) for p in programs]
+    )
 
 
 # =========================================================
@@ -670,6 +912,93 @@ def subscribe():
         coach=coach,
         trial_eligible=trial_eligible
     )
+
+
+@app.route("/api/program/<int:program_id>/send", methods=["POST"])
+@login_required
+def send_program(program_id):
+ 
+    conn = get_db()
+ 
+    program = conn.execute("""
+        SELECT * FROM programs WHERE id = ? AND coach_id = ?
+    """, (program_id, session["coach_id"])).fetchone()
+ 
+    if not program:
+        conn.close()
+        return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
+ 
+    token = program["share_token"] or secrets.token_urlsafe(16)
+ 
+    conn.execute("""
+        UPDATE programs
+        SET share_token = ?, status = 'sent'
+        WHERE id = ?
+    """, (token, program_id))
+ 
+    conn.commit()
+    conn.close()
+ 
+    share_url = url_for("view_shared_program", share_token=token, _external=True)
+ 
+    return jsonify({"success": True, "share_url": share_url})
+ 
+ 
+# ج) صفحهٔ عمومی نمایش برنامه برای شاگرد (بدون نیاز به لاگین
+# شاگرد؛ فقط با توکن قابل دیدن است). این صفحه، دیتای خام
+# program_data را برمی‌گرداند تا همان تابع جاوااسکریپتی که
+# در planner.html پیش‌نمایش را می‌سازد، اینجا هم دوباره
+# صدا زده شود — این‌طوری ظاهر با پیش‌نمایش مربی و با PDF
+# صد در صد یکی می‌ماند.
+ 
+@app.route("/program/<share_token>")
+def view_shared_program(share_token):
+ 
+    conn = get_db()
+ 
+    program = conn.execute("""
+        SELECT * FROM programs WHERE share_token = ? AND status = 'sent'
+    """, (share_token,)).fetchone()
+ 
+    conn.close()
+ 
+    if not program:
+        return "این برنامه پیدا نشد یا هنوز ارسال نشده است.", 404
+ 
+    return render_template("program_view.html", program=dict(program))
+ 
+ 
+# د) API که program_data را به صورت JSON برمی‌گرداند تا
+# جاوااسکریپت صفحهٔ program_view.html با آن پیش‌نمایش را
+# رندر کند (همان تابعی که در script.js پیش‌نمایش را می‌سازد)
+ 
+@app.route("/api/program/shared/<share_token>")
+def get_shared_program_data(share_token):
+ 
+    conn = get_db()
+ 
+    program = conn.execute("""
+        SELECT * FROM programs WHERE share_token = ? AND status = 'sent'
+    """, (share_token,)).fetchone()
+ 
+    conn.close()
+ 
+    if not program:
+        return jsonify({"success": False, "message": "پیدا نشد."}), 404
+ 
+    data = dict(program)
+ 
+    try:
+        data["program_data"] = json.loads(data["program_data"])
+    except Exception:
+        data["program_data"] = []
+ 
+    try:
+        data["sizes"] = json.loads(data["sizes"]) if data.get("sizes") else {}
+    except Exception:
+        data["sizes"] = {}
+ 
+    return jsonify({"success": True, "program": data})
 
 
 # =========================================================
