@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شاگردان من | FIT PLAN</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="mobile-header">
+    <div class="brand">FIT PLAN</div>
+    <div class="header-actions">
+        <a href="{{ url_for('planner') }}" class="nav-home-btn">بازگشت به برنامه‌ساز</a>
+        <a href="{{ url_for('logout') }}" class="logout">خروج</a>
+    </div>
+</header>
+
+<main class="planner">
+
+    <section class="section-card">
+
+        <div class="section-title">
+            <div>
+                <h2>لینک و QR ثبت‌نام شاگرد</h2>
+                <span>این لینک یا کد QR را برای شاگردانت بفرست تا خودشان ثبت‌نام کنند</span>
+            </div>
+        </div>
+
+        <div class="qr-box" style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+
+            <img
+                src="{{ url_for('coach_qrcode') }}"
+                alt="QR ثبت‌نام"
+                style="width:160px; height:160px; border-radius:8px; border:1px solid #eee;">
+
+            <div style="flex:1; min-width:220px;">
+                <input
+                    type="text"
+                    readonly
+                    value="{{ register_url }}"
+                    id="registerUrlInput"
+                    style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; direction:ltr; text-align:left;">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    style="margin-top:10px;"
+                    onclick="copyRegisterLink()">
+                    کپی لینک
+                </button>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="section-card history-card">
+
+        <div class="section-title">
+            <div>
+                <h2>لیست شاگردان</h2>
+            </div>
+        </div>
+
+        <div class="history-list">
+
+            {% if students|length == 0 %}
+                <div class="empty-history">
+                    هنوز شاگردی ثبت‌نام نکرده است.
+                </div>
+            {% else %}
+
+                {% for student in students %}
+                <div class="history-item">
+                    <div class="history-info">
+                        <strong>{{ student.name }}</strong>
+                        <small>{{ student.phone }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+function copyRegisterLink() {
+    const input = document.getElementById("registerUrlInput");
+    input.select();
+    navigator.clipboard.writeText(input.value).then(() => {
+        alert("لینک کپی شد.");
+    });
+}
+</script>
+
+</body>
+</html>
