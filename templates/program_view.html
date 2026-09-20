@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>برنامه تمرینی | FIT PLAN</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<header class="mobile-header">
+
+    <div class="brand">
+        FIT PLAN
+    </div>
+
+</header>
+
+<main class="planner">
+
+    <section class="section-card">
+
+        <div class="section-title">
+            <div>
+                <h2>برنامه تمرینی شما</h2>
+            </div>
+        </div>
+
+        <div id="programBody">
+            در حال بارگذاری برنامه...
+        </div>
+
+    </section>
+
+    <div class="bottom-actions">
+
+        <button
+            id="downloadPdfBtn"
+            type="button"
+            class="pdf-button"
+            style="display:none;"
+            onclick="exportSharedPDF()">
+
+            دریافت فایل PDF
+
+        </button>
+
+    </div>
+
+</main>
+
+<script>
+    // این‌ها بعد از فچ کردن دیتای برنامه پر می‌شوند
+    let COACH_BRAND = {
+        hasCustomLogo: false,
+        planKey: "basic",
+        jobTitle: "",
+        socialAddress: "",
+        phoneNumber: "",
+        footerText: "",
+        coachName: ""
+    };
+
+    const SHARE_TOKEN = "{{ program.share_token }}";
+</script>
+
+<script src="{{ url_for('static', filename='logo-data.js') }}"></script>
+<script src="{{ url_for('static', filename='exercises.js') }}"></script>
+<script src="{{ url_for('static', filename='program-render.js') }}"></script>
+
+<script>
+
+    async function loadSharedProgram() {
+
+        const body = document.getElementById("programBody");
+
+        try {
+
+            const response = await fetch(`/api/program/shared/${SHARE_TOKEN}`);
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                body.innerHTML = "این برنامه پیدا نشد یا هنوز ارسال نشده است.";
+                return;
+            }
+
+            const program = result.program;
+
+            // پر کردن COACH_BRAND با اطلاعات مربی که در همین API برگردانده می‌شود
+            COACH_BRAND = {
+                hasCustomLogo: Boolean(program.has_custom_logo),
+                planKey: program.plan_key || "basic",
+                jobTitle: program.job_title || "",
+                socialAddress: program.social_address || "",
+                phoneNumber: program.phone_number || "",
+                footerText: program.footer_text || "",
+                coachName: program.coach_name || ""
+            };
+
+            // buildProgramPreviewHTML انتظار کلید days را دارد، نه program_data
+            const previewData = {
+                athlete_name: program.athlete_name,
+                athlete_age: program.athlete_age,
+                athlete_height: program.athlete_height,
+                athlete_weight: program.athlete_weight,
+                athlete_goal: program.athlete_goal,
+                athlete_gender: program.athlete_gender,
+                sizes: program.sizes,
+                notes: program.notes,
+                days: program.program_data
+            };
+
+            body.innerHTML = buildProgramPreviewHTML(previewData);
+            document.getElementById("downloadPdfBtn").style.display = "inline-block";
+
+            // برای استفاده در exportSharedPDF
+            window.__currentProgramBody = body;
+
+        } catch (error) {
+            console.error(error);
+            body.innerHTML = "خطا در دریافت برنامه.";
+        }
+
+    }
+
+
+    async function exportSharedPDF() {
+
+        const body = window.__currentProgramBody || document.getElementById("programBody");
+
+        const html = buildBrandHeaderHTML() + body.innerHTML + buildBrandFooterHTML();
+
+        try {
+
+            const response = await fetch(`/api/program/pdf/shared/${SHARE_TOKEN}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ html: html })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || "خطا در ساخت PDF");
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "FIT_PLAN.pdf";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error("PDF ERROR:", error);
+            alert("خطا در ساخت PDF: " + error.message);
+        }
+
+    }
+
+
+    document.addEventListener("DOMContentLoaded", loadSharedProgram);
+
+</script>
+
+</body>
+
+</html>
