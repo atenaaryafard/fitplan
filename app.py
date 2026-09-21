@@ -139,7 +139,6 @@ def init_db():
             coach_id INTEGER NOT NULL REFERENCES coaches(id),
             name TEXT NOT NULL,
             phone TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
             created_at TEXT
         )
         """,
@@ -750,206 +749,343 @@ def logout():
     return redirect(url_for("login"))
 
 
-
 # =========================================================
 # 3) پنل مربی — لیست شاگردان + QR ثبت‌نام
 # =========================================================
- 
+
 @app.route("/students")
 @login_required
 def students_list():
- 
+
     conn = get_db()
- 
+
     coach = conn.execute("""
-        SELECT * FROM coaches WHERE id = ?
+        SELECT * FROM coaches
+        WHERE id = ?
     """, (session["coach_id"],)).fetchone()
- 
+
     if not coach["coach_code"]:
+
         new_code = secrets.token_urlsafe(6)
+
         conn.execute("""
-            UPDATE coaches SET coach_code = ? WHERE id = ?
+            UPDATE coaches
+            SET coach_code = ?
+            WHERE id = ?
         """, (new_code, coach["id"]))
+
         conn.commit()
+
         coach = conn.execute("""
-            SELECT * FROM coaches WHERE id = ?
+            SELECT * FROM coaches
+            WHERE id = ?
         """, (session["coach_id"],)).fetchone()
- 
+
     students = conn.execute("""
-        SELECT id, name, phone FROM students
+        SELECT id, name, phone
+        FROM students
         WHERE coach_id = ?
         ORDER BY id DESC
     """, (coach["id"],)).fetchall()
- 
+
     conn.close()
- 
-    register_url = url_for("student_register", coach_code=coach["coach_code"], _external=True)
- 
+
+    register_url = url_for(
+        "student_register",
+        coach_code=coach["coach_code"],
+        _external=True
+    )
+
     return render_template(
         "students_list.html",
         students=[dict(s) for s in students],
         register_url=register_url
     )
- 
- 
+
+
 @app.route("/coach/qrcode.png")
 @login_required
 def coach_qrcode():
- 
+
     conn = get_db()
+
     coach = conn.execute("""
-        SELECT coach_code FROM coaches WHERE id = ?
+        SELECT coach_code
+        FROM coaches
+        WHERE id = ?
     """, (session["coach_id"],)).fetchone()
+
     conn.close()
- 
-    url = url_for("student_register", coach_code=coach["coach_code"], _external=True)
- 
+
+    url = url_for(
+        "student_register",
+        coach_code=coach["coach_code"],
+        _external=True
+    )
+
     img = qrcode.make(url)
+
     buf = QRBytesIO()
-    img.save(buf, format="PNG")
+
+    img.save(
+        buf,
+        format="PNG"
+    )
+
     buf.seek(0)
- 
-    return send_file(buf, mimetype="image/png")
- 
- 
+
+    return send_file(
+        buf,
+        mimetype="image/png"
+    )
+
+
 # =========================================================
-# 4) ثبت‌نام شاگرد از طریق QR/لینک مربی
+# 4) ثبت‌نام شاگرد از طریق QR / لینک مربی
 # =========================================================
- 
+
 @app.route("/register/student/<coach_code>", methods=["GET", "POST"])
 def student_register(coach_code):
- 
+
     conn = get_db()
- 
+
     coach = conn.execute("""
-        SELECT id, name, phone FROM coaches WHERE coach_code = ?
+        SELECT id, name, phone
+        FROM coaches
+        WHERE coach_code = ?
     """, (coach_code,)).fetchone()
- 
+
     if not coach:
+
         conn.close()
+
         return "لینک ثبت‌نام نامعتبر است.", 404
- 
+
     error = None
- 
+
     if request.method == "POST":
- 
+
         name = request.form.get("name", "").strip()
+
         phone = request.form.get("phone", "").strip()
-        password = request.form.get("password", "")
- 
-        if not name or not phone or not password:
+
+        # -----------------------------------------
+        # بررسی اطلاعات
+        # -----------------------------------------
+
+        if not name or not phone:
+
             conn.close()
-            return render_template("students_list.html", coach=coach,
-                                    error="همه فیلدها را تکمیل کنید.")
- 
+
+            return render_template(
+                "student_register.html",
+                coach=coach,
+                error="همه فیلدها را تکمیل کنید."
+            )
+
+        # -----------------------------------------
+        # بررسی شماره تماس
+        # -----------------------------------------
+
         if not re.match(r"^09\d{9}$", phone):
+
             conn.close()
-            return render_template("student_register.html", coach=coach,
-                                    error="شماره تماس باید ۱۱ رقم باشد و با 09 شروع شود.")
- 
-        if len(password) < 8:
-            conn.close()
-            return render_template("student_register.html", coach=coach,
-                                    error="رمز عبور باید حداقل ۸ کاراکتر باشد.")
- 
+
+            return render_template(
+                "student_register.html",
+                coach=coach,
+                error="شماره تماس باید ۱۱ رقم باشد و با 09 شروع شود."
+            )
+
+        # -----------------------------------------
+        # ثبت شاگرد
+        # -----------------------------------------
+
         try:
+
             cursor = conn.execute("""
-                INSERT INTO students (coach_id, name, phone, password, created_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO students (
+                    coach_id,
+                    name,
+                    phone,
+                    created_at
+                )
+                VALUES (?, ?, ?, ?)
                 RETURNING id
             """, (
-                coach["id"], name, phone,
-                generate_password_hash(password),
+                coach["id"],
+                name,
+                phone,
                 datetime.now().isoformat()
             ))
+
             new_student_id = cursor.fetchone()["id"]
+
             conn.commit()
-        except Exception:
+
+        except Exception as e:
+
             conn.rollback()
+
             conn.close()
-            return render_template("student_register.html", coach=coach,
-                                    error="این شماره قبلاً ثبت شده است.")
- 
+
+            return render_template(
+                "student_register.html",
+                coach=coach,
+                error="این شماره تماس قبلاً ثبت شده است."
+            )
+
+        # -----------------------------------------
+        # ورود خودکار شاگرد
+        # -----------------------------------------
+
         session["student_id"] = new_student_id
+
         conn.close()
- 
-        return redirect(url_for("student_panel"))
- 
+
+        return redirect(
+            url_for("student_panel")
+        )
+
+    # -----------------------------------------
+    # نمایش صفحه ثبت‌نام
+    # -----------------------------------------
+
     conn.close()
-    return render_template("student_register.html", coach=coach, error=error)
- 
- 
+
+    return render_template(
+        "student_register.html",
+        coach=coach,
+        error=error
+    )
+
+
 # =========================================================
 # 5) ورود شاگرد
 # =========================================================
- 
+
 @app.route("/student/login", methods=["GET", "POST"])
 def student_login():
- 
+
     error = None
- 
+
     if "student_id" in session:
-        return redirect(url_for("student_panel"))
- 
+
+        return redirect(
+            url_for("student_panel")
+        )
+
     if request.method == "POST":
- 
+
         phone = request.form.get("phone", "").strip()
-        password = request.form.get("password", "")
- 
+
+        if not phone:
+
+            return render_template(
+                "student_login.html",
+                error="شماره تماس را وارد کنید."
+            )
+
         conn = get_db()
+
         student = conn.execute("""
-            SELECT * FROM students WHERE phone = ?
+            SELECT *
+            FROM students
+            WHERE phone = ?
         """, (phone,)).fetchone()
+
         conn.close()
- 
-        if not student or not check_password_hash(student["password"], password):
-            return render_template("student_login.html", error="اطلاعات ورود اشتباه است.")
- 
+
+        if not student:
+
+            return render_template(
+                "student_login.html",
+                error="شاگردی با این شماره پیدا نشد."
+            )
+
         session["student_id"] = student["id"]
-        return redirect(url_for("student_panel"))
- 
-    return render_template("student_login.html", error=error)
- 
- 
+
+        return redirect(
+            url_for("student_panel")
+        )
+
+    return render_template(
+        "student_login.html",
+        error=error
+    )
+
+
+# =========================================================
+# 6) خروج شاگرد
+# =========================================================
+
 @app.route("/student/logout")
 def student_logout():
-    session.pop("student_id", None)
-    return redirect(url_for("student_login"))
- 
- 
+
+    session.pop(
+        "student_id",
+        None
+    )
+
+    return redirect(
+        url_for("student_login")
+    )
+
+
 # =========================================================
-# 6) پنل شاگرد — اطلاعات مربی + لیست برنامه‌های ارسال‌شده
+# 7) پنل شاگرد
 # =========================================================
- 
+
 @app.route("/student/panel")
 @student_login_required
 def student_panel():
- 
+
     conn = get_db()
- 
+
     student = conn.execute("""
-        SELECT * FROM students WHERE id = ?
+        SELECT *
+        FROM students
+        WHERE id = ?
     """, (session["student_id"],)).fetchone()
- 
+
+    if not student:
+
+        session.pop(
+            "student_id",
+            None
+        )
+
+        conn.close()
+
+        return redirect(
+            url_for("student_login")
+        )
+
     coach = conn.execute("""
-        SELECT name, phone FROM coaches WHERE id = ?
+        SELECT name, phone
+        FROM coaches
+        WHERE id = ?
     """, (student["coach_id"],)).fetchone()
- 
+
     programs = conn.execute("""
-        SELECT id, program_name, share_token, created_at
+        SELECT
+            id,
+            program_name,
+            share_token,
+            created_at
         FROM programs
-        WHERE student_id = ? AND status = 'sent'
+        WHERE student_id = ?
+          AND status = 'sent'
         ORDER BY created_at DESC
     """, (student["id"],)).fetchall()
- 
+
     conn.close()
- 
+
     return render_template(
         "student_panel.html",
-        coach=dict(coach),
+        coach=dict(coach) if coach else {},
         programs=[dict(p) for p in programs]
     )
-
 
 # =========================================================
 # SUBSCRIBE PAGE
