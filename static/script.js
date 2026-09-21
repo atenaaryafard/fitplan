@@ -1159,7 +1159,7 @@ async function exportPDF() {
         return;
     }
 
-    const html = buildBrandHeaderHTML() + previewBody.innerHTML + buildBrandFooterHTML();
+    const html = body.innerHTML;
 
     try {
 
