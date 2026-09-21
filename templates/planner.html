@@ -31,62 +31,52 @@
 
     <div class="header-actions">
 
+    <!-- دکمه همبرگری موبایل -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="باز کردن منو">
+        ☰
+    </button>
+
+    <!-- منوی اصلی -->
+    <div class="header-menu" id="headerMenu">
+
         {% if coach.is_admin %}
         <a href="{{ url_for('admin_orders') }}"
-             class="nav-subscribe-btn">
-
-        پنل ادمین
-
+           class="nav-subscribe-btn">
+            پنل ادمین
         </a>
         {% endif %}
 
+        <a href="{{ url_for('home') }}"
+           class="nav-home-btn">
+            صفحه اصلی
+        </a>
 
-    <div class="header-actions">
+        <a href="{{ url_for('students_list') }}"
+           class="nav-home-btn">
+            شاگردان من
+        </a>
 
-         <a href="{{ url_for('home') }}"
-   class="nav-home-btn">
-
-    صفحه اصلی
-
-         </a>
-
-         <a href="{{ url_for('students_list') }}"
-   class="nav-home-btn">
-
-    شاگردان من
-
-         </a>
-
-        
-          <a href="{{ url_for('subscribe') }}"
-            class="nav-subscribe-btn">
-
+        <a href="{{ url_for('subscribe') }}"
+           class="nav-subscribe-btn">
             تهیه اشتراک
-
         </a>
 
         <div class="quota">
-
-            <span>
-                باقی‌مانده
-            </span>
+            <span>باقی‌مانده</span>
 
             <strong id="quota">
                 {{ remaining }}
             </strong>
-
         </div>
 
-
-        
-           <a href="{{ url_for('logout') }}"
-            class="logout">
-
+        <a href="{{ url_for('logout') }}"
+           class="logout">
             خروج
-
         </a>
 
     </div>
+
+</div>
 
 </header>
 
