@@ -21,12 +21,12 @@ body {
 /* هدر برندینگ */
 
 .pdf-brand-header {
-    width: 100%;
-    max-width: 100%;
+    width: 50%;
+    max-width: 50%;
 }
 
 .pdf-brand-logo {
-    max-width: 100%;
+    max-width: 50%;
 }
 
 /* جدول تمرین */
