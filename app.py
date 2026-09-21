@@ -1209,31 +1209,50 @@ def get_my_students():
 @app.route("/api/program/<int:program_id>/send", methods=["POST"])
 @login_required
 def send_program(program_id):
- 
+
+    data = request.get_json() or {}
+    student_id = data.get("student_id")
+
+    if not student_id:
+        return jsonify({"success": False, "message": "شاگرد را انتخاب کنید."}), 400
+
     conn = get_db()
- 
+
     program = conn.execute("""
         SELECT * FROM programs WHERE id = ? AND coach_id = ?
     """, (program_id, session["coach_id"])).fetchone()
- 
+
     if not program:
         conn.close()
         return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
- 
+
+    student = conn.execute("""
+        SELECT id, name FROM students
+        WHERE id = ? AND coach_id = ?
+    """, (student_id, session["coach_id"])).fetchone()
+
+    if not student:
+        conn.close()
+        return jsonify({"success": False, "message": "شاگرد نامعتبر است."}), 400
+
     token = program["share_token"] or secrets.token_urlsafe(16)
- 
+
     conn.execute("""
         UPDATE programs
-        SET share_token = ?, status = 'sent'
+        SET share_token = ?, status = 'sent', student_id = ?
         WHERE id = ?
-    """, (token, program_id))
- 
+    """, (token, student_id, program_id))
+
     conn.commit()
     conn.close()
- 
+
     share_url = url_for("view_shared_program", share_token=token, _external=True)
- 
-    return jsonify({"success": True, "share_url": share_url})
+
+    return jsonify({
+        "success": True,
+        "share_url": share_url,
+        "student_name": student["name"]
+    })
  
  
 # ج) صفحهٔ عمومی نمایش برنامه برای شاگرد (بدون نیاز به لاگین
