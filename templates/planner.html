@@ -80,6 +80,37 @@
 
 </header>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const menuBtn = document.getElementById("mobileMenuBtn");
+    const menu = document.getElementById("headerMenu");
+
+    if (!menuBtn || !menu) return;
+
+    menuBtn.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        menu.classList.toggle("active");
+
+    });
+
+
+    document.addEventListener("click", function (event) {
+
+        if (
+            !menu.contains(event.target) &&
+            !menuBtn.contains(event.target)
+        ) {
+            menu.classList.remove("active");
+        }
+
+    });
+
+});
+</script>
+
 <!-- =========== -->
 
 <main class="planner">
