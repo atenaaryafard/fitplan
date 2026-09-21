@@ -219,7 +219,7 @@ def init_db():
 
     except Exception as e:
         conn.rollback()
-        print("STUDENT FK ERROR:", repr(e)))
+        print("STUDENT FK ERROR:", repr(e))
 
     
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
