@@ -15,6 +15,19 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}">
 
+    <!--
+        CSS مربوط به پلن مربی بعد از دریافت اطلاعات برنامه
+        به صورت خودکار اینجا قرار می‌گیرد.
+    -->
+    <link
+        id="programPlanStyle"
+        rel="stylesheet">
+
+    <!-- فقط برای ریسپانسیو صفحه آنلاین -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='program-responsive.css') }}">
+
 </head>
 
 <body>
@@ -32,9 +45,11 @@
     <section class="section-card">
 
         <div class="section-title">
+
             <div>
                 <h2>برنامه تمرینی شما</h2>
             </div>
+
         </div>
 
         <div id="programBody">
@@ -60,122 +75,350 @@
 
 </main>
 
+
 <script>
-    // این‌ها بعد از فچ کردن دیتای برنامه پر می‌شوند
+
+    /*
+       مقدار اولیه
+       بعد از دریافت برنامه از API با اطلاعات واقعی مربی
+       جایگزین می‌شود.
+    */
+
     let COACH_BRAND = {
+
         hasCustomLogo: false,
+
         planKey: "basic",
+
         jobTitle: "",
+
         socialAddress: "",
+
         phoneNumber: "",
+
         footerText: "",
+
         coachName: ""
+
     };
 
+
     const SHARE_TOKEN = "{{ program.share_token }}";
+
 </script>
 
+
 <script src="{{ url_for('static', filename='logo-data.js') }}"></script>
+
 <script src="{{ url_for('static', filename='exercises.js') }}"></script>
+
 <script src="{{ url_for('static', filename='program-render.js') }}"></script>
 
+
 <script>
+
+
+    /* =====================================================
+       انتخاب CSS بر اساس پلن مربی
+    ===================================================== */
+
+    function loadPlanStyle(planKey) {
+
+        const styleElement =
+            document.getElementById("programPlanStyle");
+
+        const styleMap = {
+
+            basic:
+                "{{ url_for('static', filename='pdf_style_basic.css') }}",
+
+            branded:
+                "{{ url_for('static', filename='pdf_style_branded.css') }}",
+
+            premium:
+                "{{ url_for('static', filename='pdf_style_premium.css') }}"
+
+        };
+
+        const selectedStyle =
+            styleMap[planKey] || styleMap.basic;
+
+        styleElement.href = selectedStyle;
+
+    }
+
+
+
+    /* =====================================================
+       دریافت برنامه
+    ===================================================== */
 
     async function loadSharedProgram() {
 
-        const body = document.getElementById("programBody");
+        const body =
+            document.getElementById("programBody");
+
 
         try {
 
-            const response = await fetch(`/api/program/shared/${SHARE_TOKEN}`);
-            const result = await response.json();
+            const response =
+                await fetch(
+                    `/api/program/shared/${SHARE_TOKEN}`
+                );
+
+
+            const result =
+                await response.json();
+
 
             if (!response.ok || !result.success) {
-                body.innerHTML = "این برنامه پیدا نشد یا هنوز ارسال نشده است.";
+
+                body.innerHTML =
+                    "این برنامه پیدا نشد یا هنوز ارسال نشده است.";
+
                 return;
+
             }
 
-            const program = result.program;
 
-            // پر کردن COACH_BRAND با اطلاعات مربی که در همین API برگردانده می‌شود
+            const program =
+                result.program;
+
+
+            /* ---------------------------------------------
+               پلن واقعی مربی
+            --------------------------------------------- */
+
+            const planKey =
+                program.plan_key || "basic";
+
+
+            /*
+               CSS همان پلن را لود کن
+            */
+
+            loadPlanStyle(planKey);
+
+
+            /* ---------------------------------------------
+               اطلاعات برند مربی
+            --------------------------------------------- */
+
             COACH_BRAND = {
-                hasCustomLogo: Boolean(program.has_custom_logo),
-                planKey: program.plan_key || "basic",
-                jobTitle: program.job_title || "",
-                socialAddress: program.social_address || "",
-                phoneNumber: program.phone_number || "",
-                footerText: program.footer_text || "",
-                coachName: program.coach_name || ""
+
+                hasCustomLogo:
+                    planKey !== "basic"
+                    ? true
+                    : Boolean(program.has_custom_logo),
+
+                planKey:
+                    planKey,
+
+                jobTitle:
+                    program.job_title || "",
+
+                socialAddress:
+                    program.social_address || "",
+
+                phoneNumber:
+                    program.phone_number || "",
+
+                footerText:
+                    program.footer_text || "",
+
+                coachName:
+                    program.coach_name || ""
+
             };
 
-            // buildProgramPreviewHTML انتظار کلید days را دارد، نه program_data
+
+            /* ---------------------------------------------
+               اطلاعات برنامه
+            --------------------------------------------- */
+
             const previewData = {
-                athlete_name: program.athlete_name,
-                athlete_age: program.athlete_age,
-                athlete_height: program.athlete_height,
-                athlete_weight: program.athlete_weight,
-                athlete_goal: program.athlete_goal,
-                athlete_gender: program.athlete_gender,
-                sizes: program.sizes,
-                notes: program.notes,
-                days: program.program_data
+
+                athlete_name:
+                    program.athlete_name,
+
+                athlete_age:
+                    program.athlete_age,
+
+                athlete_height:
+                    program.athlete_height,
+
+                athlete_weight:
+                    program.athlete_weight,
+
+                athlete_goal:
+                    program.athlete_goal,
+
+                athlete_gender:
+                    program.athlete_gender,
+
+                sizes:
+                    program.sizes,
+
+                notes:
+                    program.notes,
+
+                days:
+                    program.program_data
+
             };
 
-            body.innerHTML = buildProgramPreviewHTML(previewData);
-            document.getElementById("downloadPdfBtn").style.display = "inline-block";
 
-            // برای استفاده در exportSharedPDF
-            window.__currentProgramBody = body;
+            /* ---------------------------------------------
+               نمایش برنامه
+               هدر + برنامه + فوتر
+            --------------------------------------------- */
+
+            body.innerHTML =
+                buildBrandHeaderHTML()
+                +
+                buildProgramPreviewHTML(previewData)
+                +
+                buildBrandFooterHTML();
+
+
+            /* ---------------------------------------------
+               نمایش دکمه PDF
+            --------------------------------------------- */
+
+            document
+                .getElementById("downloadPdfBtn")
+                .style.display = "inline-block";
+
+
+            /*
+               برای exportSharedPDF
+            */
+
+            window.__currentProgramBody =
+                body;
+
 
         } catch (error) {
+
             console.error(error);
-            body.innerHTML = "خطا در دریافت برنامه.";
+
+            body.innerHTML =
+                "خطا در دریافت برنامه.";
+
         }
 
     }
 
+
+
+    /* =====================================================
+       ساخت PDF
+    ===================================================== */
 
     async function exportSharedPDF() {
 
-        const body = window.__currentProgramBody || document.getElementById("programBody");
+        const body =
+            window.__currentProgramBody
+            ||
+            document.getElementById("programBody");
 
-        const html = buildBrandHeaderHTML() + body.innerHTML + buildBrandFooterHTML();
+
+        /*
+           برای PDF همان ساختار فعلی حفظ می‌شود:
+           هدر + برنامه + فوتر
+        */
+
+        const html =
+            buildBrandHeaderHTML()
+            +
+            body.innerHTML
+            +
+            buildBrandFooterHTML();
+
 
         try {
 
-            const response = await fetch(`/api/program/pdf/shared/${SHARE_TOKEN}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ html: html })
-            });
+            const response =
+                await fetch(
+                    `/api/program/pdf/shared/${SHARE_TOKEN}`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            html: html
+                        })
+                    }
+                );
+
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "خطا در ساخت PDF");
+
+                const error =
+                    await response.json();
+
+                throw new Error(
+                    error.message ||
+                    "خطا در ساخت PDF"
+                );
+
             }
 
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
 
-            const link = document.createElement("a");
+            const blob =
+                await response.blob();
+
+
+            const url =
+                window.URL.createObjectURL(blob);
+
+
+            const link =
+                document.createElement("a");
+
+
             link.href = url;
-            link.download = "FIT_PLAN.pdf";
+
+            link.download =
+                "FIT_PLAN.pdf";
+
 
             document.body.appendChild(link);
+
             link.click();
+
             link.remove();
+
 
             window.URL.revokeObjectURL(url);
 
+
         } catch (error) {
-            console.error("PDF ERROR:", error);
-            alert("خطا در ساخت PDF: " + error.message);
+
+            console.error(
+                "PDF ERROR:",
+                error
+            );
+
+            alert(
+                "خطا در ساخت PDF: "
+                +
+                error.message
+            );
+
         }
 
     }
 
 
-    document.addEventListener("DOMContentLoaded", loadSharedProgram);
+    document.addEventListener(
+        "DOMContentLoaded",
+        loadSharedProgram
+    );
 
 </script>
 
