@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -7,224 +8,335 @@
 
     <title>FIT PLAN | ورود یا ثبت‌نام</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-        body {
-            margin: 0;
+    <style>
+
+        .student-access-page {
+
             min-height: 100vh;
-            font-family: Tahoma, Arial, sans-serif;
-            background:
-                radial-gradient(
-                    circle at top,
-                    rgba(0, 255, 161, 0.10),
-                    transparent 35%
-                ),
-                #080b12;
-            color: #ffffff;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             padding: 20px;
+
+            background: #f4f6f8;
+
         }
 
-        .register-box {
+
+        .student-access-card {
+
             width: 100%;
+
             max-width: 430px;
 
-            background: rgba(17, 22, 32, 0.96);
+            background: white;
 
-            border: 1px solid rgba(0, 255, 161, 0.20);
+            border-radius: 20px;
 
-            border-radius: 22px;
+            padding: 30px;
 
-            padding: 30px 25px;
+            border: 1px solid #e5e7eb;
 
             box-shadow:
-                0 15px 50px rgba(0, 0, 0, 0.45);
+                0 20px 60px
+                rgba(0, 0, 0, .10);
+
         }
 
-        .logo {
+
+        .student-access-logo {
+
             text-align: center;
 
-            color: #00ffa1;
+            font-size: 24px;
 
-            font-size: 30px;
+            font-weight: 900;
 
-            font-weight: bold;
+            color: #111827;
 
-            letter-spacing: 1px;
+            margin-bottom: 20px;
 
-            margin-bottom: 10px;
         }
 
-        .title {
+
+        .student-access-title {
+
             text-align: center;
+
+            margin: 0 0 7px;
 
             font-size: 22px;
 
-            margin-bottom: 8px;
+            color: #17202a;
+
         }
 
-        .subtitle {
+
+        .student-access-subtitle {
+
             text-align: center;
 
-            color: #aab2c0;
-
-            font-size: 14px;
-
-            line-height: 1.8;
-
-            margin-bottom: 25px;
-        }
-
-        .coach-box {
-            background: rgba(0, 255, 161, 0.06);
-
-            border: 1px solid rgba(0, 255, 161, 0.15);
-
-            border-radius: 14px;
-
-            padding: 14px;
-
-            margin-bottom: 22px;
-
-            text-align: center;
-        }
-
-        .coach-label {
-            color: #8f98a8;
+            color: #777;
 
             font-size: 13px;
 
-            margin-bottom: 5px;
+            line-height: 1.9;
+
+            margin: 0 0 24px;
+
         }
 
-        .coach-name {
-            color: #00ffa1;
 
-            font-size: 18px;
+        .student-coach-box {
 
-            font-weight: bold;
-        }
+            background: #f8fafc;
 
-        .action-title {
+            border: 1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            padding: 14px;
+
+            margin-bottom: 24px;
+
             text-align: center;
 
-            font-size: 15px;
-
-            color: #dfe5ed;
-
-            margin-bottom: 15px;
         }
 
-        .action-button {
+
+        .student-coach-label {
+
+            color: #888;
+
+            font-size: 12px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .student-coach-name {
+
+            color: #111827;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+        }
+
+
+        .student-action-title {
+
+            text-align: center;
+
+            color: #555;
+
+            font-size: 13px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .student-action-btn {
+
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             width: 100%;
 
-            min-height: 52px;
+            min-height: 48px;
 
-            border-radius: 13px;
+            border-radius: 9px;
 
             text-decoration: none;
 
-            font-size: 16px;
+            font-size: 14px;
 
             font-weight: bold;
 
-            margin-bottom: 12px;
+            margin-bottom: 10px;
 
-            transition: 0.2s;
+            transition: .2s ease;
+
         }
 
-        .register-button {
-            background: #00ffa1;
 
-            color: #07110d;
-        }
+        .student-register-btn {
 
-        .login-button {
             background: #111827;
 
-            color: #ffffff;
+            color: white;
 
-            border: 1px solid #303746;
         }
 
-        .action-button:hover {
+
+        .student-register-btn:hover {
+
+            background: #263449;
+
             transform: translateY(-1px);
+
         }
 
-        .register-button:hover {
-            box-shadow:
-                0 8px 25px rgba(0, 255, 161, 0.20);
+
+        .student-login-btn {
+
+            background: #f1f5f9;
+
+            color: #374151;
+
+            border: 1px solid #e5e7eb;
+
         }
 
-        .login-button:hover {
-            border-color: #00ffa1;
-            color: #00ffa1;
+
+        .student-login-btn:hover {
+
+            background: #e5e7eb;
+
+            transform: translateY(-1px);
+
         }
+
+
+        @media (max-width: 480px) {
+
+            .student-access-page {
+
+                padding: 12px;
+
+            }
+
+
+            .student-access-card {
+
+                padding: 25px 18px;
+
+                border-radius: 16px;
+
+            }
+
+
+            .student-access-title {
+
+                font-size: 20px;
+
+            }
+
+
+            .student-access-logo {
+
+                font-size: 22px;
+
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <div class="register-box">
 
-        <div class="logo">
+<div class="student-access-page">
+
+
+    <div class="student-access-card">
+
+
+        <div class="student-access-logo">
+
             FIT PLAN
+
         </div>
 
-        <div class="title">
-            ورود به FIT PLAN
-        </div>
 
-        <div class="subtitle">
-            برای استفاده از پنل شاگرد، یکی از گزینه‌های زیر را انتخاب کنید.
-        </div>
+        <h1 class="student-access-title">
+
+            ورود به پنل شاگرد
+
+        </h1>
+
+
+        <p class="student-access-subtitle">
+
+            برای استفاده از پنل شاگرد،
+            یکی از گزینه‌های زیر را انتخاب کنید.
+
+        </p>
+
 
         {% if coach %}
-        <div class="coach-box">
 
-            <div class="coach-label">
+        <div class="student-coach-box">
+
+
+            <div class="student-coach-label">
+
                 مربی شما
+
             </div>
 
-            <div class="coach-name">
+
+            <div class="student-coach-name">
+
                 {{ coach["name"] }}
+
             </div>
+
 
         </div>
+
         {% endif %}
 
-        <div class="action-title">
-            اگر قبلاً حساب نساخته‌اید، ثبت‌نام کنید.
+
+        <div class="student-action-title">
+
+            اگر قبلاً حساب نساخته‌اید، ابتدا ثبت‌نام کنید.
+
         </div>
 
+
         <a
-            class="action-button register-button"
+            class="student-action-btn student-register-btn"
             href="{{ url_for('student_register_form', coach_code=coach['coach_code']) }}"
         >
+
             ثبت‌نام شاگرد
+
         </a>
+
 
         <a
-            class="action-button login-button"
+            class="student-action-btn student-login-btn"
             href="{{ url_for('student_login', coach_code=coach['coach_code']) }}"
         >
+
             ورود به پنل
+
         </a>
 
+
     </div>
+
+
+</div>
+
 
 </body>
 
 </html>
+```
