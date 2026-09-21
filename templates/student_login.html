@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -7,231 +8,182 @@
 
     <title>ورود شاگرد | FIT PLAN</title>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
+        .student-auth-page {
             min-height: 100vh;
-            font-family: Tahoma, Arial, sans-serif;
-
-            background:
-                radial-gradient(
-                    circle at top,
-                    rgba(0, 255, 161, 0.10),
-                    transparent 35%
-                ),
-                #080b12;
-
-            color: #ffffff;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             padding: 20px;
+            background: #f4f6f8;
         }
 
-        .login-box {
+        .student-auth-card {
             width: 100%;
             max-width: 430px;
-
-            background: rgba(17, 22, 32, 0.96);
-
-            border: 1px solid rgba(0, 255, 161, 0.20);
-
-            border-radius: 22px;
-
-            padding: 30px 25px;
-
-            box-shadow:
-                0 15px 50px rgba(0, 0, 0, 0.45);
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.10);
+            border: 1px solid #e5e7eb;
         }
 
-        .logo {
+        .student-auth-logo {
             text-align: center;
-
-            color: #00ffa1;
-
-            font-size: 30px;
-
-            font-weight: bold;
-
-            margin-bottom: 10px;
-        }
-
-        .title {
-            text-align: center;
-
-            font-size: 22px;
-
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            text-align: center;
-
-            color: #aab2c0;
-
-            font-size: 14px;
-
-            line-height: 1.8;
-
-            margin-bottom: 22px;
-        }
-
-        .coach-box {
-            background: rgba(0, 255, 161, 0.06);
-
-            border: 1px solid rgba(0, 255, 161, 0.15);
-
-            border-radius: 14px;
-
-            padding: 14px;
-
+            font-size: 24px;
+            font-weight: 900;
+            color: #111827;
             margin-bottom: 20px;
+        }
 
+        .student-auth-title {
+            text-align: center;
+            margin: 0 0 7px;
+            font-size: 22px;
+        }
+
+        .student-auth-subtitle {
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            line-height: 1.9;
+            margin: 0 0 22px;
+        }
+
+        .student-coach-box {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
-        .coach-label {
-            color: #8f98a8;
-
-            font-size: 13px;
-
+        .student-coach-label {
+            color: #888;
+            font-size: 12px;
             margin-bottom: 5px;
         }
 
-        .coach-name {
-            color: #00ffa1;
-
-            font-size: 18px;
-
+        .student-coach-name {
+            color: #111827;
+            font-size: 17px;
             font-weight: bold;
         }
 
-        label {
+        .student-auth-card label {
             display: block;
-
-            margin-bottom: 8px;
-
-            font-size: 14px;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: bold;
         }
 
-        input {
+        .student-auth-card input {
             width: 100%;
-
-            padding: 14px;
-
-            border-radius: 12px;
-
-            border: 1px solid #303746;
-
-            background: #0d121b;
-
-            color: #ffffff;
-
-            font-size: 16px;
-
+            min-height: 42px;
+            padding: 10px 12px;
+            border: 1px solid #dfe3e8;
+            border-radius: 8px;
+            background: white;
+            color: #17202a;
+            font-family: inherit;
+            font-size: 14px;
             outline: none;
-
             direction: ltr;
-
             text-align: left;
         }
 
-        input:focus {
-            border-color: #00ffa1;
+        .student-auth-card input:focus {
+            border-color: #111827;
         }
 
-        button {
+        .student-login-submit {
             width: 100%;
-
+            min-height: 44px;
+            margin-top: 16px;
             border: none;
-
-            border-radius: 13px;
-
-            padding: 14px;
-
-            background: #00ffa1;
-
-            color: #07110d;
-
-            font-size: 16px;
-
+            border-radius: 9px;
+            background: #111827;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
             font-weight: bold;
-
             cursor: pointer;
-
-            margin-top: 18px;
         }
 
-        .error {
-            background: rgba(255, 70, 70, 0.10);
+        .student-login-submit:hover {
+            background: #263449;
+        }
 
-            border: 1px solid rgba(255, 70, 70, 0.25);
-
-            color: #ff8585;
-
-            border-radius: 12px;
-
+        .student-auth-error {
+            background: #fee2e2;
+            color: #b91c1c;
             padding: 12px;
-
-            margin-bottom: 18px;
-
+            border-radius: 8px;
+            margin-bottom: 16px;
             font-size: 13px;
-
             text-align: center;
-
-            line-height: 1.8;
         }
 
-        .back {
+        .student-auth-back {
             display: block;
-
             text-align: center;
-
             margin-top: 18px;
-
-            color: #929aaa;
-
+            color: #777;
             text-decoration: none;
-
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        .back:hover {
-            color: #00ffa1;
+        .student-auth-back:hover {
+            color: #111827;
+        }
+
+        @media (max-width: 480px) {
+
+            .student-auth-page {
+                padding: 12px;
+            }
+
+            .student-auth-card {
+                padding: 25px 18px;
+                border-radius: 16px;
+            }
+
+            .student-auth-title {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="login-box">
+<div class="student-auth-page">
 
-        <div class="logo">
+    <div class="student-auth-card">
+
+        <div class="student-auth-logo">
             FIT PLAN
         </div>
 
-        <div class="title">
+        <h1 class="student-auth-title">
             ورود شاگرد
-        </div>
+        </h1>
 
-        <div class="subtitle">
+        <p class="student-auth-subtitle">
             شماره موبایلی که هنگام ثبت‌نام وارد کردید را وارد کنید.
-        </div>
+        </p>
 
         {% if coach %}
-        <div class="coach-box">
+        <div class="student-coach-box">
 
-            <div class="coach-label">
+            <div class="student-coach-label">
                 مربی شما
             </div>
 
-            <div class="coach-name">
+            <div class="student-coach-name">
                 {{ coach["name"] }}
             </div>
 
@@ -239,7 +191,7 @@
         {% endif %}
 
         {% if error %}
-        <div class="error">
+        <div class="student-auth-error">
             {{ error }}
         </div>
         {% endif %}
@@ -257,24 +209,30 @@
                 placeholder="09123456789"
                 maxlength="11"
                 inputmode="numeric"
+                autocomplete="tel"
                 required
             >
 
-            <button type="submit">
+            <button
+                type="submit"
+                class="student-login-submit"
+            >
                 ورود به پنل
             </button>
 
         </form>
 
         <a
-            class="back"
+            class="student-auth-back"
             href="{{ url_for('student_register', coach_code=coach['coach_code']) }}"
         >
-            بازگشت
+            بازگشت به ثبت‌نام
         </a>
 
     </div>
 
-</body>
+</div>
 
+</body>
 </html>
+```
