@@ -841,24 +841,22 @@ def coach_qrcode():
 
 
 # =========================================================
-# 4) ثبت‌نام شاگرد از طریق QR / لینک مربی
+# 4) ثبت‌نام واقعی شاگرد
 # =========================================================
 
-@app.route("/register/student/<coach_code>", methods=["GET", "POST"])
-def student_register(coach_code):
+@app.route("/register/student/<coach_code>/new", methods=["GET", "POST"])
+def student_register_form(coach_code):
 
     conn = get_db()
 
     coach = conn.execute("""
-        SELECT id, name, phone
+        SELECT id, name, phone, coach_code
         FROM coaches
         WHERE coach_code = ?
     """, (coach_code,)).fetchone()
 
     if not coach:
-
         conn.close()
-
         return "لینک ثبت‌نام نامعتبر است.", 404
 
     error = None
@@ -866,50 +864,48 @@ def student_register(coach_code):
     if request.method == "POST":
 
         name = request.form.get("name", "").strip()
-
         phone = request.form.get("phone", "").strip()
 
-        # -----------------------------------------
-        # بررسی اطلاعات
-        # -----------------------------------------
-
         if not name or not phone:
-
             conn.close()
 
             return render_template(
-                "student_register.html",
+                "student_register_form.html",
                 coach=coach,
                 error="همه فیلدها را تکمیل کنید."
             )
 
-        # -----------------------------------------
-        # بررسی شماره تماس
-        # -----------------------------------------
-
         if not re.match(r"^09\d{9}$", phone):
-
             conn.close()
 
             return render_template(
-                "student_register.html",
+                "student_register_form.html",
                 coach=coach,
                 error="شماره تماس باید ۱۱ رقم باشد و با 09 شروع شود."
             )
 
-        # -----------------------------------------
-        # ثبت شاگرد
-        # -----------------------------------------
+        # بررسی اینکه این شاگرد قبلاً برای همین مربی ثبت‌نام کرده یا نه
+        existing_student = conn.execute("""
+            SELECT id
+            FROM students
+            WHERE coach_id = ? AND phone = ?
+        """, (coach["id"], phone)).fetchone()
+
+        if existing_student:
+
+            conn.close()
+
+            return render_template(
+                "student_register_form.html",
+                coach=coach,
+                error="این شماره قبلاً برای این مربی ثبت‌نام کرده است. لطفاً از گزینه ورود استفاده کنید."
+            )
 
         try:
 
             cursor = conn.execute("""
-                INSERT INTO students (
-                    coach_id,
-                    name,
-                    phone,
-                    created_at
-                )
+                INSERT INTO students
+                (coach_id, name, phone, created_at)
                 VALUES (?, ?, ?, ?)
                 RETURNING id
             """, (
@@ -927,34 +923,27 @@ def student_register(coach_code):
 
             conn.rollback()
 
+            print("STUDENT REGISTER ERROR:", repr(e))
+
             conn.close()
 
             return render_template(
-                "student_register.html",
+                "student_register_form.html",
                 coach=coach,
-                error="این شماره تماس قبلاً ثبت شده است."
+                error="ثبت‌نام انجام نشد. دوباره تلاش کنید."
             )
 
-        # -----------------------------------------
-        # ورود خودکار شاگرد
-        # -----------------------------------------
-
+        # ورود خودکار بعد از ثبت‌نام
         session["student_id"] = new_student_id
 
         conn.close()
 
-        return redirect(
-            url_for("student_panel")
-        )
-
-    # -----------------------------------------
-    # نمایش صفحه ثبت‌نام
-    # -----------------------------------------
+        return redirect(url_for("student_panel"))
 
     conn.close()
 
     return render_template(
-        "student_register.html",
+        "student_register_form.html",
         coach=coach,
         error=error
     )
@@ -964,53 +953,68 @@ def student_register(coach_code):
 # 5) ورود شاگرد
 # =========================================================
 
-@app.route("/student/login", methods=["GET", "POST"])
-def student_login():
+@app.route("/student/login/<coach_code>", methods=["GET", "POST"])
+def student_login(coach_code):
 
-    error = None
+    conn = get_db()
+
+    coach = conn.execute("""
+        SELECT id, name, phone, coach_code
+        FROM coaches
+        WHERE coach_code = ?
+    """, (coach_code,)).fetchone()
+
+    if not coach:
+        conn.close()
+        return "لینک مربی نامعتبر است.", 404
 
     if "student_id" in session:
 
-        return redirect(
-            url_for("student_panel")
-        )
+        student = conn.execute("""
+            SELECT id, coach_id
+            FROM students
+            WHERE id = ?
+        """, (session["student_id"],)).fetchone()
+
+        if student and student["coach_id"] == coach["id"]:
+            conn.close()
+            return redirect(url_for("student_panel"))
+
+        session.pop("student_id", None)
+
+    error = None
 
     if request.method == "POST":
 
         phone = request.form.get("phone", "").strip()
 
-        if not phone:
-
-            return render_template(
-                "student_login.html",
-                error="شماره تماس را وارد کنید."
-            )
-
-        conn = get_db()
-
         student = conn.execute("""
-            SELECT *
+            SELECT id
             FROM students
-            WHERE phone = ?
-        """, (phone,)).fetchone()
-
-        conn.close()
+            WHERE coach_id = ? AND phone = ?
+        """, (coach["id"], phone)).fetchone()
 
         if not student:
 
+            conn.close()
+
             return render_template(
                 "student_login.html",
-                error="شاگردی با این شماره پیدا نشد."
+                coach=coach,
+                error="این شماره برای این مربی ثبت‌نام نشده است. ابتدا ثبت‌نام کنید."
             )
 
         session["student_id"] = student["id"]
 
-        return redirect(
-            url_for("student_panel")
-        )
+        conn.close()
+
+        return redirect(url_for("student_panel"))
+
+    conn.close()
 
     return render_template(
         "student_login.html",
+        coach=coach,
         error=error
     )
 
@@ -1022,14 +1026,9 @@ def student_login():
 @app.route("/student/logout")
 def student_logout():
 
-    session.pop(
-        "student_id",
-        None
-    )
+    session.pop("student_id", None)
 
-    return redirect(
-        url_for("student_login")
-    )
+    return redirect(url_for("student_login"))
 
 
 # =========================================================
