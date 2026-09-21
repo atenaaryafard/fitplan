@@ -2415,3 +2415,80 @@ button {
     color: #166534;
 
 }
+
+/* =========================
+   منوی موبایل
+========================= */
+
+.mobile-menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 5px 10px;
+    line-height: 1;
+}
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* =========================
+   موبایل
+========================= */
+
+@media (max-width: 768px) {
+
+    .header-actions {
+        position: relative;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .header-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+
+        width: 220px;
+        padding: 12px;
+
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+
+        background: #111;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+
+        z-index: 9999;
+    }
+
+    .header-menu.active {
+        display: flex;
+    }
+
+    .header-menu a,
+    .header-menu .quota {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .header-menu .quota {
+        padding: 10px;
+        text-align: center;
+    }
+
+}
