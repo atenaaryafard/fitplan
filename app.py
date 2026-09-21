@@ -729,13 +729,26 @@ def login():
 
 def student_login_required(function):
     from functools import wraps
- 
+
     @wraps(function)
     def wrapper(*args, **kwargs):
+
         if "student_id" not in session:
-            return redirect(url_for("student_login"))
+
+            coach_code = session.get("student_coach_code")
+
+            if coach_code:
+                return redirect(
+                    url_for(
+                        "student_login",
+                        coach_code=coach_code
+                    )
+                )
+
+            return redirect(url_for("login"))
+
         return function(*args, **kwargs)
- 
+
     return wrapper
 
 
@@ -839,6 +852,31 @@ def coach_qrcode():
         mimetype="image/png"
     )
 
+# =========================================================
+# صفحه انتخاب ثبت‌نام / ورود شاگرد
+# =========================================================
+
+@app.route("/register/student/<coach_code>")
+def student_register(coach_code):
+
+    conn = get_db()
+
+    coach = conn.execute("""
+        SELECT id, name, phone, coach_code
+        FROM coaches
+        WHERE coach_code = ?
+    """, (coach_code,)).fetchone()
+
+    conn.close()
+
+    if not coach:
+        return "لینک مربی نامعتبر است.", 404
+
+    return render_template(
+        "student_register.html",
+        coach=coach
+    )
+
 
 # =========================================================
 # 4) ثبت‌نام واقعی شاگرد
@@ -935,6 +973,7 @@ def student_register_form(coach_code):
 
         # ورود خودکار بعد از ثبت‌نام
         session["student_id"] = new_student_id
+        session["student_coach_code"] = coach["coach_code"]
 
         conn.close()
 
@@ -1005,6 +1044,7 @@ def student_login(coach_code):
             )
 
         session["student_id"] = student["id"]
+        session["student_coach_code"] = coach["coach_code"]
 
         conn.close()
 
@@ -1026,9 +1066,19 @@ def student_login(coach_code):
 @app.route("/student/logout")
 def student_logout():
 
+    coach_code = session.get("student_coach_code")
+
     session.pop("student_id", None)
 
-    return redirect(url_for("student_login"))
+    if coach_code:
+        return redirect(
+            url_for(
+                "student_register",
+                coach_code=coach_code
+            )
+        )
+
+    return redirect(url_for("login"))
 
 
 # =========================================================
