@@ -839,7 +839,7 @@ def student_register(coach_code):
  
         if not name or not phone or not password:
             conn.close()
-            return render_template("student_register.html", coach=coach,
+            return render_template("students_list.html", coach=coach,
                                     error="همه فیلدها را تکمیل کنید.")
  
         if not re.match(r"^09\d{9}$", phone):
