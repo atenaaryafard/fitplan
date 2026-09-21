@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ورود به پنل شاگرد | FIT PLAN</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: Tahoma, Arial, sans-serif;
+
+            background: #f6f8f7;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .student-access {
+            width: 100%;
+            max-width: 430px;
+
+            background: #ffffff;
+
+            border-radius: 22px;
+
+            padding: 35px 28px;
+
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+            border: 1px solid #e8eeeb;
+
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: 800;
+
+            color: #00c982;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 18px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+
+            color: #202824;
+
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #747d78;
+
+            font-size: 14px;
+
+            line-height: 2;
+
+            margin-bottom: 28px;
+        }
+
+        .coach-box {
+            background: #f4fbf8;
+
+            border: 1px solid #dff2e9;
+
+            border-radius: 14px;
+
+            padding: 14px;
+
+            margin-bottom: 24px;
+        }
+
+        .coach-label {
+            color: #7b8580;
+
+            font-size: 12px;
+
+            margin-bottom: 6px;
+        }
+
+        .coach-name {
+            color: #00b878;
+
+            font-size: 17px;
+
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+        .access-btn {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 52px;
+
+            border-radius: 13px;
+
+            text-decoration: none;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            transition: 0.2s ease;
+        }
+
+        .register-btn {
+            background: #00d991;
+
+            color: #ffffff;
+
+            border: 1px solid #00d991;
+        }
+
+        .register-btn:hover {
+            background: #00c982;
+
+            transform: translateY(-1px);
+
+            box-shadow: 0 8px 22px rgba(0, 201, 130, 0.20);
+        }
+
+        .login-btn {
+            background: #ffffff;
+
+            color: #00b878;
+
+            border: 1px solid #00c982;
+        }
+
+        .login-btn:hover {
+            background: #f2fbf7;
+
+            transform: translateY(-1px);
+        }
+
+        .footer-text {
+            margin-top: 24px;
+
+            color: #9aa29e;
+
+            font-size: 12px;
+
+            line-height: 1.8;
+        }
+
+        @media (max-width: 480px) {
+
+            .student-access {
+                padding: 30px 20px;
+
+                border-radius: 18px;
+            }
+
+            .logo {
+                font-size: 27px;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="student-access">
+
+        <div class="logo">
+            FIT PLAN
+        </div>
+
+        <div class="title">
+            ورود به پنل شاگرد
+        </div>
+
+        <div class="subtitle">
+            برای استفاده از برنامه‌های تمرینی خود،
+            ثبت‌نام کنید یا وارد حساب خود شوید.
+        </div>
+
+        {% if coach %}
+        <div class="coach-box">
+
+            <div class="coach-label">
+                مربی شما
+            </div>
+
+            <div class="coach-name">
+                {{ coach["name"] }}
+            </div>
+
+        </div>
+        {% endif %}
+
+        <div class="buttons">
+
+            <a
+                href="{{ url_for('student_register_form', coach_code=coach['coach_code']) }}"
+                class="access-btn register-btn"
+            >
+                ثبت‌نام
+            </a>
+
+            <a
+                href="{{ url_for('student_login', coach_code=coach['coach_code']) }}"
+                class="access-btn login-btn"
+            >
+                ورود
+            </a>
+
+        </div>
+
+        <div class="footer-text">
+            FIT PLAN — مدیریت حرفه‌ای برنامه‌های تمرینی
+        </div>
+
+    </div>
+
+</body>
+
+</html>
