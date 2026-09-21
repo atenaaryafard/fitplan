@@ -2438,57 +2438,226 @@ button {
 }
 
 
+```css
+/* =========================
+   منوی همبرگری موبایل
+========================= */
+
+.mobile-menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
+    background: #f4f5f6;
+    color: #111827;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+.mobile-menu-btn:hover {
+    background: #e9ecef;
+}
+
+
+/* محتوای اصلی منو */
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
 /* =========================
    موبایل
 ========================= */
 
 @media (max-width: 768px) {
 
+    .mobile-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+        min-height: 65px;
+
+        padding: 10px 14px;
+    }
+
+
+    .brand {
+        font-size: 17px;
+    }
+
+
     .header-actions {
         position: relative;
+
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
     }
+
+
+    /* دکمه ☰ */
 
     .mobile-menu-btn {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-shrink: 0;
     }
+
+
+    /* منوی بازشونده */
 
     .header-menu {
         display: none;
+
         position: absolute;
+
         top: calc(100% + 10px);
         right: 0;
 
-        width: 220px;
-        padding: 12px;
+        width: 230px;
+
+        padding: 10px;
 
         flex-direction: column;
         align-items: stretch;
-        gap: 8px;
 
-        background: #111;
-        border: 1px solid rgba(255,255,255,0.12);
+        gap: 7px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
         border-radius: 14px;
 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        box-shadow:
+            0 12px 35px
+            rgba(17, 24, 39, .12);
 
         z-index: 9999;
     }
+
+
+    /* وقتی منو باز است */
 
     .header-menu.active {
         display: flex;
     }
 
+
+    /* تمام آیتم‌های داخل منو */
+
     .header-menu a,
     .header-menu .quota {
         width: 100%;
+        min-height: 42px;
+
         box-sizing: border-box;
     }
 
-    .header-menu .quota {
+
+    .header-menu a {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        text-decoration: none;
+
+        border-radius: 9px;
+    }
+
+
+    /* صفحه اصلی */
+
+    .header-menu .nav-home-btn {
+        background: #f4f5f6;
+        color: #374151;
+    }
+
+
+    /* خرید اشتراک */
+
+    .header-menu .nav-subscribe-btn {
+        background: #111827;
+        color: white;
+    }
+
+
+    /* پنل من */
+
+    .header-menu .nav-panel-btn {
+        background: #f4f5f6;
+        color: #111827;
+    }
+
+
+    /* خروج */
+
+    .header-menu .logout {
+        background: #fef2f2;
+        color: #dc2626;
+
         padding: 10px;
-        text-align: center;
+    }
+
+
+    /* سهمیه */
+
+    .header-menu .quota {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        background: #f8fafc;
+
+        color: #374151;
+
+        border-radius: 9px;
+
+        padding: 8px;
+    }
+
+
+    .header-menu .quota strong {
+        font-size: 15px;
     }
 
 }
+
+
+/* =========================
+   دسکتاپ
+========================= */
+
+@media (min-width: 769px) {
+
+    .mobile-menu-btn {
+        display: none !important;
+    }
+
+    .header-menu {
+        display: flex !important;
+    }
+
+}
+```
+
