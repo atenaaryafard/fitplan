@@ -1,31 +1,4 @@
-# =========================================================
-# این‌ها را داخل app.py merge کن (جایگزین کل فایل نکن).
-#
-# پیش‌نیاز تغییرات فرانت‌اند:
-#   1) فایل static/program-render.js را اضافه کن (از پیام قبلی).
-#   2) از script.js توابع escapeHTML, calculateBMI,
-#      buildBrandHeaderHTML, buildBrandFooterHTML,
-#      buildProgramPreviewHTML و ثابت BMI_GUIDE_BASE64 را
-#      حذف کن (چون به program-render.js منتقل شدند) تا
-#      دوبار تعریف نشوند.
-#   3) در planner.html، قبل از تگ script.js همین‌ها را اضافه کن:
-#        <script src="{{ url_for('static', filename='logo-data.js') }}"></script>
-#        <script src="{{ url_for('static', filename='exercises.js') }}"></script>
-#        <script src="{{ url_for('static', filename='program-render.js') }}"></script>
-#        <script src="{{ url_for('static', filename='script.js') }}"></script>
-#      (logo-data.js و exercises.js از قبل هم بودند، فقط ترتیب مهم است:
-#       program-render.js باید قبل از script.js لود شود)
-# =========================================================
 
-
-# =========================================================
-# 1) رفکتور PDF: منطق ساخت PDF از app.py فعلی به یک تابع
-# مشترک منتقل شد تا هم روت مربی (لاگین‌شده) و هم روت عمومی
-# شاگرد (بدون لاگین) از همان منطق استفاده کنند.
-#
-# این تابع را جای منطق داخل try بلوک export_program_pdf فعلی
-# قرار بده (همان کدی که با sync_playwright شروع می‌شود)
-# =========================================================
 
 def generate_program_pdf_response(coach, html_content):
     """
