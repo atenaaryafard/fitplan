@@ -191,17 +191,35 @@ def init_db():
         conn.rollback()
         print("SHARE TOKEN INDEX ERROR:", repr(e))
 
+    # =========================================================
+    # STUDENT FOREIGN KEY - SAFE
+    # =========================================================
+
     try:
         cursor.execute("""
-            ALTER TABLE programs
-            ADD CONSTRAINT programs_student_id_fkey
-            FOREIGN KEY (student_id)
-            REFERENCES students(id)
+            SELECT 1
+            FROM pg_constraint
+            WHERE conname = 'programs_student_id_fkey'
+              AND conrelid = 'programs'::regclass
         """)
-        conn.commit()
+
+        fk_exists = cursor.fetchone()
+
+        if not fk_exists:
+            cursor.execute("""
+                ALTER TABLE programs
+                ADD CONSTRAINT programs_student_id_fkey
+                FOREIGN KEY (student_id)
+                REFERENCES students(id)
+            """)
+            conn.commit()
+            print("STUDENT FK CREATED")
+        else:
+            print("STUDENT FK ALREADY EXISTS")
+
     except Exception as e:
         conn.rollback()
-        print("STUDENT FK ERROR:", repr(e))
+        print("STUDENT FK ERROR:", repr(e)))
 
     
     cursor.execute("ALTER TABLE coaches ADD COLUMN IF NOT EXISTS email TEXT")
