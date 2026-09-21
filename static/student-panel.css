@@ -1,0 +1,438 @@
+```css
+/* =========================================================
+   FIT PLAN — STUDENT PANEL
+========================================================= */
+
+.student-page {
+    min-height: 100vh;
+    background: #f4f6f8;
+    color: #17202a;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.student-header {
+    background: white;
+    min-height: 65px;
+    padding: 10px max(16px, calc((100vw - 1200px) / 2));
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #eee;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.student-brand {
+    font-size: 20px;
+    font-weight: 900;
+    color: #111827;
+}
+
+.student-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-panel-label {
+    background: #f1f5f9;
+    color: #374151;
+
+    padding: 7px 12px;
+    border-radius: 8px;
+
+    font-size: 11px;
+}
+
+.student-logout {
+    text-decoration: none;
+    color: #dc2626;
+    font-size: 12px;
+
+    padding: 7px 10px;
+    border-radius: 8px;
+
+    transition: .2s;
+}
+
+.student-logout:hover {
+    background: #fee2e2;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.student-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px 18px 50px;
+}
+
+
+/* =========================================================
+   WELCOME
+========================================================= */
+
+.student-welcome {
+    margin-bottom: 22px;
+}
+
+.student-welcome h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.student-welcome h1 span {
+    color: #111827;
+}
+
+.student-welcome p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   COACH CARD
+========================================================= */
+
+.student-coach-card {
+    background: white;
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 4px 18px
+        rgba(0,0,0,.04);
+}
+
+.student-section-label {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 14px;
+}
+
+.student-coach-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.student-coach-avatar {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: #f1f5f9;
+    color: #111827;
+
+    font-size: 23px;
+}
+
+.student-coach-name {
+    font-size: 17px;
+    font-weight: 900;
+
+    margin-bottom: 5px;
+}
+
+.student-coach-phone {
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   PROGRAM SECTION
+========================================================= */
+
+.student-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+.student-section-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.student-program-count {
+    background: #f1f5f9;
+    color: #555;
+
+    padding: 6px 10px;
+    border-radius: 8px;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   PROGRAM GRID
+========================================================= */
+
+.student-program-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 15px;
+}
+
+
+/* =========================================================
+   PROGRAM CARD
+========================================================= */
+
+.student-program-card {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.student-program-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #c7d0dc;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.06);
+}
+
+.student-program-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.student-program-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f1f5f9;
+
+    border-radius: 11px;
+
+    font-size: 19px;
+}
+
+.student-program-status {
+    color: #166534;
+    background: #dcfce7;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.student-program-name {
+    font-size: 15px;
+    font-weight: bold;
+
+    margin-bottom: 7px;
+
+    line-height: 1.7;
+}
+
+.student-program-date {
+    color: #999;
+
+    font-size: 11px;
+
+    margin-bottom: 15px;
+}
+
+.student-program-button {
+    display: block;
+
+    width: 100%;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    background: #111827;
+    color: white;
+
+    padding: 11px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+.student-program-button:hover {
+    background: #263449;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.student-empty {
+    background: white;
+
+    border:
+        1px dashed #d5d9df;
+
+    border-radius: 14px;
+
+    padding: 40px 20px;
+
+    text-align: center;
+}
+
+.student-empty-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: #f1f5f9;
+
+    font-size: 25px;
+}
+
+.student-empty h3 {
+    margin: 0 0 8px;
+
+    font-size: 16px;
+}
+
+.student-empty p {
+    margin: 0 auto;
+
+    max-width: 430px;
+
+    color: #888;
+
+    font-size: 12px;
+
+    line-height: 1.9;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.student-footer {
+    text-align: center;
+
+    margin-top: 35px;
+
+    color: #999;
+
+    font-size: 10px;
+}
+
+.student-footer strong {
+    color: #111827;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .student-header {
+        padding:
+            10px 14px;
+    }
+
+    .student-brand {
+        font-size: 17px;
+    }
+
+    .student-panel-label {
+        display: none;
+    }
+
+    .student-container {
+        padding:
+            18px 10px 40px;
+    }
+
+    .student-welcome h1 {
+        font-size: 21px;
+    }
+
+    .student-coach-card {
+        padding: 16px;
+        border-radius: 13px;
+    }
+
+    .student-program-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .student-program-card {
+        padding: 16px;
+    }
+
+    .student-section-header h2 {
+        font-size: 16px;
+    }
+
+}
+```
