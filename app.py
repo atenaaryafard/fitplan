@@ -347,13 +347,13 @@ def init_db():
          has_custom_logo, has_extra_features, trial_days, trial_quota)
         VALUES
         ('basic', 'پلن ساده', 'ساخت برنامه تمرینی با سهمیه ماهانه', '1,980,000 تومان',
-         30, 30, FALSE, FALSE, 3, 3),
+         NULL, 35, FALSE, FALSE, 3, 3),
 
         ('branded', 'پلن با لوگوی شخصی', 'همه امکانات پایه به‌علاوه درج لوگوی خودتان روی PDF', '4,750,000 تومان',
-         30, 30, TRUE, FALSE, 3, 3),
+         NULL, 35, TRUE, FALSE, 3, 3),
 
         ('premium', 'پلن نامحدود', 'بدون محدودیت زمانی + امکانات ویژه بیشتر', '7,950,000 تومان',
-         NULL, NULL, TRUE, TRUE, 5, 5)
+         NULL, 90, TRUE, TRUE, 5, 5)
 
         ON CONFLICT (plan_key) DO UPDATE SET
             title = EXCLUDED.title,
