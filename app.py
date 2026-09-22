@@ -1520,12 +1520,9 @@ def export_shared_program_pdf(share_token):
         }), 500
  
  
-# ج) صفحهٔ عمومی نمایش برنامه برای شاگرد (بدون نیاز به لاگین
-# شاگرد؛ فقط با توکن قابل دیدن است). این صفحه، دیتای خام
-# program_data را برمی‌گرداند تا همان تابع جاوااسکریپتی که
-# در planner.html پیش‌نمایش را می‌سازد، اینجا هم دوباره
-# صدا زده شود — این‌طوری ظاهر با پیش‌نمایش مربی و با PDF
-# صد در صد یکی می‌ماند.
+# =====================
+# program/<share_token
+# =====================
  
 @app.route("/program/<share_token>")
 def view_shared_program(share_token):
@@ -1543,10 +1540,9 @@ def view_shared_program(share_token):
  
     return render_template("program_view.html", program=dict(program))
  
- 
-# د) API که program_data را به صورت JSON برمی‌گرداند تا
-# جاوااسکریپت صفحهٔ program_view.html با آن پیش‌نمایش را
-# رندر کند (همان تابعی که در script.js پیش‌نمایش را می‌سازد)
+# ==================================
+# api/program/shared/<share_token
+# ==================================
  
 @app.route("/api/program/shared/<share_token>")
 def get_shared_program_data(share_token):
