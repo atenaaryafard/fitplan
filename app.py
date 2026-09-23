@@ -908,6 +908,25 @@ def students_list():
         WHERE id = ?
     """, (session["coach_id"],)).fetchone()
 
+    if not coach:
+        conn.close()
+        session.clear()
+        return redirect(url_for("login"))
+
+    # =====================================================
+    # بررسی فعال بودن اشتراک
+    # =====================================================
+
+    active_plan = get_active_plan(coach)
+
+    if not active_plan:
+        conn.close()
+        return redirect(url_for("subscribe", expired=1))
+
+    # =====================================================
+    # ساخت کد اختصاصی مربی در صورت نداشتن
+    # =====================================================
+
     if not coach["coach_code"]:
 
         new_code = secrets.token_urlsafe(6)
@@ -924,6 +943,10 @@ def students_list():
             SELECT * FROM coaches
             WHERE id = ?
         """, (session["coach_id"],)).fetchone()
+
+    # =====================================================
+    # دریافت شاگردان
+    # =====================================================
 
     students = conn.execute("""
         SELECT id, name, phone
@@ -954,18 +977,36 @@ def coach_qrcode():
     conn = get_db()
 
     coach = conn.execute("""
-        SELECT coach_code
+        SELECT *
         FROM coaches
         WHERE id = ?
     """, (session["coach_id"],)).fetchone()
 
-    conn.close()
+    if not coach:
+        conn.close()
+        return "", 401
+
+    # =====================================================
+    # بررسی فعال بودن اشتراک
+    # =====================================================
+
+    active_plan = get_active_plan(coach)
+
+    if not active_plan:
+        conn.close()
+        return "", 403
+
+    # =====================================================
+    # ساخت QR
+    # =====================================================
 
     url = url_for(
         "student_register",
         coach_code=coach["coach_code"],
         _external=True
     )
+
+    conn.close()
 
     img = qrcode.make(url)
 
