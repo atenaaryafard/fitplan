@@ -2743,21 +2743,302 @@ button {
     margin: 0 0 24px;
 }
 
+@media (max-width: 600px) {
 
-/* دکمه تهیه اشتراک */
+    .subscription-modal-overlay {
+        padding: 16px;
+    }
 
-.subscription-expired-button {
-    display: inline-flex;
+    .subscription-modal {
+        width: 100%;
+        padding: 32px 20px 24px;
+        border-radius: 18px;
+    }
+
+    .subscription-modal-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 16px;
+        font-size: 23px;
+    }
+
+    .subscription-modal-title {
+        font-size: 17px;
+        line-height: 1.8;
+    }
+
+    .subscription-modal-text {
+        font-size: 13px;
+        line-height: 1.9;
+        margin-bottom: 22px;
+    }
+
+    .subscription-modal-button {
+        min-height: 47px;
+    }
+
+}
+
+
+/* ==========================================
+   دکمه شاگردان من - اشتراک منقضی
+   ========================================== */
+
+.students-locked-btn {
+
+    opacity: 0.55;
+
+    cursor: pointer;
+
+    filter: grayscale(0.25);
+
+    position: relative;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+
+.students-locked-btn:hover {
+
+    opacity: 0.75;
+
+    transform: translateY(-1px);
+
+    filter: grayscale(0);
+}
+
+
+/* ==========================================
+   Overlay پاپ‌آپ اشتراک
+   ========================================== */
+
+.subscription-modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
 
     align-items: center;
-
     justify-content: center;
 
-    min-width: 175px;
+    padding: 20px;
 
-    min-height: 44px;
+    background: rgba(0, 0, 0, 0.78);
 
-    padding: 11px 24px;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    z-index: 999999;
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+}
+
+
+.subscription-modal-overlay.show {
+
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* ==========================================
+   خود پاپ‌آپ
+   ========================================== */
+
+.subscription-modal {
+
+    position: relative;
+
+    width: min(410px, 100%);
+
+    padding: 34px 28px 28px;
+
+    background: #111111;
+
+    border: 1px solid rgba(0, 255, 161, 0.18);
+
+    border-radius: 18px;
+
+    direction: rtl;
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.65),
+        0 0 30px rgba(0, 255, 161, 0.04);
+
+    transform: translateY(20px) scale(0.96);
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.subscription-modal-overlay.show
+.subscription-modal {
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* ==========================================
+   دکمه بستن
+   ========================================== */
+
+.subscription-modal-close {
+
+    position: absolute;
+
+    top: 12px;
+    left: 12px;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: #8d8d8d;
+
+    font-size: 23px;
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.subscription-modal-close:hover {
+
+    color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    transform: scale(1.05);
+}
+
+
+/* ==========================================
+   آیکون قفل
+   ========================================== */
+
+.subscription-modal-icon {
+
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: rgba(0, 255, 161, 0.07);
+
+    border: 1px solid rgba(0, 255, 161, 0.14);
+
+    font-size: 25px;
+
+    box-shadow:
+        0 0 25px rgba(0, 255, 161, 0.04);
+}
+
+
+/* ==========================================
+   عنوان
+   ========================================== */
+
+.subscription-modal-title {
+
+    margin-bottom: 11px;
+
+    color: #ffffff;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.8;
+}
+
+
+/* ==========================================
+   متن
+   ========================================== */
+
+.subscription-modal-text {
+
+    max-width: 340px;
+
+    margin:
+        0 auto
+        24px;
+
+    color: #a8a8a8;
+
+    font-size: 13px;
+
+    font-weight: 400;
+
+    line-height: 2;
+}
+
+
+/* ==========================================
+   دکمه تهیه / تمدید
+   ========================================== */
+
+.subscription-modal-button {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    min-height: 46px;
+
+    padding: 11px 20px;
+
+    border: none;
 
     border-radius: 10px;
 
@@ -2771,8 +3052,6 @@ button {
 
     font-weight: 800;
 
-    border: none;
-
     cursor: pointer;
 
     transition:
@@ -2782,33 +3061,20 @@ button {
 }
 
 
-.subscription-expired-button:hover {
-    transform: translateY(-2px);
+.subscription-modal-button:hover {
 
     opacity: 0.92;
 
-    box-shadow: 0 8px 24px rgba(0, 255, 161, 0.18);
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(0, 255, 161, 0.16);
 }
 
 
-.subscription-expired-button:active {
+.subscription-modal-button:active {
+
     transform: translateY(0);
-}
-
-
-/* انیمیشن ورود */
-
-@keyframes subscriptionExpiredShow {
-
-    from {
-        opacity: 0;
-        transform: translate(-50%, -47%);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
 
 }
 
@@ -2819,58 +3085,33 @@ button {
 
 @media (max-width: 600px) {
 
-    .subscription-expired-box {
-        width: calc(100% - 28px);
+    .subscription-modal-overlay {
 
-        padding: 26px 20px;
+        padding: 14px;
 
-        border-radius: 16px;
     }
 
-    .subscription-expired-title {
-        font-size: 18px;
+    .subscription-modal {
+
+        padding:
+            32px
+            20px
+            24px;
+
+        border-radius: 17px;
+
     }
 
-    .subscription-expired-text {
+    .subscription-modal-title {
+
+        font-size: 17px;
+
+    }
+
+    .subscription-modal-text {
+
         font-size: 13px;
 
-        line-height: 1.9;
     }
 
-    .subscription-expired-button {
-        width: 100%;
-
-        min-height: 46px;
-    }
-
-}
-
-
-/* ==========================================
-   دکمه شاگردان من - اشتراک منقضی
-   ========================================== */
-
-.students-locked-btn {
-    opacity: 0.55;
-    cursor: pointer;
-    filter: grayscale(0.25);
-    position: relative;
-}
-
-.students-locked-btn:hover {
-    opacity: 0.75;
-    transform: translateY(-1px);
-}
-
-.students-locked-btn {
-    opacity: 0.55;
-    cursor: pointer;
-    filter: grayscale(0.25);
-    position: relative;
-    transition: 0.2s ease;
-}
-
-.students-locked-btn:hover {
-    opacity: 0.75;
-    transform: translateY(-1px);
 }
