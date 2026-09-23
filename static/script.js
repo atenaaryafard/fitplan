@@ -741,18 +741,73 @@ async function saveProgram() {
 
         const response = await fetch("/api/program", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         });
 
         const result = await response.json();
 
-        if (!response.ok) {
-            alert(result.message);
+        /* ==========================================
+           اشتراک تمام شده
+           ========================================== */
+
+        if (result.subscription_expired) {
+
+            const oldBox =
+                document.getElementById("subscriptionExpiredBox");
+
+            if (oldBox) {
+                oldBox.remove();
+            }
+
+            const messageBox =
+                document.createElement("div");
+
+            messageBox.id =
+                "subscriptionExpiredBox";
+
+            messageBox.className =
+                "subscription-expired-box";
+
+            messageBox.innerHTML = `
+                <div class="subscription-expired-title">
+                    زمان اشتراک شما به پایان رسیده است
+                </div>
+
+                <div class="subscription-expired-text">
+                    برای ذخیره برنامه و ادامه استفاده از امکانات FIT PLAN،
+                    ابتدا اشتراک خود را تهیه یا تمدید کنید.
+                </div>
+
+                <a
+                    href="/subscribe?expired=1"
+                    class="subscription-expired-button">
+                    تهیه اشتراک
+                </a>
+            `;
+
+            document.body.appendChild(messageBox);
+
             return;
         }
 
-        document.getElementById("quota").textContent = result.remaining;
+        /* ==========================================
+           خطای عادی
+           ========================================== */
+
+        if (!response.ok) {
+            alert(result.message || "خطایی رخ داده است.");
+            return;
+        }
+
+        /* ==========================================
+           ذخیره موفق
+           ========================================== */
+
+        document.getElementById("quota").textContent =
+            result.remaining;
 
         loadHistory();
 
@@ -763,6 +818,7 @@ async function saveProgram() {
     } catch (error) {
 
         console.error(error);
+
         alert("خطا در ارتباط با سرور.");
 
     }
