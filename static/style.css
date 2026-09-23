@@ -2816,16 +2816,12 @@ button {
    ========================================== */
 
 .subscription-modal-overlay {
-
     position: fixed;
-
     inset: 0;
-
     width: 100%;
     height: 100%;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
@@ -2837,7 +2833,6 @@ button {
     -webkit-backdrop-filter: blur(7px);
 
     opacity: 0;
-
     visibility: hidden;
 
     z-index: 999999;
@@ -2848,10 +2843,12 @@ button {
 }
 
 
+/* ==========================================
+   حالت نمایش Overlay
+   ========================================== */
+
 .subscription-modal-overlay.show {
-
     opacity: 1;
-
     visibility: visible;
 }
 
@@ -2861,7 +2858,6 @@ button {
    ========================================== */
 
 .subscription-modal {
-
     position: relative;
 
     width: min(410px, 100%);
@@ -2875,7 +2871,6 @@ button {
     border-radius: 18px;
 
     direction: rtl;
-
     text-align: center;
 
     box-shadow:
@@ -2889,12 +2884,10 @@ button {
 }
 
 
-.subscription-modal-overlay.show
-.subscription-modal {
+/* انیمیشن ورود پاپ‌آپ */
 
-    transform:
-        translateY(0)
-        scale(1);
+.subscription-modal-overlay.show .subscription-modal {
+    transform: translateY(0) scale(1);
 }
 
 
@@ -2903,7 +2896,6 @@ button {
    ========================================== */
 
 .subscription-modal-close {
-
     position: absolute;
 
     top: 12px;
@@ -2913,7 +2905,6 @@ button {
     height: 32px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
@@ -2928,7 +2919,6 @@ button {
     color: #8d8d8d;
 
     font-size: 23px;
-
     font-weight: 300;
 
     line-height: 1;
@@ -2943,7 +2933,6 @@ button {
 
 
 .subscription-modal-close:hover {
-
     color: #ffffff;
 
     background: rgba(255, 255, 255, 0.08);
@@ -2957,14 +2946,12 @@ button {
    ========================================== */
 
 .subscription-modal-icon {
-
     width: 58px;
     height: 58px;
 
     margin: 0 auto 18px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
@@ -2986,13 +2973,11 @@ button {
    ========================================== */
 
 .subscription-modal-title {
-
     margin-bottom: 11px;
 
     color: #ffffff;
 
     font-size: 19px;
-
     font-weight: 800;
 
     line-height: 1.8;
@@ -3004,17 +2989,13 @@ button {
    ========================================== */
 
 .subscription-modal-text {
-
     max-width: 340px;
 
-    margin:
-        0 auto
-        24px;
+    margin: 0 auto 24px;
 
     color: #a8a8a8;
 
     font-size: 13px;
-
     font-weight: 400;
 
     line-height: 2;
@@ -3022,24 +3003,20 @@ button {
 
 
 /* ==========================================
-   دکمه تهیه / تمدید
+   دکمه تهیه / تمدید اشتراک
    ========================================== */
 
 .subscription-modal-button {
-
     display: flex;
-
     align-items: center;
     justify-content: center;
 
     width: 100%;
-
     min-height: 46px;
 
     padding: 11px 20px;
 
     border: none;
-
     border-radius: 10px;
 
     background: #00ffa1;
@@ -3049,7 +3026,6 @@ button {
     text-decoration: none;
 
     font-size: 14px;
-
     font-weight: 800;
 
     cursor: pointer;
@@ -3062,7 +3038,6 @@ button {
 
 
 .subscription-modal-button:hover {
-
     opacity: 0.92;
 
     transform: translateY(-2px);
@@ -3073,9 +3048,7 @@ button {
 
 
 .subscription-modal-button:active {
-
     transform: translateY(0);
-
 }
 
 
@@ -3086,32 +3059,21 @@ button {
 @media (max-width: 600px) {
 
     .subscription-modal-overlay {
-
         padding: 14px;
-
     }
 
     .subscription-modal {
-
-        padding:
-            32px
-            20px
-            24px;
+        padding: 32px 20px 24px;
 
         border-radius: 17px;
-
     }
 
     .subscription-modal-title {
-
         font-size: 17px;
-
     }
 
     .subscription-modal-text {
-
         font-size: 13px;
-
     }
 
 }
