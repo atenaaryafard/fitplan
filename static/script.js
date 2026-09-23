@@ -1588,42 +1588,61 @@ function closeSendProgramModal() {
 
 }
 
-function showStudentsLockedMessage() {
 
-    const oldBox =
-        document.getElementById("studentsLockedBox");
+@media (max-width: 600px) {
 
-    if (oldBox) {
-        oldBox.remove();
+    .subscription-expired-box {
+        width: calc(100% - 28px);
+
+        padding: 26px 20px;
+
+        border-radius: 16px;
     }
 
-    const messageBox =
-        document.createElement("div");
+    .subscription-expired-title {
+        font-size: 18px;
+    }
 
-    messageBox.id = "studentsLockedBox";
+    .subscription-expired-text {
+        font-size: 13px;
 
-    messageBox.className =
-        "subscription-expired-box";
+        line-height: 1.9;
+    }
 
-    messageBox.innerHTML = `
-        <div class="subscription-expired-title">
-            دسترسی به لیست شاگردان غیرفعال است
-        </div>
+    .subscription-expired-button {
+        width: 100%;
 
-        <div class="subscription-expired-text">
-            زمان اشتراک شما به پایان رسیده است.
-            برای دسترسی دوباره به لیست شاگردان،
-            اشتراک خود را تمدید کنید.
-        </div>
+        min-height: 46px;
+    }
 
-        <a
-            href="/subscribe?expired=1"
-            class="subscription-expired-button">
-            تهیه / تمدید اشتراک
-        </a>
-    `;
-
-    document.body.appendChild(messageBox);
 }
 
 
+/* ==========================================
+   دکمه شاگردان من - اشتراک منقضی
+   ========================================== */
+
+.students-locked-btn {
+    opacity: 0.55;
+    cursor: pointer;
+    filter: grayscale(0.25);
+    position: relative;
+}
+
+.students-locked-btn:hover {
+    opacity: 0.75;
+    transform: translateY(-1px);
+}
+
+.students-locked-btn {
+    opacity: 0.55;
+    cursor: pointer;
+    filter: grayscale(0.25);
+    position: relative;
+    transition: 0.2s ease;
+}
+
+.students-locked-btn:hover {
+    opacity: 0.75;
+    transform: translateY(-1px);
+}
