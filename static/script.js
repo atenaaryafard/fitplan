@@ -1588,20 +1588,42 @@ function closeSendProgramModal() {
 
 }
 
+function showStudentsLockedMessage() {
 
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
+    const oldBox =
+        document.getElementById("studentsLockedBox");
 
-// function escapeHTML(value) {
+    if (oldBox) {
+        oldBox.remove();
+    }
 
-//     if (!value) return "";
+    const messageBox =
+        document.createElement("div");
 
-//     return String(value)
-//         .replace(/&/g, "&amp;")
-//         .replace(/</g, "&lt;")
-//         .replace(/>/g, "&gt;")
-//         .replace(/"/g, "&quot;")
-//         .replace(/'/g, "&#039;");
+    messageBox.id = "studentsLockedBox";
 
-// }
+    messageBox.className =
+        "subscription-expired-box";
+
+    messageBox.innerHTML = `
+        <div class="subscription-expired-title">
+            دسترسی به لیست شاگردان غیرفعال است
+        </div>
+
+        <div class="subscription-expired-text">
+            زمان اشتراک شما به پایان رسیده است.
+            برای دسترسی دوباره به لیست شاگردان،
+            اشتراک خود را تمدید کنید.
+        </div>
+
+        <a
+            href="/subscribe?expired=1"
+            class="subscription-expired-button">
+            تهیه / تمدید اشتراک
+        </a>
+    `;
+
+    document.body.appendChild(messageBox);
+}
+
+
