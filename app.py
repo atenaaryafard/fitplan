@@ -2053,21 +2053,65 @@ def planner():
 
     conn.close()
 
+    if not coach:
+        session.clear()
+        return redirect(url_for("login"))
+
+    # =====================================================
+    # به‌روزرسانی مصرف ماهانه
+    # =====================================================
+
     coach = reset_monthly_usage(coach)
 
-    remaining = max(0, coach["monthly_limit"] - coach["monthly_used"])
+    # =====================================================
+    # بررسی اشتراک
+    # =====================================================
 
     plan = get_active_plan(coach)
-    has_custom_logo = bool(plan and plan["has_custom_logo"])
-    plan_key = plan["plan_key"] if plan else "basic" 
+
+    subscription_active = bool(plan)
+
+    # =====================================================
+    # امکانات پلن
+    # =====================================================
+
+    has_custom_logo = bool(
+        plan and plan["has_custom_logo"]
+    )
+
+    plan_key = (
+        plan["plan_key"]
+        if plan
+        else "basic"
+    )
+
+    # =====================================================
+    # سهمیه
+    # =====================================================
 
     if plan and plan["monthly_quota"] is None:
+
         remaining = "نامحدود"
+
     else:
-        remaining = max(0, coach["monthly_limit"] - coach["monthly_used"])
 
-    return render_template("planner.html", coach=coach, remaining=remaining,has_custom_logo=has_custom_logo,plan_key=plan_key)
+        remaining = max(
+            0,
+            coach["monthly_limit"] - coach["monthly_used"]
+        )
 
+    # =====================================================
+    # ارسال اطلاعات به planner.html
+    # =====================================================
+
+    return render_template(
+        "planner.html",
+        coach=coach,
+        remaining=remaining,
+        has_custom_logo=has_custom_logo,
+        plan_key=plan_key,
+        subscription_active=subscription_active
+    )
 
 # =========================================================
 # GET PROGRAM HISTORY
