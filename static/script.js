@@ -1573,76 +1573,96 @@ async function sendProgramToStudent(studentId) {
    CLOSE SEND MODAL
 ===================================================== */
 
-function closeSendProgramModal() {
+function showStudentsLockedMessage() {
 
-    const modal =
-        document.getElementById("sendProgramModal");
+    const oldOverlay =
+        document.getElementById("subscriptionModalOverlay");
 
-    if (modal) {
-
-        modal.classList.add("hidden");
-
+    if (oldOverlay) {
+        oldOverlay.remove();
     }
 
-    currentSendProgramId = null;
+    const overlay =
+        document.createElement("div");
 
+    overlay.id =
+        "subscriptionModalOverlay";
+
+    overlay.className =
+        "subscription-modal-overlay";
+
+    overlay.innerHTML = `
+
+        <div
+            class="subscription-modal"
+            role="dialog"
+            aria-modal="true">
+
+            <button
+                type="button"
+                class="subscription-modal-close"
+                onclick="closeSubscriptionModal()"
+                aria-label="بستن">
+                ×
+            </button>
+
+            <div class="subscription-modal-icon">
+                🔒
+            </div>
+
+            <div class="subscription-modal-title">
+                دسترسی به لیست شاگردان غیرفعال است
+            </div>
+
+            <div class="subscription-modal-text">
+                زمان اشتراک شما به پایان رسیده است.
+                برای دسترسی دوباره به لیست شاگردان،
+                اشتراک خود را تمدید کنید.
+            </div>
+
+            <a
+                href="/subscribe?expired=1"
+                class="subscription-modal-button">
+                تهیه / تمدید اشتراک
+            </a>
+
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    requestAnimationFrame(() => {
+        overlay.classList.add("show");
+    });
+
+    overlay.addEventListener("click", function(event) {
+
+        if (event.target === overlay) {
+            closeSubscriptionModal();
+        }
+
+    });
+
+    document.body.style.overflow = "hidden";
 }
 
 
-@media (max-width: 600px) {
+function closeSubscriptionModal() {
 
-    .subscription-expired-box {
-        width: calc(100% - 28px);
+    const overlay =
+        document.getElementById("subscriptionModalOverlay");
 
-        padding: 26px 20px;
-
-        border-radius: 16px;
+    if (!overlay) {
+        return;
     }
 
-    .subscription-expired-title {
-        font-size: 18px;
-    }
+    overlay.classList.remove("show");
 
-    .subscription-expired-text {
-        font-size: 13px;
+    setTimeout(() => {
 
-        line-height: 1.9;
-    }
+        overlay.remove();
 
-    .subscription-expired-button {
-        width: 100%;
+        document.body.style.overflow = "";
 
-        min-height: 46px;
-    }
-
-}
-
-
-/* ==========================================
-   دکمه شاگردان من - اشتراک منقضی
-   ========================================== */
-
-.students-locked-btn {
-    opacity: 0.55;
-    cursor: pointer;
-    filter: grayscale(0.25);
-    position: relative;
-}
-
-.students-locked-btn:hover {
-    opacity: 0.75;
-    transform: translateY(-1px);
-}
-
-.students-locked-btn {
-    opacity: 0.55;
-    cursor: pointer;
-    filter: grayscale(0.25);
-    position: relative;
-    transition: 0.2s ease;
-}
-
-.students-locked-btn:hover {
-    opacity: 0.75;
-    transform: translateY(-1px);
+    }, 180);
 }
