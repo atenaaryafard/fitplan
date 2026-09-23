@@ -24,175 +24,75 @@
                 <br>
                 <br>
                     
-             ```html
-<div class="mini-plan-compare">
+             
+                <div class="mini-plan-compare">
+                
+                    <div class="compare-title">
+                        <h3>کدام پلن برای شما مناسب است؟</h3>
+                        <p>امکانات هر پلن را سریع مقایسه کنید.</p>
+                    </div>
+                
+                    <div class="compare-cards">
+                
+                        <div class="compare-card">
+                            <span>شروع ساده</span>
+                            <h4>پلن ساده</h4>
+                
+                            <div class="compare-info">
+                                <b>۳۵ روز</b>
+                                <small>مدت اشتراک</small>
+                            </div>
+                
+                            <ul>
+                                <li>✓ ساخت برنامه تمرینی</li>
+                                <li>✓ مدیریت شاگردان</li>
+                                <li>✓ ارسال آنلاین برنامه</li>
+                                <li>× لوگوی شخصی</li>
+                            </ul>
+                        </div>
+                
+                
+                        <div class="compare-card featured">
+                            <div class="compare-badge">پیشنهاد محبوب</div>
+                
+                            <span>حرفه‌ای</span>
+                            <h4>پلن با لوگوی شخصی</h4>
+                
+                            <div class="compare-info">
+                                <b>۳۵ روز</b>
+                                <small>مدت اشتراک</small>
+                            </div>
+                
+                            <ul>
+                                <li>✓ همه امکانات پلن ساده</li>
+                                <li>✓ لوگوی شخصی</li>
+                                <li>✓ BMI و اندازه‌گیری</li>
+                                <li>✓ برنامه با برند شما</li>
+                            </ul>
+                        </div>
+                
+                
+                        <div class="compare-card">
+                            <span>برای مربی‌های پرکار</span>
+                            <h4>پلن نامحدود</h4>
+                
+                            <div class="compare-info">
+                                <b>۹۰ روز</b>
+                                <small>مدت اشتراک</small>
+                            </div>
+                
+                            <ul>
+                                <li>✓ همه امکانات حرفه‌ای</li>
+                                <li>✓ برنامه نامحدود</li>
+                                <li>✓ لوگوی شخصی</li>
+                                <li>✓ BMI و اندازه‌گیری</li>
+                            </ul>
+                        </div>
+                
+                    </div>
+                </div>
 
-    <div class="compare-title">
-        <h3>کدام پلن برای شما مناسب است؟</h3>
-        <p>امکانات هر پلن را سریع مقایسه کنید.</p>
-    </div>
 
-    <div class="compare-cards">
-
-        <div class="compare-card">
-            <span>شروع ساده</span>
-            <h4>پلن ساده</h4>
-
-            <div class="compare-info">
-                <b>۳۵ روز</b>
-                <small>مدت اشتراک</small>
-            </div>
-
-            <ul>
-                <li>✓ ساخت برنامه تمرینی</li>
-                <li>✓ مدیریت شاگردان</li>
-                <li>✓ ارسال آنلاین برنامه</li>
-                <li>× لوگوی شخصی</li>
-            </ul>
-        </div>
-
-
-        <div class="compare-card featured">
-            <div class="compare-badge">پیشنهاد محبوب</div>
-
-            <span>حرفه‌ای</span>
-            <h4>پلن با لوگوی شخصی</h4>
-
-            <div class="compare-info">
-                <b>۳۵ روز</b>
-                <small>مدت اشتراک</small>
-            </div>
-
-            <ul>
-                <li>✓ همه امکانات پلن ساده</li>
-                <li>✓ لوگوی شخصی</li>
-                <li>✓ BMI و اندازه‌گیری</li>
-                <li>✓ برنامه با برند شما</li>
-            </ul>
-        </div>
-
-
-        <div class="compare-card">
-            <span>برای مربی‌های پرکار</span>
-            <h4>پلن نامحدود</h4>
-
-            <div class="compare-info">
-                <b>۹۰ روز</b>
-                <small>مدت اشتراک</small>
-            </div>
-
-            <ul>
-                <li>✓ همه امکانات حرفه‌ای</li>
-                <li>✓ برنامه نامحدود</li>
-                <li>✓ لوگوی شخصی</li>
-                <li>✓ BMI و اندازه‌گیری</li>
-            </ul>
-        </div>
-
-    </div>
-</div>
-
-<style>
-.mini-plan-compare {
-    direction: rtl;
-    max-width: 1000px;
-    margin: 35px auto;
-}
-
-.compare-title {
-    text-align: center;
-    margin-bottom: 22px;
-}
-
-.compare-title h3 {
-    color: #fff;
-    margin: 0 0 7px;
-    font-size: 22px;
-}
-
-.compare-title p {
-    color: #888;
-    font-size: 13px;
-    margin: 0;
-}
-
-.compare-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-}
-
-.compare-card {
-    position: relative;
-    padding: 20px;
-    border-radius: 18px;
-    background: rgba(255,255,255,.035);
-    border: 1px solid rgba(255,255,255,.08);
-}
-
-.compare-card.featured {
-    border-color: rgba(0,255,161,.4);
-}
-
-.compare-badge {
-    position: absolute;
-    top: 0;
-    right: 15px;
-    background: #00ffa1;
-    color: #07110d;
-    padding: 4px 10px;
-    border-radius: 0 0 8px 8px;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-.compare-card > span {
-    color: #888;
-    font-size: 11px;
-}
-
-.compare-card h4 {
-    color: #fff;
-    margin: 6px 0 15px;
-    font-size: 17px;
-}
-
-.compare-info {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin-bottom: 15px;
-}
-
-.compare-info b {
-    color: #00ffa1;
-    font-size: 18px;
-}
-
-.compare-info small {
-    color: #777;
-    font-size: 10px;
-}
-
-.compare-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.compare-card li {
-    color: #bbb;
-    font-size: 11px;
-    margin: 9px 0;
-}
-
-@media (max-width: 700px) {
-    .compare-cards {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-```
 
                 <span style="color: #d2691e;">توجه: هر کدام از پلن هایی که به عنوان تست انتخاب کنید همان فعال میشود و قابل تغییر نیست. میتوانید با خرید اشتراک پلن انتخابی تجربه جدیدی را داشته باشید.</span>
 
