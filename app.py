@@ -2101,38 +2101,68 @@ def save_program():
 
     conn.close()
 
-    coach = reset_monthly_usage(coach)
-
-    remaining = coach["monthly_limit"] - coach["monthly_used"]
-
-    if remaining <= 0:
+    if not coach:
         return jsonify({
             "success": False,
-            "message": "سهمیه ساخت برنامه این ماه شما تمام شده است. برای تمدید به صفحه خرید اشتراک بروید."
+            "message": "حساب مربی پیدا نشد."
+        }), 401
+
+    # ==========================================
+    # بررسی فعال بودن اشتراک
+    # ==========================================
+
+    plan = get_active_plan(coach)
+
+    if not plan:
+        return jsonify({
+            "success": False,
+            "subscription_expired": True,
+            "message": "زمان اشتراک شما به پایان رسیده است. برای ذخیره برنامه، ابتدا اشتراک خود را تهیه یا تمدید کنید."
         }), 403
+
+    # ==========================================
+    # دریافت اطلاعات برنامه
+    # ==========================================
 
     data = request.get_json()
 
     if not data:
-        return jsonify({"success": False, "message": "اطلاعات برنامه دریافت نشد."}), 400
+        return jsonify({
+            "success": False,
+            "message": "اطلاعات برنامه دریافت نشد."
+        }), 400
 
     if not data.get("athlete_name"):
-        return jsonify({"success": False, "message": "نام ورزشکار را وارد کنید."}), 400
+        return jsonify({
+            "success": False,
+            "message": "نام ورزشکار را وارد کنید."
+        }), 400
 
     if not data.get("program_name"):
-        return jsonify({"success": False, "message": "نام برنامه را وارد کنید."}), 400
+        return jsonify({
+            "success": False,
+            "message": "نام برنامه را وارد کنید."
+        }), 400
 
     days = data.get("days", [])
 
     if not days:
-        return jsonify({"success": False, "message": "حداقل یک روز تمرین انتخاب کنید."}), 400
+        return jsonify({
+            "success": False,
+            "message": "حداقل یک روز تمرین انتخاب کنید."
+        }), 400
+
+    # ==========================================
+    # ذخیره برنامه
+    # ==========================================
 
     conn = get_db()
 
     conn.execute("""
         INSERT INTO programs
         (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
-         athlete_goal,athlete_gender,sizes, program_name, program_data, notes, created_at)
+         athlete_goal, athlete_gender, sizes, program_name, program_data,
+         notes, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         coach["id"],
@@ -2149,20 +2179,17 @@ def save_program():
         datetime.now().isoformat()
     ))
 
-    conn.execute("""
-        UPDATE coaches
-        SET monthly_used = monthly_used + 1
-        WHERE id = ?
-    """, (coach["id"],))
-
     conn.commit()
     conn.close()
 
-    plan = get_active_plan(coach)
-    remaining_display = "نامحدود" if (plan and plan["monthly_quota"] is None) else (remaining - 1)
+    # ==========================================
+    # پاسخ موفق
+    # ==========================================
 
-    return jsonify({"success": True, "remaining": remaining - 1})
-
+    return jsonify({
+        "success": True,
+        "remaining": "نامحدود"
+    })
 
 # =========================================================
 # DELETE PROGRAM
