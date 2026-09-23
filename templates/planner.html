@@ -51,10 +51,9 @@
             صفحه اصلی
         </a>
 
-        ```html
-{% if coach.plan_expires_at and get_active_plan(coach) %}
-
-        <a href="{{ url_for('students_list') }}" class="nav-home-btn">
+        <a
+            href="{{ url_for('students_list') }}"
+            class="nav-home-btn">
             شاگردان من
         </a>
         
@@ -68,7 +67,6 @@
         </button>
         
         {% endif %}
-        ```
 
 
         <a href="{{ url_for('subscribe') }}"
