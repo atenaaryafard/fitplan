@@ -728,7 +728,9 @@ async function saveProgram() {
     const hasDigits = /[\u0660-\u0669\u06F0-\u06F9]/;
 
     if (hasDigits.test(data.athlete_name)) {
-        alert("نام شاگرد باید فقط شامل حروف فارسی باشد و نباید عدد یا کاراکتر دیگری داشته باشد.");
+        alert(
+            "نام شاگرد باید فقط شامل حروف فارسی باشد و نباید عدد یا کاراکتر دیگری داشته باشد."
+        );
         return;
     }
 
@@ -741,13 +743,16 @@ async function saveProgram() {
 
         const response = await fetch("/api/program", {
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify(data)
         });
 
         const result = await response.json();
+
 
         /* ==========================================
            اشتراک تمام شده
@@ -755,43 +760,55 @@ async function saveProgram() {
 
         if (result.subscription_expired) {
 
-            const oldBox =
-                document.getElementById("subscriptionExpiredBox");
-
-            if (oldBox) {
-                oldBox.remove();
-            }
-
-            const messageBox =
-                document.createElement("div");
-
-            messageBox.id =
-                "subscriptionExpiredBox";
-
-            messageBox.className =
-                "subscription-expired-box";
-
-            messageBox.innerHTML = `
-                <div class="subscription-expired-title">
-                    زمان اشتراک شما به پایان رسیده است
-                </div>
-
-                <div class="subscription-expired-text">
-                    برای ذخیره برنامه و ادامه استفاده از امکانات FIT PLAN،
-                    ابتدا اشتراک خود را تهیه یا تمدید کنید.
-                </div>
-
-                <a
-                    href="/subscribe?expired=1"
-                    class="subscription-expired-button">
-                    تهیه اشتراک
-                </a>
-            `;
-
-            document.body.appendChild(messageBox);
+            showSubscriptionExpiredModal(
+                "امکان ذخیره برنامه وجود ندارد",
+                "زمان اشتراک شما به پایان رسیده است. برای ذخیره برنامه، ابتدا اشتراک خود را تهیه یا تمدید کنید."
+            );
 
             return;
         }
+
+
+        /* ==========================================
+           خطای عمومی سرور
+           ========================================== */
+
+        if (!response.ok) {
+
+            alert(
+                result.message ||
+                "خطایی رخ داده است."
+            );
+
+            return;
+        }
+
+
+        /* ==========================================
+           ذخیره موفق
+           ========================================== */
+
+        document.getElementById("quota").textContent =
+            result.remaining;
+
+        loadHistory();
+
+        openPreview(data);
+
+        resetProgramForm();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "خطا در ارتباط با سرور."
+        );
+
+    }
+
+}
 
         /* ==========================================
            خطای عادی
@@ -997,175 +1014,7 @@ function resetProgramForm() {
 
     renderDayAccordion();
 
-}
-
-
-/* =====================================================
-   PREVIEW MODAL
-===================================================== */
-
-// function buildProgramPreviewHTML(program) {
-
-//     const days = program.days || [];
-
-//     let html = "";
-
-//     html += `
-
-//         <div class="preview-athlete">
-//             <div><strong>ورزشکار:</strong> ${escapeHTML(program.athlete_name) || "-"}</div>
-//             <div><strong>سن:</strong> ${escapeHTML(program.athlete_age) || "-"}</div>
-//             <div><strong>قد:</strong> ${escapeHTML(program.athlete_height) || "-"}</div>
-//             <div><strong>وزن:</strong> ${escapeHTML(program.athlete_weight) || "-"}</div>
-//             <div><strong>هدف:</strong> ${escapeHTML(program.athlete_goal) || "-"}</div>
-//             <div><strong>جنسیت:</strong> ${escapeHTML(program.athlete_gender) || "-"}</div>
-//         </div>
-
-//     `;
-
-//     if (days.length === 0) {
-
-//         html += `
-//             <div class="empty-workout">
-//                 هیچ روز تمرینی ثبت نشده است.
-//             </div>
-//         `;
-
-//     }
-
-//     days.forEach(day => {
-
-//         html += `
-
-//             <div class="preview-day">
-
-//                 <h3>${escapeHTML(day.name)}</h3>
-
-//                 <table class="preview-table">
-
-//                     <thead>
-//                         <tr>
-//                             <th>حرکت</th>
-//                             <th>عضله هدف</th>
-//                             <th>ست</th>
-//                             <th>تکرار</th>
-//                             <th>استراحت</th>
-//                             <th> وزنه</th>
-//                             ${COACH_BRAND.hasCustomLogo ? `<th class="guide-col"> اجرا حرکت</th>` : ""}
-//                         </tr>
-//                     </thead>
-
-//                     <tbody>
-
-//                         ${
-//                             (day.exercises || [])
-//                                 .map((exercise, index) => {
-
-//                                     const exerciseInfo = exercises.find(item => item.name === exercise.exercise);
-//                                     const gifUrl = (exerciseInfo && exerciseInfo.gif) || "";
-
-//                                     return `
-//                                         <tr>
-//                                             <td>${escapeHTML(exercise.exercise) || "-"}</td>
-//                                             <td>${escapeHTML(exercise.muscle) || "-"}</td>
-//                                             <td>${escapeHTML(exercise.sets) || "-"}</td>
-//                                             <td>${escapeHTML(exercise.reps) || "-"}</td>
-//                                             <td>${escapeHTML(exercise.rest) || "-"}</td>
-//                                             <td>${escapeHTML(exercise.weight) || "-"}</td>
-//                                             ${COACH_BRAND.hasCustomLogo ? `
-//                                             <td class="guide-col">
-//                                                 ${
-//                                                     gifUrl
-//                                                     ? `
-//                                                         <a href="${gifUrl}" target="_blank" class="exercise-guide-link">
-//                                                              اجرا حرکت
-//                                                         </a>
-//                                                     `
-//                                                     : `
-//                                                         <span class="exercise-guide-disabled">
-//                                                              اجرا حرکت
-//                                                         </span>
-//                                                     `
-//                                                 }
-//                                             </td>
-//                                             ` : ""}
-//                                     `;
-
-//                                 })
-//                                 .join("")
-//                         }
-
-//                     </tbody>
-
-//                 </table>
-
-//             </div>
-
-//         `;
-
-//     });
-
-//     const sizeRows = program.sizes ? [
-//         { label: "دور سینه: ", value: program.sizes.sine },
-//         { label: "دور کمر: ", value: program.sizes.kamar },
-//         { label: "دور شکم: ", value: program.sizes.shekam },
-//         { label: "دور باسن: ", value: program.sizes.basan },
-//         { label: "دور ران: ", value: program.sizes.ran },
-//         { label: "دور بازو: ", value: program.sizes.bazo },
-//         { label: "دور ساق: ", value: program.sizes.sagh }
-//     ].filter(row => row.value) : [];
-
-//     const bmiValue = calculateBMI(program.athlete_weight, program.athlete_height);
-//     const isBasicPlan = COACH_BRAND.planKey === "basic";   // <-- جدید
-//         if (program.notes || sizeRows.length > 0 || bmiValue) {
-
-//         html += `<div class="preview-bottom-row">`;
-
-//         if (program.notes) {
-//             html += `
-//                 <div class="preview-box notes-box">
-//                     <div class="preview-box-title">توضیحات:</div>
-//                     <p>${escapeHTML(program.notes)}</p>
-//                 </div>
-//             `;
-//         }
-//         if (!isBasicPlan && (bmiValue || sizeRows.length > 0)) {
-//             html += `<div class="preview-size-boxes">`;
-
-//         if (bmiValue) {
-//             html += `
-//                 <div class="preview-box bmi-box">
-//                     <div class="preview-box-title">bmi:${bmiValue}</div>
-//                     <img src="${BMI_GUIDE_BASE64}" class="bmi-guide-img" alt="راهنمای BMI">
-//                 </div>
-//             `;
-//         }
-
-//         if (sizeRows.length > 0) {
-//             html += `
-//                 <div class="preview-box sizes-box">
-//                     <div class="preview-box-title">سایز ها:</div>
-//                     <div class="sizes-grid">
-//                         ${sizeRows.map(row => `
-//                             <div class="size-row">
-//                                 <span class="size-row-label">${escapeHTML(row.label)}</span>
-//                                 <span class="size-row-value">${escapeHTML(row.value)}</span>
-//                             </div>
-//                         `).join("")}
-//                     </div>
-//                 </div>
-//             `;
-//         }
-
-//         html += `</div>`;
-
-//     }
-//         html += `</div>`;   
-
-//     }
-
-//     return html;
-// }      
+}    
     
 
 
@@ -1570,10 +1419,13 @@ async function sendProgramToStudent(studentId) {
 
 
 /* =====================================================
-   CLOSE SEND MODAL
+   SUBSCRIPTION EXPIRED MODAL
 ===================================================== */
 
-function showStudentsLockedMessage() {
+function showSubscriptionExpiredModal(
+    title = "زمان اشتراک شما به پایان رسیده است",
+    message = "برای ادامه استفاده از این قابلیت، اشتراک خود را تهیه یا تمدید کنید."
+) {
 
     const oldOverlay =
         document.getElementById("subscriptionModalOverlay");
@@ -1611,13 +1463,11 @@ function showStudentsLockedMessage() {
             </div>
 
             <div class="subscription-modal-title">
-                دسترسی به لیست شاگردان غیرفعال است
+                ${title}
             </div>
 
             <div class="subscription-modal-text">
-                زمان اشتراک شما به پایان رسیده است.
-                برای دسترسی دوباره به لیست شاگردان،
-                اشتراک خود را تمدید کنید.
+                ${message}
             </div>
 
             <a
@@ -1644,6 +1494,45 @@ function showStudentsLockedMessage() {
     });
 
     document.body.style.overflow = "hidden";
+}
+
+
+/* =====================================================
+   STUDENTS LOCKED
+===================================================== */
+
+function showStudentsLockedMessage() {
+
+    showSubscriptionExpiredModal(
+        "دسترسی به لیست شاگردان غیرفعال است",
+        "زمان اشتراک شما به پایان رسیده است. برای دسترسی دوباره به لیست شاگردان، اشتراک خود را تمدید کنید."
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE SUBSCRIPTION MODAL
+===================================================== */
+
+function closeSubscriptionModal() {
+
+    const overlay =
+        document.getElementById("subscriptionModalOverlay");
+
+    if (!overlay) {
+        return;
+    }
+
+    overlay.classList.remove("show");
+
+    setTimeout(() => {
+
+        overlay.remove();
+
+        document.body.style.overflow = "";
+
+    }, 180);
 }
 
 
