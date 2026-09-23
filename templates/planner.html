@@ -51,10 +51,25 @@
             صفحه اصلی
         </a>
 
-        <a href="{{ url_for('students_list') }}"
-           class="nav-home-btn">
+        ```html
+{% if coach.plan_expires_at and get_active_plan(coach) %}
+
+        <a href="{{ url_for('students_list') }}" class="nav-home-btn">
             شاگردان من
         </a>
+        
+        {% else %}
+        
+        <button
+            type="button"
+            class="nav-home-btn students-locked-btn"
+            onclick="showStudentsLockedMessage()">
+            🔒 شاگردان من
+        </button>
+        
+        {% endif %}
+        ```
+
 
         <a href="{{ url_for('subscribe') }}"
            class="nav-subscribe-btn">
