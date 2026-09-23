@@ -2844,3 +2844,20 @@ button {
     }
 
 }
+
+
+/* ==========================================
+   دکمه شاگردان من - اشتراک منقضی
+   ========================================== */
+
+.students-locked-btn {
+    opacity: 0.55;
+    cursor: pointer;
+    filter: grayscale(0.25);
+    position: relative;
+}
+
+.students-locked-btn:hover {
+    opacity: 0.75;
+    transform: translateY(-1px);
+}
