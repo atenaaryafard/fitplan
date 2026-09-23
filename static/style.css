@@ -2861,3 +2861,16 @@ button {
     opacity: 0.75;
     transform: translateY(-1px);
 }
+
+.students-locked-btn {
+    opacity: 0.55;
+    cursor: pointer;
+    filter: grayscale(0.25);
+    position: relative;
+    transition: 0.2s ease;
+}
+
+.students-locked-btn:hover {
+    opacity: 0.75;
+    transform: translateY(-1px);
+}
