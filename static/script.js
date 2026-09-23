@@ -65,56 +65,6 @@ async function saveBrandProfile() {
 
 }
 
-
-// function buildBrandHeaderHTML() {
-
-//     if (!COACH_BRAND.hasCustomLogo) return "";
-
-//     return `
-//         <div class="pdf-brand-header">
-
-//             <div class="pdf-brand-info">
-//                 <strong>${escapeHTML(COACH_BRAND.coachName)}</strong>
-//                 ${COACH_BRAND.jobTitle ? `<span>${escapeHTML(COACH_BRAND.jobTitle)}</span>` : ""}
-//                 ${COACH_BRAND.socialAddress ? `<span>${escapeHTML(COACH_BRAND.socialAddress)}</span>` : ""}
-//                 ${COACH_BRAND.phoneNumber ? `<span>${escapeHTML(COACH_BRAND.phoneNumber)}</span>` : ""}
-//             </div>
-
-//             <img src="${DEFAULT_LOGO_BASE64}" class="pdf-brand-logo" alt="لوگو">
-
-//         </div>
-//     `;
-// }
-
-
-// function calculateBMI(weight, height) {
-
-//     const w = parseFloat(weight);
-//     const hCm = parseFloat(height);
-
-//     if (!w || !hCm) return null;
-
-//     const hM = hCm / 100;
-//     const bmi = w / (hM * hM);
-
-//     return bmi.toFixed(1);
-
-// }
-
-
-// function buildBrandFooterHTML() {
-
-//     if (!COACH_BRAND.hasCustomLogo || !COACH_BRAND.footerText) return "";
-
-//     return `
-//         <div class="pdf-brand-footer">
-//             ${escapeHTML(COACH_BRAND.footerText)}
-//         </div>
-//     `;
-// }
-
-
-
 /* =====================================================
    GLOBAL
 ===================================================== */
