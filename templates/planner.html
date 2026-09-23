@@ -50,7 +50,8 @@
            class="nav-home-btn">
             صفحه اصلی
         </a>
-
+        
+        {% if subscription_active %}
         <a
             href="{{ url_for('students_list') }}"
             class="nav-home-btn">
