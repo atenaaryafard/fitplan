@@ -2681,3 +2681,166 @@ button {
 }
 ```
 
+/* ==========================================
+   پیام پایان اشتراک
+   هماهنگ با استایل FIT PLAN
+   ========================================== */
+
+.subscription-expired-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: min(440px, calc(100% - 32px));
+
+    padding: 30px 26px;
+
+    background: #111111;
+
+    border: 1px solid rgba(0, 255, 161, 0.35);
+
+    border-radius: 18px;
+
+    text-align: center;
+
+    direction: rtl;
+
+    z-index: 99999;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+
+    animation: subscriptionExpiredShow 0.25s ease-out;
+}
+
+
+/* عنوان */
+
+.subscription-expired-title {
+    color: #ffffff;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    line-height: 1.8;
+
+    margin: 0 0 12px;
+}
+
+
+/* متن */
+
+.subscription-expired-text {
+    color: #bcbcbc;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    line-height: 2;
+
+    margin: 0 0 24px;
+}
+
+
+/* دکمه تهیه اشتراک */
+
+.subscription-expired-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 175px;
+
+    min-height: 44px;
+
+    padding: 11px 24px;
+
+    border-radius: 10px;
+
+    background: #00ffa1;
+
+    color: #07110d;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    border: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.subscription-expired-button:hover {
+    transform: translateY(-2px);
+
+    opacity: 0.92;
+
+    box-shadow: 0 8px 24px rgba(0, 255, 161, 0.18);
+}
+
+
+.subscription-expired-button:active {
+    transform: translateY(0);
+}
+
+
+/* انیمیشن ورود */
+
+@keyframes subscriptionExpiredShow {
+
+    from {
+        opacity: 0;
+        transform: translate(-50%, -47%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+}
+
+
+/* ==========================================
+   موبایل
+   ========================================== */
+
+@media (max-width: 600px) {
+
+    .subscription-expired-box {
+        width: calc(100% - 28px);
+
+        padding: 26px 20px;
+
+        border-radius: 16px;
+    }
+
+    .subscription-expired-title {
+        font-size: 18px;
+    }
+
+    .subscription-expired-text {
+        font-size: 13px;
+
+        line-height: 1.9;
+    }
+
+    .subscription-expired-button {
+        width: 100%;
+
+        min-height: 46px;
+    }
+
+}
