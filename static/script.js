@@ -770,7 +770,7 @@ async function saveProgram() {
 
 
         /* ==========================================
-           خطای عمومی سرور
+           خطای عادی
            ========================================== */
 
         if (!response.ok) {
@@ -805,38 +805,6 @@ async function saveProgram() {
         alert(
             "خطا در ارتباط با سرور."
         );
-
-    }
-
-}
-
-        /* ==========================================
-           خطای عادی
-           ========================================== */
-
-        if (!response.ok) {
-            alert(result.message || "خطایی رخ داده است.");
-            return;
-        }
-
-        /* ==========================================
-           ذخیره موفق
-           ========================================== */
-
-        document.getElementById("quota").textContent =
-            result.remaining;
-
-        loadHistory();
-
-        openPreview(data);
-
-        resetProgramForm();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("خطا در ارتباط با سرور.");
 
     }
 
