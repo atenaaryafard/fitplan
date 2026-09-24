@@ -1473,3 +1473,50 @@ function closeSubscriptionModal() {
 
     }, 180);
 }
+
+async function downloadProgramImage() {
+
+    const button = document.querySelector('.image-download-btn');
+
+    // کل بخش برنامه
+    const program = document.querySelector('.program-container');
+
+    if (!program) {
+        alert('بخش برنامه پیدا نشد.');
+        return;
+    }
+
+    try {
+
+        button.disabled = true;
+        button.textContent = 'در حال آماده‌سازی تصویر...';
+
+        const canvas = await html2canvas(program, {
+            scale: 1.5,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false
+        });
+
+        const image = canvas.toDataURL('image/jpeg', 0.85);
+
+        const link = document.createElement('a');
+
+        link.href = image;
+        link.download = 'FIT-PLAN-program.jpg';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (error) {
+
+        console.error('Screenshot error:', error);
+        alert('ساخت تصویر با مشکل مواجه شد.');
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = '🖼️ دریافت تصویر برنامه';
+    }
+}
