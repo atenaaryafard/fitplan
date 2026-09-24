@@ -690,133 +690,133 @@ def register():
 # generate_program_pdf_response
 # ==========================
 
-def generate_program_pdf_response(coach, html_content):
-    plan = get_active_plan(coach)
-    is_basic = (not plan) or (plan["plan_key"] == "basic")
+# def generate_program_pdf_response(coach, html_content):
+#     plan = get_active_plan(coach)
+#     is_basic = (not plan) or (plan["plan_key"] == "basic")
 
-    if is_basic:
-        soup = BeautifulSoup(html_content, "html.parser")
-        for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
-            for tag in soup.find_all(class_=class_name):
-                tag.decompose()
-        html_content = str(soup)
+#     if is_basic:
+#         soup = BeautifulSoup(html_content, "html.parser")
+#         for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
+#             for tag in soup.find_all(class_=class_name):
+#                 tag.decompose()
+#         html_content = str(soup)
 
-    pdf_style_filename = get_pdf_style_filename(coach)
+#     pdf_style_filename = get_pdf_style_filename(coach)
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+#     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    font_path = os.path.join(
-        base_dir,
-        "static",
-        "font",
-        "Vazirmatn-Regular.ttf"
-    )
+#     font_path = os.path.join(
+#         base_dir,
+#         "static",
+#         "font",
+#         "Vazirmatn-Regular.ttf"
+#     )
 
-    if not os.path.isfile(font_path):
-        return None, {
-            "success": False,
-            "message": f"فونت پیدا نشد: {font_path}"
-        }
+#     if not os.path.isfile(font_path):
+#         return None, {
+#             "success": False,
+#             "message": f"فونت پیدا نشد: {font_path}"
+#         }
 
-    with open(font_path, "rb") as font_file:
-        font_base64 = base64.b64encode(
-            font_file.read()
-        ).decode("utf-8")
+#     with open(font_path, "rb") as font_file:
+#         font_base64 = base64.b64encode(
+#             font_file.read()
+#         ).decode("utf-8")
 
-    pdf_css_path = os.path.join(
-        base_dir,
-        "static",
-        pdf_style_filename
-    )
+#     pdf_css_path = os.path.join(
+#         base_dir,
+#         "static",
+#         pdf_style_filename
+#     )
 
-    if not os.path.isfile(pdf_css_path):
-        return None, {
-            "success": False,
-            "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
-        }
+#     if not os.path.isfile(pdf_css_path):
+#         return None, {
+#             "success": False,
+#             "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
+#         }
 
-    with open(pdf_css_path, "r", encoding="utf-8") as css_file:
-        css_content = css_file.read()
+#     with open(pdf_css_path, "r", encoding="utf-8") as css_file:
+#         css_content = css_file.read()
 
-    full_html = f"""
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <style>
-        @font-face {{
-            font-family: "Vazirmatn";
-            src: url("data:font/ttf;base64,{font_base64}")
-                format("truetype");
-            font-weight: 400;
-            font-style: normal;
-            font-display: block;
-        }}
+#     full_html = f"""
+# <!DOCTYPE html>
+# <html lang="fa" dir="rtl">
+# <head>
+#     <meta charset="UTF-8">
+#     <style>
+#         @font-face {{
+#             font-family: "Vazirmatn";
+#             src: url("data:font/ttf;base64,{font_base64}")
+#                 format("truetype");
+#             font-weight: 400;
+#             font-style: normal;
+#             font-display: block;
+#         }}
 
-        html {{
-            direction: rtl;
-        }}
+#         html {{
+#             direction: rtl;
+#         }}
 
-        body {{
-            direction: rtl;
-            font-family: "Vazirmatn", sans-serif;
-        }}
+#         body {{
+#             direction: rtl;
+#             font-family: "Vazirmatn", sans-serif;
+#         }}
 
-        {css_content}
-    </style>
-</head>
-<body>
-    {html_content}
-</body>
-</html>
-"""
+#         {css_content}
+#     </style>
+# </head>
+# <body>
+#     {html_content}
+# </body>
+# </html>
+# """
 
-    with sync_playwright() as p:
+#     with sync_playwright() as p:
 
-        browser = p.chromium.launch(
-            headless=True,
-            args=[
-                "--no-sandbox",
-                "--disable-dev-shm-usage"
-            ]
-        )
+#         browser = p.chromium.launch(
+#             headless=True,
+#             args=[
+#                 "--no-sandbox",
+#                 "--disable-dev-shm-usage"
+#             ]
+#         )
 
-        page = browser.new_page()
+#         page = browser.new_page()
 
-        page.set_content(
-            full_html,
-            wait_until="load"
-        )
+#         page.set_content(
+#             full_html,
+#             wait_until="load"
+#         )
 
-        page.evaluate(
-            "async () => { await document.fonts.ready; }"
-        )
+#         page.evaluate(
+#             "async () => { await document.fonts.ready; }"
+#         )
 
-        pdf_bytes = page.pdf(
-            format="A4",
-            print_background=True,
-            margin={
-                "top": "12mm",
-                "right": "12mm",
-                "bottom": "12mm",
-                "left": "12mm"
-            }
-        )
+#         pdf_bytes = page.pdf(
+#             format="A4",
+#             print_background=True,
+#             margin={
+#                 "top": "12mm",
+#                 "right": "12mm",
+#                 "bottom": "12mm",
+#                 "left": "12mm"
+#             }
+#         )
 
-        browser.close()
+#         browser.close()
 
-    pdf_buffer = BytesIO()
-    pdf_buffer.write(pdf_bytes)
-    pdf_buffer.seek(0)
+#     pdf_buffer = BytesIO()
+#     pdf_buffer.write(pdf_bytes)
+#     pdf_buffer.seek(0)
 
-    response = send_file(
-        pdf_buffer,
-        mimetype="application/pdf",
-        as_attachment=True,
-        download_name="program.pdf"
-    )
+#     response = send_file(
+#         pdf_buffer,
+#         mimetype="application/pdf",
+#         as_attachment=True,
+#         download_name="program.pdf"
+#     )
 
-    return response, None
+#     return response, None
 
 # =========================================================
 # LOGIN
@@ -1427,138 +1427,138 @@ def send_program(program_id):
     })
 
 
-@app.route("/api/program/pdf/shared/<share_token>", methods=["POST"])
-def export_shared_program_pdf(share_token):
+# @app.route("/api/program/pdf/shared/<share_token>", methods=["POST"])
+# def export_shared_program_pdf(share_token):
 
-    data = request.get_json()
+#     data = request.get_json()
 
-    if not data or not data.get("html"):
-        return jsonify({
-            "success": False,
-            "message": "محتوایی برای تبدیل به PDF ارسال نشده است."
-        }), 400
+#     if not data or not data.get("html"):
+#         return jsonify({
+#             "success": False,
+#             "message": "محتوایی برای تبدیل به PDF ارسال نشده است."
+#         }), 400
 
-    try:
+#     try:
 
-        conn = get_db()
+#         conn = get_db()
 
-        program = conn.execute("""
-            SELECT * FROM programs WHERE share_token = ? AND status = 'sent'
-        """, (share_token,)).fetchone()
+#         program = conn.execute("""
+#             SELECT * FROM programs WHERE share_token = ? AND status = 'sent'
+#         """, (share_token,)).fetchone()
 
-        if not program:
-            conn.close()
-            return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
+#         if not program:
+#             conn.close()
+#             return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
 
-        coach = conn.execute("""
-            SELECT * FROM coaches WHERE id = ?
-        """, (program["coach_id"],)).fetchone()
+#         coach = conn.execute("""
+#             SELECT * FROM coaches WHERE id = ?
+#         """, (program["coach_id"],)).fetchone()
 
-        conn.close()
+#         conn.close()
 
-        plan = get_active_plan(coach)
-        is_basic = (not plan) or (plan["plan_key"] == "basic")
+#         plan = get_active_plan(coach)
+#         is_basic = (not plan) or (plan["plan_key"] == "basic")
 
-        html_content = data["html"]
+#         html_content = data["html"]
 
-        if is_basic:
-            soup = BeautifulSoup(html_content, "html.parser")
-            for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
-                for tag in soup.find_all(class_=class_name):
-                    tag.decompose()
-            html_content = str(soup)
+#         if is_basic:
+#             soup = BeautifulSoup(html_content, "html.parser")
+#             for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
+#                 for tag in soup.find_all(class_=class_name):
+#                     tag.decompose()
+#             html_content = str(soup)
 
-        pdf_style_filename = get_pdf_style_filename(coach)
+#         pdf_style_filename = get_pdf_style_filename(coach)
 
-        base_dir = os.path.dirname(os.path.abspath(__file__))
+#         base_dir = os.path.dirname(os.path.abspath(__file__))
 
-        font_path = os.path.join(base_dir, "static", "font", "Vazirmatn-Regular.ttf")
+#         font_path = os.path.join(base_dir, "static", "font", "Vazirmatn-Regular.ttf")
 
-        if not os.path.isfile(font_path):
-            return jsonify({
-                "success": False,
-                "message": f"فونت پیدا نشد: {font_path}"
-            }), 500
+#         if not os.path.isfile(font_path):
+#             return jsonify({
+#                 "success": False,
+#                 "message": f"فونت پیدا نشد: {font_path}"
+#             }), 500
 
-        with open(font_path, "rb") as font_file:
-            font_base64 = base64.b64encode(font_file.read()).decode("utf-8")
+#         with open(font_path, "rb") as font_file:
+#             font_base64 = base64.b64encode(font_file.read()).decode("utf-8")
 
-        pdf_css_path = os.path.join(base_dir, "static", pdf_style_filename)
+#         pdf_css_path = os.path.join(base_dir, "static", pdf_style_filename)
 
-        if not os.path.isfile(pdf_css_path):
-            return jsonify({
-                "success": False,
-                "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
-            }), 500
+#         if not os.path.isfile(pdf_css_path):
+#             return jsonify({
+#                 "success": False,
+#                 "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
+#             }), 500
 
-        with open(pdf_css_path, "r", encoding="utf-8") as css_file:
-            css_content = css_file.read()
+#         with open(pdf_css_path, "r", encoding="utf-8") as css_file:
+#             css_content = css_file.read()
 
-        full_html = f"""
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <style>
-        @font-face {{
-            font-family: "Vazirmatn";
-            src: url("data:font/ttf;base64,{font_base64}") format("truetype");
-            font-weight: 400;
-            font-style: normal;
-            font-display: block;
-        }}
-        html {{ direction: rtl; }}
-        body {{ direction: rtl; font-family: "Vazirmatn", sans-serif; }}
-        {css_content}
-    </style>
-</head>
-<body>
-    {html_content}
-</body>
-</html>
-"""
+#         full_html = f"""
+# <!DOCTYPE html>
+# <html lang="fa" dir="rtl">
+# <head>
+#     <meta charset="UTF-8">
+#     <style>
+#         @font-face {{
+#             font-family: "Vazirmatn";
+#             src: url("data:font/ttf;base64,{font_base64}") format("truetype");
+#             font-weight: 400;
+#             font-style: normal;
+#             font-display: block;
+#         }}
+#         html {{ direction: rtl; }}
+#         body {{ direction: rtl; font-family: "Vazirmatn", sans-serif; }}
+#         {css_content}
+#     </style>
+# </head>
+# <body>
+#     {html_content}
+# </body>
+# </html>
+# """
 
-        with sync_playwright() as p:
+#         with sync_playwright() as p:
 
-            browser = p.chromium.launch(
-                headless=True,
-                args=["--no-sandbox", "--disable-dev-shm-usage"]
-            )
+#             browser = p.chromium.launch(
+#                 headless=True,
+#                 args=["--no-sandbox", "--disable-dev-shm-usage"]
+#             )
 
-            page = browser.new_page()
-            page.set_content(full_html, wait_until="load")
+#             page = browser.new_page()
+#             page.set_content(full_html, wait_until="load")
 
-            page.evaluate("""
-                async () => { await document.fonts.ready; }
-            """)
+#             page.evaluate("""
+#                 async () => { await document.fonts.ready; }
+#             """)
 
-            pdf_bytes = page.pdf(
-                format="A4",
-                print_background=True,
-                margin={"top": "12mm", "right": "12mm", "bottom": "12mm", "left": "12mm"}
-            )
+#             pdf_bytes = page.pdf(
+#                 format="A4",
+#                 print_background=True,
+#                 margin={"top": "12mm", "right": "12mm", "bottom": "12mm", "left": "12mm"}
+#             )
 
-            browser.close()
+#             browser.close()
 
-        pdf_buffer = BytesIO()
-        pdf_buffer.write(pdf_bytes)
-        pdf_buffer.seek(0)
+#         pdf_buffer = BytesIO()
+#         pdf_buffer.write(pdf_bytes)
+#         pdf_buffer.seek(0)
 
-        return send_file(
-            pdf_buffer,
-            mimetype="application/pdf",
-            as_attachment=True,
-            download_name="program.pdf"
-        )
+#         return send_file(
+#             pdf_buffer,
+#             mimetype="application/pdf",
+#             as_attachment=True,
+#             download_name="program.pdf"
+#         )
 
-    except Exception as e:
+#     except Exception as e:
 
-        print("SHARED PDF ERROR:", repr(e))
+#         print("SHARED PDF ERROR:", repr(e))
 
-        return jsonify({
-            "success": False,
-            "message": f"خطا در ساخت PDF: {str(e)}"
-        }), 500
+#         return jsonify({
+#             "success": False,
+#             "message": f"خطا در ساخت PDF: {str(e)}"
+#         }), 500
  
  
 # =====================
@@ -2304,178 +2304,178 @@ def delete_program(program_id):
 # PDF EXPORT
 # =========================================================
 
-@app.route("/api/program/pdf", methods=["POST"])
-@login_required
-def export_program_pdf():
+# @app.route("/api/program/pdf", methods=["POST"])
+# @login_required
+# def export_program_pdf():
 
-    data = request.get_json()
+#     data = request.get_json()
 
-    if not data or not data.get("html"):
-        return jsonify({
-            "success": False,
-            "message": "محتوایی برای تبدیل به PDF ارسال نشده است."
-        }), 400
+#     if not data or not data.get("html"):
+#         return jsonify({
+#             "success": False,
+#             "message": "محتوایی برای تبدیل به PDF ارسال نشده است."
+#         }), 400
 
-    try:
+#     try:
 
-        conn = get_db()
+#         conn = get_db()
 
-        coach = conn.execute("""
-            SELECT * FROM coaches WHERE id = ?
-        """, (session["coach_id"],)).fetchone()
+#         coach = conn.execute("""
+#             SELECT * FROM coaches WHERE id = ?
+#         """, (session["coach_id"],)).fetchone()
 
-        conn.close()
+#         conn.close()
         
-        plan = get_active_plan(coach)
-        is_basic = (not plan) or (plan["plan_key"] == "basic")    # <-- جدید
+#         plan = get_active_plan(coach)
+#         is_basic = (not plan) or (plan["plan_key"] == "basic")    # <-- جدید
 
-        html_content = data["html"]                               # <-- جدید
+#         html_content = data["html"]                               # <-- جدید
 
-        if is_basic:                                               # <-- جدید
-            soup = BeautifulSoup(html_content, "html.parser")
-            for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
-                for tag in soup.find_all(class_=class_name):
-                    tag.decompose()
-            html_content = str(soup)
+#         if is_basic:                                               # <-- جدید
+#             soup = BeautifulSoup(html_content, "html.parser")
+#             for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
+#                 for tag in soup.find_all(class_=class_name):
+#                     tag.decompose()
+#             html_content = str(soup)
 
-        pdf_style_filename = get_pdf_style_filename(coach)
+#         pdf_style_filename = get_pdf_style_filename(coach)
 
-        base_dir = os.path.dirname(os.path.abspath(__file__))
+#         base_dir = os.path.dirname(os.path.abspath(__file__))
 
-        font_path = os.path.join(
-            base_dir,
-            "static",
-            "font",
-            "Vazirmatn-Regular.ttf"
-        )
+#         font_path = os.path.join(
+#             base_dir,
+#             "static",
+#             "font",
+#             "Vazirmatn-Regular.ttf"
+#         )
 
         
 
-        if not os.path.isfile(font_path):
-            return jsonify({
-                "success": False,
-                "message": f"فونت پیدا نشد: {font_path}"
-            }), 500
+#         if not os.path.isfile(font_path):
+#             return jsonify({
+#                 "success": False,
+#                 "message": f"فونت پیدا نشد: {font_path}"
+#             }), 500
 
-        with open(font_path, "rb") as font_file:
-            font_base64 = base64.b64encode(
-                font_file.read()
-            ).decode("utf-8")
+#         with open(font_path, "rb") as font_file:
+#             font_base64 = base64.b64encode(
+#                 font_file.read()
+#             ).decode("utf-8")
 
-        pdf_css_path = os.path.join(
-            base_dir,
-            "static",
-            pdf_style_filename
-        )
+#         pdf_css_path = os.path.join(
+#             base_dir,
+#             "static",
+#             pdf_style_filename
+#         )
 
-        if not os.path.isfile(pdf_css_path):
-            return jsonify({
-                "success": False,
-                "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
-            }), 500
+#         if not os.path.isfile(pdf_css_path):
+#             return jsonify({
+#                 "success": False,
+#                 "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
+#             }), 500
 
-        with open(pdf_css_path, "r", encoding="utf-8") as css_file:
-            css_content = css_file.read()
+#         with open(pdf_css_path, "r", encoding="utf-8") as css_file:
+#             css_content = css_file.read()
 
-        html_content = data["html"]
+#         html_content = data["html"]
 
-        full_html = f"""
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+#         full_html = f"""
+# <!DOCTYPE html>
+# <html lang="fa" dir="rtl">
 
-<head>
+# <head>
 
-    <meta charset="UTF-8">
+#     <meta charset="UTF-8">
 
-    <style>
+#     <style>
 
-        @font-face {{
-            font-family: "Vazirmatn";
-            src: url("data:font/ttf;base64,{font_base64}") format("truetype");
-            font-weight: 400;
-            font-style: normal;
-            font-display: block;
-        }}
+#         @font-face {{
+#             font-family: "Vazirmatn";
+#             src: url("data:font/ttf;base64,{font_base64}") format("truetype");
+#             font-weight: 400;
+#             font-style: normal;
+#             font-display: block;
+#         }}
 
-        html {{
-            direction: rtl;
-        }}
+#         html {{
+#             direction: rtl;
+#         }}
 
-        body {{
-            direction: rtl;
-            font-family: "Vazirmatn", sans-serif;
-        }}
+#         body {{
+#             direction: rtl;
+#             font-family: "Vazirmatn", sans-serif;
+#         }}
 
-        {css_content}
+#         {css_content}
 
-    </style>
+#     </style>
 
-</head>
+# </head>
 
-<body>
+# <body>
 
-    {data["html"]}
+#     {data["html"]}
 
-</body>
+# </body>
 
-</html>
-"""
+# </html>
+# """
 
-        with sync_playwright() as p:
+#         with sync_playwright() as p:
 
-            browser = p.chromium.launch(
-                headless=True,
-                args=[
-                    "--no-sandbox",
-                    "--disable-dev-shm-usage"
-                ]
-            )
+#             browser = p.chromium.launch(
+#                 headless=True,
+#                 args=[
+#                     "--no-sandbox",
+#                     "--disable-dev-shm-usage"
+#                 ]
+#             )
 
-            page = browser.new_page()
+#             page = browser.new_page()
 
-            page.set_content(
-                full_html,
-                wait_until="load"
-            )
+#             page.set_content(
+#                 full_html,
+#                 wait_until="load"
+#             )
 
-            page.evaluate("""
-                async () => {
-                    await document.fonts.ready;
-                }
-            """)
+#             page.evaluate("""
+#                 async () => {
+#                     await document.fonts.ready;
+#                 }
+#             """)
 
-            pdf_bytes = page.pdf(
-                format="A4",
-                print_background=True,
-                margin={
-                    "top": "12mm",
-                    "right": "12mm",
-                    "bottom": "12mm",
-                    "left": "12mm"
-                }
-            )
+#             pdf_bytes = page.pdf(
+#                 format="A4",
+#                 print_background=True,
+#                 margin={
+#                     "top": "12mm",
+#                     "right": "12mm",
+#                     "bottom": "12mm",
+#                     "left": "12mm"
+#                 }
+#             )
 
-            browser.close()
+#             browser.close()
 
-        pdf_buffer = BytesIO()
-        pdf_buffer.write(pdf_bytes)
-        pdf_buffer.seek(0)
+#         pdf_buffer = BytesIO()
+#         pdf_buffer.write(pdf_bytes)
+#         pdf_buffer.seek(0)
 
-        return send_file(
-            pdf_buffer,
-            mimetype="application/pdf",
-            as_attachment=True,
-            download_name="program.pdf"
-        )
+#         return send_file(
+#             pdf_buffer,
+#             mimetype="application/pdf",
+#             as_attachment=True,
+#             download_name="program.pdf"
+#         )
 
-    except Exception as e:
+#     except Exception as e:
 
-        print("PDF ERROR:", repr(e))
+#         print("PDF ERROR:", repr(e))
 
-        return jsonify({
-            "success": False,
-            "message": f"خطا در ساخت PDF: {str(e)}"
-        }), 500
+#         return jsonify({
+#             "success": False,
+#             "message": f"خطا در ساخت PDF: {str(e)}"
+#         }), 500
 
 
 # =========================================================
