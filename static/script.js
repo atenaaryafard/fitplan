@@ -1,5 +1,4 @@
 
-
 function sanitizeNameInput(input) {
     input.value = input.value
         .replace(/[\u0660-\u0669\u06F0-\u06F9]/g, "")
@@ -641,15 +640,6 @@ function collectProgram() {
                 bazo: getVal("sizebazo"),
                 sagh: getVal("sizesagh")
           },
-            // sine: document.getElementById("sizesine").value,
-            // kamar: document.getElementById("sizekamar").value,
-            // shekam: document.getElementById("sizeshekam").value,
-            // basan: document.getElementById("sizebasan").value,
-            // ran: document.getElementById("sizeran").value,
-            // bazo: document.getElementById("sizebazo").value,
-            // sagh: document.getElementById("sizesagh").value
-            
-        
 
         program_name: generateProgramName(),
 
@@ -741,11 +731,10 @@ async function saveProgram() {
         document.getElementById("quota").textContent =
             result.remaining;
 
-        loadHistory();
-
-        openPreview(data);
-
         resetProgramForm();
+
+        // باز کردن برنامه در صفحه HTML (همان نمای شاگرد)
+        window.location.href = `/coach/program/${result.program_id}`;
 
 
     } catch (error) {
@@ -829,37 +818,12 @@ async function loadHistory() {
 
 /* =====================================================
    VIEW PROGRAM
+   باز کردن برنامه در صفحه HTML (همان نمای شاگرد)
 ===================================================== */
 
-async function viewProgram(id) {
+function viewProgram(id) {
 
-    try {
-
-        const response = await fetch(`/api/program/${id}`);
-        const result = await response.json();
-
-        if (!response.ok) {
-            alert(result.message);
-            return;
-        }
-
-        const program = result.program;
-
-        openPreview({
-            athlete_name: program.athlete_name,
-            athlete_age: program.athlete_age,
-            athlete_height: program.athlete_height,
-            athlete_weight: program.athlete_weight,
-            athlete_goal: program.athlete_goal,
-            athlete_gender: program.athlete_gender,
-            sizes: program.sizes,
-            notes: program.notes,
-            days: program.program_data
-        });
-
-    } catch (error) {
-        alert("خطا در دریافت برنامه.");
-    }
+    window.open(`/coach/program/${id}`, "_blank");
 
 }
 
@@ -932,92 +896,8 @@ function resetProgramForm() {
 
     renderDayAccordion();
 
-}    
-    
-
-
-function openPreview(program, savedMessage) {
-
-    const body = document.getElementById("previewBody");
-
-    let html = "";
-
-    if (savedMessage) {
-        html += `
-            <div class="preview-saved-banner">
-                ✔ ${escapeHTML(savedMessage)}
-            </div>
-        `;
-    }
-
-    html += buildProgramPreviewHTML(program);
-
-    body.innerHTML = html;
-
-    document.getElementById("previewModal").classList.remove("hidden");
-    document.body.classList.add("modal-active");
-
 }
 
-
-function closePreview() {
-    document.getElementById("previewModal").classList.add("hidden");
-    document.body.classList.remove("modal-active");
-}
-
-
-/* =====================================================
-   PDF
-===================================================== */
-
-async function exportPDF() {
-
-    closeGifModal();
-    saveCurrentDay();
-
-    const previewBody = document.getElementById("previewBody");
-
-    if (!previewBody) {
-        alert("پیش‌نمایش برنامه پیدا نشد.");
-        return;
-    }
-
-    const html = body.innerHTML;
-
-    try {
-
-        const response = await fetch("/api/program/pdf", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ html: html })
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || "خطا در ساخت PDF");
-        }
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "FIT_PLAN.pdf";
-
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        window.URL.revokeObjectURL(url);
-
-    } catch (error) {
-
-        console.error("PDF ERROR:", error);
-        alert("خطا در ساخت PDF: " + error.message);
-
-    }
-
-}
 
 /* =====================================================
    SEND PROGRAM TO STUDENT
@@ -1451,125 +1331,4 @@ function closeSubscriptionModal() {
         document.body.style.overflow = "";
 
     }, 180);
-}
-
-async function downloadProgramImage() {
-
-    const program = document.getElementById("previewBody");
-    const button = document.querySelector(".image-download-btn");
-
-    if (!program) {
-        alert("برنامه پیدا نشد.");
-        return;
-    }
-
-    if (typeof html2canvas === "undefined") {
-        alert("سیستم ساخت تصویر بارگذاری نشده است.");
-        return;
-    }
-
-    try {
-
-        if (button) {
-            button.disabled = true;
-            button.textContent = "در حال ساخت تصویر...";
-        }
-
-        /*
-         * ذخیره وضعیت فعلی
-         */
-        const oldHeight = program.style.height;
-        const oldMaxHeight = program.style.maxHeight;
-        const oldOverflow = program.style.overflow;
-
-        /*
-         * اجازه می‌دهیم کل محتوای برنامه
-         * بدون محدودیت ارتفاع نمایش داده شود.
-         */
-        program.style.height = "auto";
-        program.style.maxHeight = "none";
-        program.style.overflow = "visible";
-
-        /*
-         * کمی صبر برای کامل شدن layout
-         */
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        const canvas = await html2canvas(program, {
-
-            scale: 1.5,
-
-            useCORS: true,
-            allowTaint: false,
-
-            backgroundColor: "#ffffff",
-
-            logging: false,
-
-            imageTimeout: 15000,
-
-            /*
-             * کل عرض و ارتفاع واقعی محتوا
-             */
-            width: program.scrollWidth,
-            height: program.scrollHeight,
-
-            windowWidth: program.scrollWidth,
-            windowHeight: program.scrollHeight,
-
-            scrollX: 0,
-            scrollY: 0
-        });
-
-
-        /*
-         * برگرداندن استایل قبلی
-         */
-        program.style.height = oldHeight;
-        program.style.maxHeight = oldMaxHeight;
-        program.style.overflow = oldOverflow;
-
-
-        const image = canvas.toDataURL(
-            "image/jpeg",
-            0.90
-        );
-
-
-        const link = document.createElement("a");
-
-        link.href = image;
-        link.download = "FIT-PLAN-program.jpg";
-
-        document.body.appendChild(link);
-
-        link.click();
-
-        document.body.removeChild(link);
-
-
-    } catch (error) {
-
-        console.error(
-            "FIT PLAN image error:",
-            error
-        );
-
-        alert(
-            "ساخت تصویر با مشکل مواجه شد."
-        );
-
-    } finally {
-
-        if (button) {
-
-            button.disabled = false;
-
-            button.textContent =
-                "🖼️ دریافت تصویر برنامه";
-
-        }
-
-    }
-
 }
