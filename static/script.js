@@ -1475,16 +1475,66 @@ async function downloadProgramImage() {
             button.textContent = "در حال ساخت تصویر...";
         }
 
+        /*
+         * ذخیره وضعیت فعلی
+         */
+        const oldHeight = program.style.height;
+        const oldMaxHeight = program.style.maxHeight;
+        const oldOverflow = program.style.overflow;
+
+        /*
+         * اجازه می‌دهیم کل محتوای برنامه
+         * بدون محدودیت ارتفاع نمایش داده شود.
+         */
+        program.style.height = "auto";
+        program.style.maxHeight = "none";
+        program.style.overflow = "visible";
+
+        /*
+         * کمی صبر برای کامل شدن layout
+         */
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         const canvas = await html2canvas(program, {
+
             scale: 1.5,
+
             useCORS: true,
             allowTaint: false,
+
             backgroundColor: "#ffffff",
+
             logging: false,
-            imageTimeout: 15000
+
+            imageTimeout: 15000,
+
+            /*
+             * کل عرض و ارتفاع واقعی محتوا
+             */
+            width: program.scrollWidth,
+            height: program.scrollHeight,
+
+            windowWidth: program.scrollWidth,
+            windowHeight: program.scrollHeight,
+
+            scrollX: 0,
+            scrollY: 0
         });
 
-        const image = canvas.toDataURL("image/jpeg", 0.85);
+
+        /*
+         * برگرداندن استایل قبلی
+         */
+        program.style.height = oldHeight;
+        program.style.maxHeight = oldMaxHeight;
+        program.style.overflow = oldOverflow;
+
+
+        const image = canvas.toDataURL(
+            "image/jpeg",
+            0.90
+        );
+
 
         const link = document.createElement("a");
 
@@ -1492,21 +1542,34 @@ async function downloadProgramImage() {
         link.download = "FIT-PLAN-program.jpg";
 
         document.body.appendChild(link);
+
         link.click();
+
         document.body.removeChild(link);
+
 
     } catch (error) {
 
-        console.error("FIT PLAN image error:", error);
+        console.error(
+            "FIT PLAN image error:",
+            error
+        );
 
-        alert("ساخت تصویر با مشکل مواجه شد.");
+        alert(
+            "ساخت تصویر با مشکل مواجه شد."
+        );
 
     } finally {
 
         if (button) {
+
             button.disabled = false;
-            button.textContent = "🖼️ دریافت تصویر برنامه";
+
+            button.textContent =
+                "🖼️ دریافت تصویر برنامه";
+
         }
 
     }
+
 }
