@@ -15,10 +15,7 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}">
 
-    <!--
-        CSS مربوط به پلن مربی بعد از دریافت اطلاعات برنامه
-        به صورت خودکار اینجا قرار می‌گیرد.
-    -->
+    <!-- CSS مربوط به پلن مربی بعد از دریافت اطلاعات برنامه اینجا قرار می‌گیرد -->
     <link
         id="programPlanStyle"
         rel="stylesheet">
@@ -37,6 +34,27 @@
     <div class="brand">
         FIT PLAN
     </div>
+
+    {% if is_coach %}
+    <!-- فقط برای مربی: بازگشت + دریافت تصویر -->
+    <div class="header-actions">
+
+        <a href="{{ url_for('planner') }}"
+           class="nav-home-btn">
+            → بازگشت به پنل
+        </a>
+
+        <button
+            id="screenshotBtn"
+            type="button"
+            class="nav-subscribe-btn"
+            style="border:none;font-family:inherit;"
+            onclick="downloadProgramImage()">
+            🖼️ دریافت تصویر برنامه
+        </button>
+
+    </div>
+    {% endif %}
 
 </header>
 
@@ -58,52 +76,27 @@
 
     </section>
 
-    <div class="bottom-actions">
-
-        <button
-            id="downloadPdfBtn"
-            type="button"
-            class="pdf-button"
-            style="display:none;"
-            onclick="exportSharedPDF()">
-
-            دریافت فایل PDF
-
-        </button>
-
-    </div>
-
 </main>
 
 
 <script>
 
-    /*
-       مقدار اولیه
-       بعد از دریافت برنامه از API با اطلاعات واقعی مربی
-       جایگزین می‌شود.
-    */
+    /* مقدار اولیه؛ بعد از دریافت برنامه با اطلاعات واقعی مربی جایگزین می‌شود */
 
     let COACH_BRAND = {
-
         hasCustomLogo: false,
-
         planKey: "basic",
-
         jobTitle: "",
-
         socialAddress: "",
-
         phoneNumber: "",
-
         footerText: "",
-
         coachName: ""
-
     };
 
-
-    const SHARE_TOKEN = "{{ program.share_token }}";
+    /* آدرس دریافت داده:
+       شاگرد -> /api/program/shared/<token>
+       مربی  -> /api/coach/program/<id>/data */
+    const DATA_URL = {{ data_url | tojson }};
 
 </script>
 
@@ -116,7 +109,6 @@
 
 
 <script>
-
 
     /* =====================================================
        انتخاب CSS بر اساس پلن مربی
@@ -140,17 +132,14 @@
 
         };
 
-        const selectedStyle =
+        styleElement.href =
             styleMap[planKey] || styleMap.basic;
-
-        styleElement.href = selectedStyle;
 
     }
 
 
-
     /* =====================================================
-       دریافت برنامه
+       دریافت و نمایش برنامه
     ===================================================== */
 
     async function loadSharedProgram() {
@@ -158,18 +147,13 @@
         const body =
             document.getElementById("programBody");
 
-
         try {
 
             const response =
-                await fetch(
-                    `/api/program/shared/${SHARE_TOKEN}`
-                );
-
+                await fetch(DATA_URL);
 
             const result =
                 await response.json();
-
 
             if (!response.ok || !result.success) {
 
@@ -180,29 +164,13 @@
 
             }
 
-
             const program =
                 result.program;
-
-
-            /* ---------------------------------------------
-               پلن واقعی مربی
-            --------------------------------------------- */
 
             const planKey =
                 program.plan_key || "basic";
 
-
-            /*
-               CSS همان پلن را لود کن
-            */
-
             loadPlanStyle(planKey);
-
-
-            /* ---------------------------------------------
-               اطلاعات برند مربی
-            --------------------------------------------- */
 
             COACH_BRAND = {
 
@@ -230,11 +198,6 @@
                     program.coach_name || ""
 
             };
-
-
-            /* ---------------------------------------------
-               اطلاعات برنامه
-            --------------------------------------------- */
 
             const previewData = {
 
@@ -267,12 +230,6 @@
 
             };
 
-
-            /* ---------------------------------------------
-               نمایش برنامه
-               هدر + برنامه + فوتر
-            --------------------------------------------- */
-
             body.innerHTML =
                 buildBrandHeaderHTML()
                 +
@@ -280,131 +237,12 @@
                 +
                 buildBrandFooterHTML();
 
-
-            /* ---------------------------------------------
-               نمایش دکمه PDF
-            --------------------------------------------- */
-
-    //         document
-    //             .getElementById("downloadPdfBtn")
-    //             .style.display = "inline-block";
-
-
-    //         /*
-    //            برای exportSharedPDF
-    //         */
-
-    //         window.__currentProgramBody =
-    //             body;
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //         body.innerHTML =
-    //             "خطا در دریافت برنامه.";
-
-    //     }
-
-    // }
-
-
-
-    /* =====================================================
-       ساخت PDF
-    ===================================================== */
-
-    async function exportSharedPDF() {
-
-        const body =
-            window.__currentProgramBody
-            ||
-            document.getElementById("programBody");
-
-
-        /*
-           برای PDF همان ساختار فعلی حفظ می‌شود:
-           هدر + برنامه + فوتر
-        */
-
-        const html =
-            body.innerHTML;
-
-
-        try {
-
-            const response =
-                await fetch(
-                    `/api/program/pdf/shared/${SHARE_TOKEN}`,
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body: JSON.stringify({
-                            html: html
-                        })
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                const error =
-                    await response.json();
-
-                throw new Error(
-                    error.message ||
-                    "خطا در ساخت PDF"
-                );
-
-            }
-
-
-            const blob =
-                await response.blob();
-
-
-            const url =
-                window.URL.createObjectURL(blob);
-
-
-            const link =
-                document.createElement("a");
-
-
-            link.href = url;
-
-            link.download =
-                "FIT_PLAN.pdf";
-
-
-            document.body.appendChild(link);
-
-            link.click();
-
-            link.remove();
-
-
-            window.URL.revokeObjectURL(url);
-
-
         } catch (error) {
 
-            console.error(
-                "PDF ERROR:",
-                error
-            );
+            console.error(error);
 
-            alert(
-                "خطا در ساخت PDF: "
-                +
-                error.message
-            );
+            body.innerHTML =
+                "خطا در دریافت برنامه.";
 
         }
 
@@ -417,6 +255,82 @@
     );
 
 </script>
+
+
+{% if is_coach %}
+<!-- فقط برای مربی: این کد اصلاً به مرورگر شاگرد ارسال نمی‌شود -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+
+    async function downloadProgramImage() {
+
+        const target =
+            document.getElementById("programBody");
+
+        const button =
+            document.getElementById("screenshotBtn");
+
+        if (typeof html2canvas === "undefined") {
+            alert("سیستم ساخت تصویر بارگذاری نشده است.");
+            return;
+        }
+
+        try {
+
+            button.disabled = true;
+            button.textContent = "در حال ساخت تصویر...";
+
+            const canvas = await html2canvas(target, {
+
+                scale: 1.5,
+
+                useCORS: true,
+                allowTaint: false,
+
+                backgroundColor: "#ffffff",
+
+                logging: false,
+
+                imageTimeout: 15000,
+
+                width: target.scrollWidth,
+                height: target.scrollHeight,
+
+                windowWidth: target.scrollWidth,
+                windowHeight: target.scrollHeight,
+
+                scrollX: 0,
+                scrollY: 0
+
+            });
+
+            const link = document.createElement("a");
+
+            link.href = canvas.toDataURL("image/jpeg", 0.90);
+            link.download = "FIT-PLAN-program.jpg";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+        } catch (error) {
+
+            console.error("FIT PLAN image error:", error);
+
+            alert("ساخت تصویر با مشکل مواجه شد.");
+
+        } finally {
+
+            button.disabled = false;
+            button.textContent = "🖼️ دریافت تصویر برنامه";
+
+        }
+
+    }
+
+</script>
+{% endif %}
 
 </body>
 
