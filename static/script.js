@@ -1476,34 +1476,41 @@ function closeSubscriptionModal() {
 
 async function downloadProgramImage() {
 
-    const button = document.querySelector('.image-download-btn');
-
-    // کل بخش برنامه
-    const program = document.querySelector('.program-container');
+    const program = document.getElementById("previewBody");
+    const button = document.querySelector(".image-download-btn");
 
     if (!program) {
-        alert('بخش برنامه پیدا نشد.');
+        alert("برنامه پیدا نشد.");
+        return;
+    }
+
+    if (typeof html2canvas === "undefined") {
+        alert("سیستم ساخت تصویر بارگذاری نشده است.");
         return;
     }
 
     try {
 
-        button.disabled = true;
-        button.textContent = 'در حال آماده‌سازی تصویر...';
+        if (button) {
+            button.disabled = true;
+            button.textContent = "در حال ساخت تصویر...";
+        }
 
         const canvas = await html2canvas(program, {
             scale: 1.5,
             useCORS: true,
-            backgroundColor: '#ffffff',
-            logging: false
+            allowTaint: false,
+            backgroundColor: "#ffffff",
+            logging: false,
+            imageTimeout: 15000
         });
 
-        const image = canvas.toDataURL('image/jpeg', 0.85);
+        const image = canvas.toDataURL("image/jpeg", 0.85);
 
-        const link = document.createElement('a');
+        const link = document.createElement("a");
 
         link.href = image;
-        link.download = 'FIT-PLAN-program.jpg';
+        link.download = "FIT-PLAN-program.jpg";
 
         document.body.appendChild(link);
         link.click();
@@ -1511,12 +1518,16 @@ async function downloadProgramImage() {
 
     } catch (error) {
 
-        console.error('Screenshot error:', error);
-        alert('ساخت تصویر با مشکل مواجه شد.');
+        console.error("FIT PLAN image error:", error);
+
+        alert("ساخت تصویر با مشکل مواجه شد.");
 
     } finally {
 
-        button.disabled = false;
-        button.textContent = '🖼️ دریافت تصویر برنامه';
+        if (button) {
+            button.disabled = false;
+            button.textContent = "🖼️ دریافت تصویر برنامه";
+        }
+
     }
 }
