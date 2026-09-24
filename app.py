@@ -686,137 +686,6 @@ def register():
 
     return render_template("register.html", error=error)
 
-# ==========================
-# generate_program_pdf_response
-# ==========================
-
-# def generate_program_pdf_response(coach, html_content):
-#     plan = get_active_plan(coach)
-#     is_basic = (not plan) or (plan["plan_key"] == "basic")
-
-#     if is_basic:
-#         soup = BeautifulSoup(html_content, "html.parser")
-#         for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
-#             for tag in soup.find_all(class_=class_name):
-#                 tag.decompose()
-#         html_content = str(soup)
-
-#     pdf_style_filename = get_pdf_style_filename(coach)
-
-#     base_dir = os.path.dirname(os.path.abspath(__file__))
-
-#     font_path = os.path.join(
-#         base_dir,
-#         "static",
-#         "font",
-#         "Vazirmatn-Regular.ttf"
-#     )
-
-#     if not os.path.isfile(font_path):
-#         return None, {
-#             "success": False,
-#             "message": f"فونت پیدا نشد: {font_path}"
-#         }
-
-#     with open(font_path, "rb") as font_file:
-#         font_base64 = base64.b64encode(
-#             font_file.read()
-#         ).decode("utf-8")
-
-#     pdf_css_path = os.path.join(
-#         base_dir,
-#         "static",
-#         pdf_style_filename
-#     )
-
-#     if not os.path.isfile(pdf_css_path):
-#         return None, {
-#             "success": False,
-#             "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
-#         }
-
-#     with open(pdf_css_path, "r", encoding="utf-8") as css_file:
-#         css_content = css_file.read()
-
-#     full_html = f"""
-# <!DOCTYPE html>
-# <html lang="fa" dir="rtl">
-# <head>
-#     <meta charset="UTF-8">
-#     <style>
-#         @font-face {{
-#             font-family: "Vazirmatn";
-#             src: url("data:font/ttf;base64,{font_base64}")
-#                 format("truetype");
-#             font-weight: 400;
-#             font-style: normal;
-#             font-display: block;
-#         }}
-
-#         html {{
-#             direction: rtl;
-#         }}
-
-#         body {{
-#             direction: rtl;
-#             font-family: "Vazirmatn", sans-serif;
-#         }}
-
-#         {css_content}
-#     </style>
-# </head>
-# <body>
-#     {html_content}
-# </body>
-# </html>
-# """
-
-#     with sync_playwright() as p:
-
-#         browser = p.chromium.launch(
-#             headless=True,
-#             args=[
-#                 "--no-sandbox",
-#                 "--disable-dev-shm-usage"
-#             ]
-#         )
-
-#         page = browser.new_page()
-
-#         page.set_content(
-#             full_html,
-#             wait_until="load"
-#         )
-
-#         page.evaluate(
-#             "async () => { await document.fonts.ready; }"
-#         )
-
-#         pdf_bytes = page.pdf(
-#             format="A4",
-#             print_background=True,
-#             margin={
-#                 "top": "12mm",
-#                 "right": "12mm",
-#                 "bottom": "12mm",
-#                 "left": "12mm"
-#             }
-#         )
-
-#         browser.close()
-
-#     pdf_buffer = BytesIO()
-#     pdf_buffer.write(pdf_bytes)
-#     pdf_buffer.seek(0)
-
-#     response = send_file(
-#         pdf_buffer,
-#         mimetype="application/pdf",
-#         as_attachment=True,
-#         download_name="program.pdf"
-#     )
-
-#     return response, None
 
 # =========================================================
 # LOGIN
@@ -1427,208 +1296,21 @@ def send_program(program_id):
     })
 
 
-# @app.route("/api/program/pdf/shared/<share_token>", methods=["POST"])
-# def export_shared_program_pdf(share_token):
+# =========================================================
+# ساخت داده‌ی برنامه (مشترک بین شاگرد و مربی)
+# =========================================================
 
-#     data = request.get_json()
-
-#     if not data or not data.get("html"):
-#         return jsonify({
-#             "success": False,
-#             "message": "محتوایی برای تبدیل به PDF ارسال نشده است."
-#         }), 400
-
-#     try:
-
-#         conn = get_db()
-
-#         program = conn.execute("""
-#             SELECT * FROM programs WHERE share_token = ? AND status = 'sent'
-#         """, (share_token,)).fetchone()
-
-#         if not program:
-#             conn.close()
-#             return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
-
-#         coach = conn.execute("""
-#             SELECT * FROM coaches WHERE id = ?
-#         """, (program["coach_id"],)).fetchone()
-
-#         conn.close()
-
-#         plan = get_active_plan(coach)
-#         is_basic = (not plan) or (plan["plan_key"] == "basic")
-
-#         html_content = data["html"]
-
-#         if is_basic:
-#             soup = BeautifulSoup(html_content, "html.parser")
-#             for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
-#                 for tag in soup.find_all(class_=class_name):
-#                     tag.decompose()
-#             html_content = str(soup)
-
-#         pdf_style_filename = get_pdf_style_filename(coach)
-
-#         base_dir = os.path.dirname(os.path.abspath(__file__))
-
-#         font_path = os.path.join(base_dir, "static", "font", "Vazirmatn-Regular.ttf")
-
-#         if not os.path.isfile(font_path):
-#             return jsonify({
-#                 "success": False,
-#                 "message": f"فونت پیدا نشد: {font_path}"
-#             }), 500
-
-#         with open(font_path, "rb") as font_file:
-#             font_base64 = base64.b64encode(font_file.read()).decode("utf-8")
-
-#         pdf_css_path = os.path.join(base_dir, "static", pdf_style_filename)
-
-#         if not os.path.isfile(pdf_css_path):
-#             return jsonify({
-#                 "success": False,
-#                 "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
-#             }), 500
-
-#         with open(pdf_css_path, "r", encoding="utf-8") as css_file:
-#             css_content = css_file.read()
-
-#         full_html = f"""
-# <!DOCTYPE html>
-# <html lang="fa" dir="rtl">
-# <head>
-#     <meta charset="UTF-8">
-#     <style>
-#         @font-face {{
-#             font-family: "Vazirmatn";
-#             src: url("data:font/ttf;base64,{font_base64}") format("truetype");
-#             font-weight: 400;
-#             font-style: normal;
-#             font-display: block;
-#         }}
-#         html {{ direction: rtl; }}
-#         body {{ direction: rtl; font-family: "Vazirmatn", sans-serif; }}
-#         {css_content}
-#     </style>
-# </head>
-# <body>
-#     {html_content}
-# </body>
-# </html>
-# """
-
-#         with sync_playwright() as p:
-
-#             browser = p.chromium.launch(
-#                 headless=True,
-#                 args=["--no-sandbox", "--disable-dev-shm-usage"]
-#             )
-
-#             page = browser.new_page()
-#             page.set_content(full_html, wait_until="load")
-
-#             page.evaluate("""
-#                 async () => { await document.fonts.ready; }
-#             """)
-
-#             pdf_bytes = page.pdf(
-#                 format="A4",
-#                 print_background=True,
-#                 margin={"top": "12mm", "right": "12mm", "bottom": "12mm", "left": "12mm"}
-#             )
-
-#             browser.close()
-
-#         pdf_buffer = BytesIO()
-#         pdf_buffer.write(pdf_bytes)
-#         pdf_buffer.seek(0)
-
-#         return send_file(
-#             pdf_buffer,
-#             mimetype="application/pdf",
-#             as_attachment=True,
-#             download_name="program.pdf"
-#         )
-
-#     except Exception as e:
-
-#         print("SHARED PDF ERROR:", repr(e))
-
-#         return jsonify({
-#             "success": False,
-#             "message": f"خطا در ساخت PDF: {str(e)}"
-#         }), 500
- 
- 
-# =====================
-# program/<share_token
-# =====================
- 
-@app.route("/program/<share_token>")
-def view_shared_program(share_token):
- 
-    conn = get_db()
- 
-    program = conn.execute("""
-        SELECT * FROM programs WHERE share_token = ? AND status = 'sent'
-    """, (share_token,)).fetchone()
- 
-    conn.close()
- 
-    if not program:
-        return "این برنامه پیدا نشد یا هنوز ارسال نشده است.", 404
- 
-    return render_template("program_view.html", program=dict(program))
- 
-# ==================================
-# api/program/shared/<share_token
-# ==================================
- 
-@app.route("/api/program/shared/<share_token>")
-def get_shared_program_data(share_token):
-
-    conn = get_db()
-
-    row = conn.execute("""
-        SELECT
-            p.*,
-            c.name AS coach_name,
-            c.job_title,
-            c.social_address,
-            c.phone_number,
-            c.footer_text,
-            c.plan_id AS coach_plan_id,
-            c.plan_expires_at AS coach_plan_expires_at
-        FROM programs p
-        JOIN coaches c ON c.id = p.coach_id
-        WHERE p.share_token = ?
-          AND p.status = 'sent'
-    """, (share_token,)).fetchone()
-
-    conn.close()
-
-    if not row:
-        return jsonify({
-            "success": False,
-            "message": "پیدا نشد."
-        }), 404
+def build_program_payload(row):
 
     data = dict(row)
 
     try:
-        data["program_data"] = json.loads(
-            data["program_data"]
-        )
+        data["program_data"] = json.loads(data["program_data"])
     except Exception:
         data["program_data"] = []
 
     try:
-        data["sizes"] = (
-            json.loads(data["sizes"])
-            if data.get("sizes")
-            else {}
-        )
+        data["sizes"] = json.loads(data["sizes"]) if data.get("sizes") else {}
     except Exception:
         data["sizes"] = {}
 
@@ -1639,20 +1321,115 @@ def get_shared_program_data(share_token):
 
     plan = get_active_plan(fake_coach)
 
-    data["has_custom_logo"] = bool(
-        plan and plan["has_custom_logo"]
+    data["has_custom_logo"] = bool(plan and plan["has_custom_logo"])
+    data["plan_key"] = plan["plan_key"] if plan else "basic"
+
+    return data
+
+
+PROGRAM_JOIN_SELECT = """
+    SELECT
+        p.*,
+        c.name AS coach_name,
+        c.job_title,
+        c.social_address,
+        c.phone_number,
+        c.footer_text,
+        c.plan_id AS coach_plan_id,
+        c.plan_expires_at AS coach_plan_expires_at
+    FROM programs p
+    JOIN coaches c ON c.id = p.coach_id
+"""
+
+
+# =========================================================
+# صفحه برنامه برای شاگرد
+# =========================================================
+
+@app.route("/program/<share_token>")
+def view_shared_program(share_token):
+
+    conn = get_db()
+
+    program = conn.execute("""
+        SELECT * FROM programs WHERE share_token = ? AND status = 'sent'
+    """, (share_token,)).fetchone()
+
+    conn.close()
+
+    if not program:
+        return "این برنامه پیدا نشد یا هنوز ارسال نشده است.", 404
+
+    return render_template(
+        "program_view.html",
+        program=dict(program),
+        is_coach=False,
+        data_url=url_for("get_shared_program_data", share_token=share_token)
     )
 
-    data["plan_key"] = (
-        plan["plan_key"]
-        if plan
-        else "basic"
+
+@app.route("/api/program/shared/<share_token>")
+def get_shared_program_data(share_token):
+
+    conn = get_db()
+
+    row = conn.execute(
+        PROGRAM_JOIN_SELECT + " WHERE p.share_token = ? AND p.status = 'sent'",
+        (share_token,)
+    ).fetchone()
+
+    conn.close()
+
+    if not row:
+        return jsonify({"success": False, "message": "پیدا نشد."}), 404
+
+    return jsonify({"success": True, "program": build_program_payload(row)})
+
+
+# =========================================================
+# صفحه برنامه برای مربی (همان قالب شاگرد + دکمه تصویر)
+# =========================================================
+
+@app.route("/coach/program/<int:program_id>")
+@login_required
+def coach_view_program(program_id):
+
+    conn = get_db()
+
+    program = conn.execute("""
+        SELECT * FROM programs WHERE id = ? AND coach_id = ?
+    """, (program_id, session["coach_id"])).fetchone()
+
+    conn.close()
+
+    if not program:
+        return "برنامه پیدا نشد.", 404
+
+    return render_template(
+        "program_view.html",
+        program=dict(program),
+        is_coach=True,
+        data_url=url_for("coach_program_data", program_id=program_id)
     )
 
-    return jsonify({
-        "success": True,
-        "program": data
-    })
+
+@app.route("/api/coach/program/<int:program_id>/data")
+@login_required
+def coach_program_data(program_id):
+
+    conn = get_db()
+
+    row = conn.execute(
+        PROGRAM_JOIN_SELECT + " WHERE p.id = ? AND p.coach_id = ?",
+        (program_id, session["coach_id"])
+    ).fetchone()
+
+    conn.close()
+
+    if not row:
+        return jsonify({"success": False, "message": "پیدا نشد."}), 404
+
+    return jsonify({"success": True, "program": build_program_payload(row)})
 
 
 # =========================================================
@@ -2243,12 +2020,13 @@ def save_program():
 
     conn = get_db()
 
-    conn.execute("""
+    cursor = conn.execute("""
         INSERT INTO programs
         (coach_id, athlete_name, athlete_age, athlete_height, athlete_weight,
          athlete_goal, athlete_gender, sizes, program_name, program_data,
          notes, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING id
     """, (
         coach["id"],
         data.get("athlete_name", ""),
@@ -2264,6 +2042,8 @@ def save_program():
         datetime.now().isoformat()
     ))
 
+    new_program_id = cursor.fetchone()["id"]
+
     conn.commit()
     conn.close()
 
@@ -2273,7 +2053,8 @@ def save_program():
 
     return jsonify({
         "success": True,
-        "remaining": "نامحدود"
+        "remaining": "نامحدود",
+        "program_id": new_program_id
     })
 
 # =========================================================
@@ -2298,184 +2079,6 @@ def delete_program(program_id):
         return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
 
     return jsonify({"success": True, "message": "برنامه حذف شد."})
-
-
-# =========================================================
-# PDF EXPORT
-# =========================================================
-
-# @app.route("/api/program/pdf", methods=["POST"])
-# @login_required
-# def export_program_pdf():
-
-#     data = request.get_json()
-
-#     if not data or not data.get("html"):
-#         return jsonify({
-#             "success": False,
-#             "message": "محتوایی برای تبدیل به PDF ارسال نشده است."
-#         }), 400
-
-#     try:
-
-#         conn = get_db()
-
-#         coach = conn.execute("""
-#             SELECT * FROM coaches WHERE id = ?
-#         """, (session["coach_id"],)).fetchone()
-
-#         conn.close()
-        
-#         plan = get_active_plan(coach)
-#         is_basic = (not plan) or (plan["plan_key"] == "basic")    # <-- جدید
-
-#         html_content = data["html"]                               # <-- جدید
-
-#         if is_basic:                                               # <-- جدید
-#             soup = BeautifulSoup(html_content, "html.parser")
-#             for class_name in ["preview-size-boxes", "bmi-box", "sizes-box"]:
-#                 for tag in soup.find_all(class_=class_name):
-#                     tag.decompose()
-#             html_content = str(soup)
-
-#         pdf_style_filename = get_pdf_style_filename(coach)
-
-#         base_dir = os.path.dirname(os.path.abspath(__file__))
-
-#         font_path = os.path.join(
-#             base_dir,
-#             "static",
-#             "font",
-#             "Vazirmatn-Regular.ttf"
-#         )
-
-        
-
-#         if not os.path.isfile(font_path):
-#             return jsonify({
-#                 "success": False,
-#                 "message": f"فونت پیدا نشد: {font_path}"
-#             }), 500
-
-#         with open(font_path, "rb") as font_file:
-#             font_base64 = base64.b64encode(
-#                 font_file.read()
-#             ).decode("utf-8")
-
-#         pdf_css_path = os.path.join(
-#             base_dir,
-#             "static",
-#             pdf_style_filename
-#         )
-
-#         if not os.path.isfile(pdf_css_path):
-#             return jsonify({
-#                 "success": False,
-#                 "message": f"فایل PDF CSS پیدا نشد: {pdf_css_path}"
-#             }), 500
-
-#         with open(pdf_css_path, "r", encoding="utf-8") as css_file:
-#             css_content = css_file.read()
-
-#         html_content = data["html"]
-
-#         full_html = f"""
-# <!DOCTYPE html>
-# <html lang="fa" dir="rtl">
-
-# <head>
-
-#     <meta charset="UTF-8">
-
-#     <style>
-
-#         @font-face {{
-#             font-family: "Vazirmatn";
-#             src: url("data:font/ttf;base64,{font_base64}") format("truetype");
-#             font-weight: 400;
-#             font-style: normal;
-#             font-display: block;
-#         }}
-
-#         html {{
-#             direction: rtl;
-#         }}
-
-#         body {{
-#             direction: rtl;
-#             font-family: "Vazirmatn", sans-serif;
-#         }}
-
-#         {css_content}
-
-#     </style>
-
-# </head>
-
-# <body>
-
-#     {data["html"]}
-
-# </body>
-
-# </html>
-# """
-
-#         with sync_playwright() as p:
-
-#             browser = p.chromium.launch(
-#                 headless=True,
-#                 args=[
-#                     "--no-sandbox",
-#                     "--disable-dev-shm-usage"
-#                 ]
-#             )
-
-#             page = browser.new_page()
-
-#             page.set_content(
-#                 full_html,
-#                 wait_until="load"
-#             )
-
-#             page.evaluate("""
-#                 async () => {
-#                     await document.fonts.ready;
-#                 }
-#             """)
-
-#             pdf_bytes = page.pdf(
-#                 format="A4",
-#                 print_background=True,
-#                 margin={
-#                     "top": "12mm",
-#                     "right": "12mm",
-#                     "bottom": "12mm",
-#                     "left": "12mm"
-#                 }
-#             )
-
-#             browser.close()
-
-#         pdf_buffer = BytesIO()
-#         pdf_buffer.write(pdf_bytes)
-#         pdf_buffer.seek(0)
-
-#         return send_file(
-#             pdf_buffer,
-#             mimetype="application/pdf",
-#             as_attachment=True,
-#             download_name="program.pdf"
-#         )
-
-#     except Exception as e:
-
-#         print("PDF ERROR:", repr(e))
-
-#         return jsonify({
-#             "success": False,
-#             "message": f"خطا در ساخت PDF: {str(e)}"
-#         }), 500
 
 
 # =========================================================
