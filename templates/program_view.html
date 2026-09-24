@@ -34,29 +34,52 @@
     <div class="brand">
         FIT PLAN
     </div>
-
-    {% if is_coach %}
-    <!-- فقط برای مربی: بازگشت + دریافت تصویر -->
-    <div class="header-actions">
-
-        <a href="{{ url_for('planner') }}"
-           class="nav-home-btn">
-            → بازگشت به پنل
-        </a>
-
-        <button
-            id="screenshotBtn"
-            type="button"
-            class="nav-subscribe-btn"
-            style="border:none;font-family:inherit;"
-            onclick="downloadProgramImage()">
-            🖼️ دریافت تصویر برنامه
-        </button>
-
-    </div>
-    {% endif %}
-
+   
 </header>
+
+    
+{% if is_coach %}
+<div id="coachToolbar"
+     style="display:flex !important;
+            align-items:center !important;
+            justify-content:space-between !important;
+            gap:10px !important;
+            padding:10px 16px !important;
+            background:#ffffff !important;
+            border-bottom:1px solid #eeeeee !important;
+            direction:rtl !important;
+            visibility:visible !important;
+            opacity:1 !important;">
+
+    <a href="{{ url_for('planner') }}"
+       style="display:inline-flex !important;
+              padding:9px 14px !important;
+              border-radius:9px !important;
+              background:#f4f5f6 !important;
+              color:#374151 !important;
+              text-decoration:none !important;
+              font-size:12px !important;
+              font-family:inherit !important;">
+        → بازگشت به پنل
+    </a>
+
+    <button id="screenshotBtn"
+            type="button"
+            onclick="downloadProgramImage()"
+            style="display:inline-flex !important;
+                   padding:10px 16px !important;
+                   border:none !important;
+                   border-radius:9px !important;
+                   background:#111827 !important;
+                   color:#ffffff !important;
+                   font-size:13px !important;
+                   font-family:inherit !important;
+                   cursor:pointer !important;">
+        🖼️ دریافت تصویر برنامه
+    </button>
+
+</div>
+{% endif %}
 
 <main class="planner">
 
