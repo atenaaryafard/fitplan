@@ -1453,27 +1453,6 @@ function closeSubscriptionModal() {
     }, 180);
 }
 
-
-function closeSubscriptionModal() {
-
-    const overlay =
-        document.getElementById("subscriptionModalOverlay");
-
-    if (!overlay) {
-        return;
-    }
-
-    overlay.classList.remove("show");
-
-    setTimeout(() => {
-
-        overlay.remove();
-
-        document.body.style.overflow = "";
-
-    }, 180);
-}
-
 async function downloadProgramImage() {
 
     const program = document.getElementById("previewBody");
