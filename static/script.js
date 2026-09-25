@@ -762,7 +762,20 @@ async function loadHistory() {
 
         const response = await fetch("/api/programs");
 
-        const programs = await response.json();
+        const result = await response.json();
+
+        if (!result.success) {
+
+            container.innerHTML = `
+                <div class="empty-history">
+                    خطا در دریافت تاریخچه برنامه‌ها.
+                </div>
+            `;
+
+            return;
+        }
+
+        const programs = result.programs || [];
 
         if (programs.length === 0) {
 
@@ -790,15 +803,50 @@ async function loadHistory() {
             item.innerHTML = `
 
                 <div class="history-info">
-                    <strong>${escapeHTML(program.athlete_name)}</strong>
-                    <small>${dateText}</small>
+
+                    <strong>
+                        ${escapeHTML(program.athlete_name)}
+                    </strong>
+
+                    <small>
+                        ${dateText}
+                    </small>
+
                 </div>
 
+
                 <div class="history-actions">
-                    <button onclick="viewProgram(${program.id})">مشاهده</button>
-                    <button onclick="openSendProgramModal(${program.id})"class="history-send">ارسال به</button>
-                    <button onclick="openProgramLink(${program.id})" class="history-link">لینک</button>
-                    <button onclick="deleteProgram(${program.id})" class="history-delete">حذف</button>
+
+                    <button
+                        onclick="viewProgram(${program.id})"
+                    >
+                        مشاهده
+                    </button>
+
+
+                    <button
+                        onclick="openSendProgramModal(${program.id})"
+                        class="history-send"
+                    >
+                        ارسال به
+                    </button>
+
+
+                    <button
+                        onclick="openProgramLink(${program.id})"
+                        class="history-link"
+                    >
+                        لینک
+                    </button>
+
+
+                    <button
+                        onclick="deleteProgram(${program.id})"
+                        class="history-delete"
+                    >
+                        حذف
+                    </button>
+
                 </div>
 
             `;
@@ -810,12 +858,16 @@ async function loadHistory() {
     } catch (error) {
 
         console.error(error);
-        container.innerHTML = "خطا در دریافت تاریخچه.";
+
+        container.innerHTML = `
+            <div class="empty-history">
+                خطا در دریافت تاریخچه.
+            </div>
+        `;
 
     }
 
 }
-
 
 /* =====================================================
    VIEW PROGRAM
@@ -826,6 +878,59 @@ function viewProgram(id) {
 
     window.open(`/coach/program/${id}`, "_blank");
 
+}
+
+async function openProgramLink(programId) {
+
+    try {
+
+        const response = await fetch(
+            `/api/program/${programId}/link`
+        );
+
+        const result = await response.json();
+
+        if (!result.success) {
+            alert(result.message || "خطا در دریافت لینک برنامه.");
+            return;
+        }
+
+        const link = result.share_url;
+
+        // کپی لینک
+        try {
+
+            await navigator.clipboard.writeText(link);
+
+            alert("لینک برنامه کپی شد.");
+
+        } catch (copyError) {
+
+            // روش جایگزین برای مرورگرهایی که Clipboard API ندارند
+            const textarea = document.createElement("textarea");
+
+            textarea.value = link;
+
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+
+            document.body.appendChild(textarea);
+
+            textarea.select();
+
+            document.execCommand("copy");
+
+            document.body.removeChild(textarea);
+
+            alert("لینک برنامه کپی شد.");
+        }
+
+    } catch (error) {
+
+        console.error("Program link error:", error);
+
+        alert("خطا در دریافت لینک برنامه.");
+    }
 }
 
 /* =====================================================
