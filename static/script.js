@@ -1256,6 +1256,23 @@ async function openSendProgramModal(programId) {
 
 
 /* =====================================================
+   CLOSE SEND PROGRAM MODAL
+===================================================== */
+
+function closeSendProgramModal() {
+
+    const modal = document.getElementById("sendProgramModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add("hidden");
+
+    currentSendProgramId = null;
+}
+
+/* =====================================================
    SEND PROGRAM
 ===================================================== */
 
