@@ -949,7 +949,7 @@ def student_register_form(coach_code):
             conn.close()
 
             return render_template(
-                "student_register_form.html",
+                "student_register.html",
                 coach=coach,
                 error="همه فیلدها را تکمیل کنید."
             )
