@@ -1252,49 +1252,93 @@ def get_my_students():
 def send_program(program_id):
 
     data = request.get_json() or {}
+
     student_id = data.get("student_id")
 
     if not student_id:
-        return jsonify({"success": False, "message": "شاگرد را انتخاب کنید."}), 400
+        return jsonify({
+            "success": False,
+            "message": "شاگرد انتخاب نشده است."
+        }), 400
 
     conn = get_db()
 
+    # بررسی اینکه برنامه متعلق به همین مربی باشد
     program = conn.execute("""
-        SELECT * FROM programs WHERE id = ? AND coach_id = ?
-    """, (program_id, session["coach_id"])).fetchone()
+        SELECT
+            id,
+            share_token,
+            status
+        FROM programs
+        WHERE id = ? AND coach_id = ?
+    """, (
+        program_id,
+        session["coach_id"]
+    )).fetchone()
 
     if not program:
         conn.close()
-        return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
 
+        return jsonify({
+            "success": False,
+            "message": "برنامه پیدا نشد."
+        }), 404
+
+    # بررسی اینکه شاگرد متعلق به همین مربی باشد
     student = conn.execute("""
-        SELECT id, name FROM students
+        SELECT
+            id,
+            name
+        FROM students
         WHERE id = ? AND coach_id = ?
-    """, (student_id, session["coach_id"])).fetchone()
+    """, (
+        student_id,
+        session["coach_id"]
+    )).fetchone()
 
     if not student:
         conn.close()
-        return jsonify({"success": False, "message": "شاگرد نامعتبر است."}), 400
 
-    token = program["share_token"] or secrets.token_urlsafe(16)
+        return jsonify({
+            "success": False,
+            "message": "این شاگرد متعلق به شما نیست."
+        }), 403
 
+    # اگر برنامه لینک نداشته باشد، لینک بساز
+    token = program["share_token"]
+
+    if not token:
+        token = secrets.token_urlsafe(16)
+
+    # ارسال برنامه به شاگرد
     conn.execute("""
         UPDATE programs
-        SET share_token = ?, status = 'sent', student_id = ?
-        WHERE id = ?
-    """, (token, student_id, program_id))
+        SET
+            share_token = ?,
+            status = 'sent',
+            student_id = ?
+        WHERE id = ? AND coach_id = ?
+    """, (
+        token,
+        student_id,
+        program_id,
+        session["coach_id"]
+    ))
 
     conn.commit()
     conn.close()
 
-    share_url = url_for("view_shared_program", share_token=token, _external=True)
+    share_url = url_for(
+        "view_shared_program",
+        share_token=token,
+        _external=True
+    )
 
     return jsonify({
         "success": True,
         "share_url": share_url,
         "student_name": student["name"]
     })
-
 
 # =========================================================
 # ساخت داده‌ی برنامه (مشترک بین شاگرد و مربی)
@@ -1896,12 +1940,18 @@ def planner():
 
 @app.route("/api/programs")
 @login_required
-def get_programs():
-
+def api_programs():
     conn = get_db()
 
-    programs = conn.execute("""
-        SELECT id, athlete_name, program_name, created_at
+    rows = conn.execute("""
+        SELECT
+            id,
+            athlete_name,
+            program_name,
+            created_at,
+            share_token,
+            status,
+            student_id
         FROM programs
         WHERE coach_id = ?
         ORDER BY id DESC
@@ -1909,7 +1959,82 @@ def get_programs():
 
     conn.close()
 
-    return jsonify([dict(program) for program in programs])
+    programs = []
+
+    for row in rows:
+        programs.append({
+            "id": row["id"],
+            "athlete_name": row["athlete_name"],
+            "program_name": row["program_name"],
+            "created_at": row["created_at"],
+            "share_token": row["share_token"],
+            "status": row["status"],
+            "student_id": row["student_id"]
+        })
+
+    return jsonify({
+        "success": True,
+        "programs": programs
+    })
+
+# ===========
+# ساخت لینک برنامه
+# ===========
+
+@app.route("/api/program/<int:program_id>/link")
+@login_required
+def get_program_link(program_id):
+
+    conn = get_db()
+
+    program = conn.execute("""
+        SELECT id, share_token, status
+        FROM programs
+        WHERE id = ? AND coach_id = ?
+    """, (
+        program_id,
+        session["coach_id"]
+    )).fetchone()
+
+    if not program:
+        conn.close()
+
+        return jsonify({
+            "success": False,
+            "message": "برنامه پیدا نشد."
+        }), 404
+
+    # اگر برنامه قبلاً لینک داشته، همان لینک را نگه می‌داریم
+    token = program["share_token"]
+
+    # اگر لینک نداشته، یک لینک جدید می‌سازیم
+    if not token:
+        token = secrets.token_urlsafe(16)
+
+        conn.execute("""
+            UPDATE programs
+            SET share_token = ?
+            WHERE id = ? AND coach_id = ?
+        """, (
+            token,
+            program_id,
+            session["coach_id"]
+        ))
+
+        conn.commit()
+
+    conn.close()
+
+    share_url = url_for(
+        "view_shared_program",
+        share_token=token,
+        _external=True
+    )
+
+    return jsonify({
+        "success": True,
+        "share_url": share_url
+    })
 
 
 # =========================================================
