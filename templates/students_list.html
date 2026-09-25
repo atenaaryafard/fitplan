@@ -91,37 +91,12 @@
 </main>
 
 <script>
-<script>
 function copyRegisterLink() {
     const input = document.getElementById("registerUrlInput");
-    input.focus();
     input.select();
-    input.setSelectionRange(0, 99999); // برای موبایل / iOS
-
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(input.value)
-            .then(showCopiedMessage)
-            .catch(() => fallbackCopy(input));
-    } else {
-        fallbackCopy(input);
-    }
-}
-
-function fallbackCopy(input) {
-    try {
-        const ok = document.execCommand("copy");
-        if (ok) {
-            showCopiedMessage();
-        } else {
-            alert("کپی خودکار ممکن نشد. لینک را دستی کپی کنید.");
-        }
-    } catch (err) {
-        alert("کپی خودکار ممکن نشد. لینک را دستی کپی کنید.");
-    }
-}
-
-function showCopiedMessage() {
-    alert("لینک کپی شد.");
+    navigator.clipboard.writeText(input.value).then(() => {
+        alert("لینک کپی شد.");
+    });
 }
 </script>
 
