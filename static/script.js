@@ -797,6 +797,7 @@ async function loadHistory() {
                 <div class="history-actions">
                     <button onclick="viewProgram(${program.id})">مشاهده</button>
                     <button onclick="openSendProgramModal(${program.id})"class="history-send">ارسال به</button>
+                    <button onclick="openProgramLink(${program.id})" class="history-link">لینک</button>
                     <button onclick="deleteProgram(${program.id})" class="history-delete">حذف</button>
                 </div>
 
