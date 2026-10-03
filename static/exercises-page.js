@@ -1,7 +1,6 @@
-```javascript
 /* =====================================
    FIT PLAN
-   EXERCISE LIBRARY
+   EXERCISE LIBRARY PAGE
 ===================================== */
 
 
@@ -9,15 +8,11 @@
    PAGE LOAD
 ===================================== */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        initExerciseLibrary();
+    initExerciseLibrary();
 
-    }
-);
-
+});
 
 
 /* =====================================
@@ -40,7 +35,6 @@ const clearSearch =
     document.getElementById("clearSearch");
 
 
-
 /* =====================================
    INITIALIZE
 ===================================== */
@@ -48,28 +42,37 @@ const clearSearch =
 function initExerciseLibrary() {
 
     if (
+        !exerciseGrid ||
+        !exerciseSearch ||
+        !resultCount ||
+        !emptyResult ||
+        !clearSearch
+    ) {
+        console.error("Exercise library elements not found.");
+        return;
+    }
+
+
+    if (
         typeof exercises === "undefined" ||
         !Array.isArray(exercises)
     ) {
 
-        exerciseGrid.innerHTML = `
-            <div class="exercise-loading">
-                لیست حرکات در دسترس نیست.
-            </div>
-        `;
+        exerciseGrid.innerHTML =
+            '<div class="exercise-loading">' +
+            'لیست حرکات در دسترس نیست.' +
+            '</div>';
 
         resultCount.textContent =
             "خطا در دریافت لیست حرکات.";
 
         return;
-
     }
 
 
     renderExercises(exercises);
 
 }
-
 
 
 /* =====================================
@@ -91,12 +94,11 @@ function renderExercises(list) {
             "حرکتی پیدا نشد.";
 
         return;
-
     }
 
 
     resultCount.textContent =
-        `${toPersianNumber(list.length)} حرکت`;
+        toPersianNumber(list.length) + " حرکت";
 
 
     list.forEach(function (exercise) {
@@ -109,7 +111,6 @@ function renderExercises(list) {
     });
 
 }
-
 
 
 /* =====================================
@@ -135,68 +136,123 @@ function createExerciseCard(exercise) {
         exercise.gif || "";
 
 
-    let gifHTML = "";
-
-
     if (gif) {
 
-        gifHTML = `
-            <img
-                src="${escapeAttribute(gif)}"
-                alt="${escapeAttribute(name)}"
-                class="exercise-gif"
-                loading="lazy"
-                onerror="handleGifError(this)"
-            >
-        `;
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "exercise-gif-wrapper";
+
+
+        const image =
+            document.createElement("img");
+
+        image.src =
+            escapeAttribute(gif);
+
+        image.alt =
+            escapeAttribute(name);
+
+        image.className =
+            "exercise-gif";
+
+        image.loading =
+            "lazy";
+
+        image.addEventListener(
+            "error",
+            function () {
+                handleGifError(this);
+            }
+        );
+
+
+        wrapper.appendChild(image);
+
+        card.appendChild(wrapper);
 
     } else {
 
-        gifHTML = `
-            <div class="no-gif">
+        const wrapper =
+            document.createElement("div");
 
-                <div class="no-gif-icon">
-                    🏋️
-                </div>
+        wrapper.className =
+            "exercise-gif-wrapper";
 
-                <span>
-                    گیف این حرکت ثبت نشده
-                </span>
 
-            </div>
-        `;
+        const noGif =
+            document.createElement("div");
+
+        noGif.className =
+            "no-gif";
+
+
+        const icon =
+            document.createElement("div");
+
+        icon.className =
+            "no-gif-icon";
+
+        icon.textContent =
+            "🏋️";
+
+
+        const text =
+            document.createElement("span");
+
+        text.textContent =
+            "گیف این حرکت ثبت نشده";
+
+
+        noGif.appendChild(icon);
+
+        noGif.appendChild(text);
+
+        wrapper.appendChild(noGif);
+
+        card.appendChild(wrapper);
 
     }
 
 
-    card.innerHTML = `
+    const info =
+        document.createElement("div");
 
-        <div class="exercise-gif-wrapper">
-
-            ${gifHTML}
-
-        </div>
+    info.className =
+        "exercise-info";
 
 
-        <div class="exercise-info">
+    const title =
+        document.createElement("h2");
 
-            <h2 class="exercise-name">
-                ${escapeHTML(name)}
-            </h2>
+    title.className =
+        "exercise-name";
 
-            <span class="exercise-muscle">
-                ${escapeHTML(muscle)}
-            </span>
+    title.textContent =
+        name;
 
-        </div>
 
-    `;
+    const muscleElement =
+        document.createElement("span");
+
+    muscleElement.className =
+        "exercise-muscle";
+
+    muscleElement.textContent =
+        muscle;
+
+
+    info.appendChild(title);
+
+    info.appendChild(muscleElement);
+
+    card.appendChild(info);
 
 
     return card;
 
 }
-
 
 
 /* =====================================
@@ -233,38 +289,38 @@ exerciseSearch.addEventListener(
             renderExercises(exercises);
 
             return;
-
         }
 
 
         const filtered =
-            exercises.filter(function (exercise) {
+            exercises.filter(
+                function (exercise) {
 
-                const name =
-                    normalizeText(
-                        exercise.name || ""
+                    const name =
+                        normalizeText(
+                            exercise.name || ""
+                        );
+
+
+                    const muscle =
+                        normalizeText(
+                            exercise.muscle || ""
+                        );
+
+
+                    return (
+                        name.includes(query) ||
+                        muscle.includes(query)
                     );
 
-
-                const muscle =
-                    normalizeText(
-                        exercise.muscle || ""
-                    );
-
-
-                return (
-                    name.includes(query) ||
-                    muscle.includes(query)
-                );
-
-            });
+                }
+            );
 
 
         renderExercises(filtered);
 
     }
 );
-
 
 
 /* =====================================
@@ -289,7 +345,6 @@ clearSearch.addEventListener(
 );
 
 
-
 /* =====================================
    NORMALIZE PERSIAN TEXT
 ===================================== */
@@ -297,22 +352,13 @@ clearSearch.addEventListener(
 function normalizeText(text) {
 
     return String(text)
-
         .trim()
-
         .toLowerCase()
-
-        // ی عربی → ی فارسی
         .replace(/ي/g, "ی")
-
-        // ک عربی → ک فارسی
         .replace(/ك/g, "ک")
-
-        // حذف فاصله‌های اضافی
         .replace(/\s+/g, " ");
 
 }
-
 
 
 /* =====================================
@@ -333,7 +379,6 @@ function toPersianNumber(number) {
 }
 
 
-
 /* =====================================
    ESCAPE HTML
 ===================================== */
@@ -341,19 +386,13 @@ function toPersianNumber(number) {
 function escapeHTML(value) {
 
     return String(value)
-
         .replace(/&/g, "&amp;")
-
         .replace(/</g, "&lt;")
-
         .replace(/>/g, "&gt;")
-
         .replace(/"/g, "&quot;")
-
         .replace(/'/g, "&#039;");
 
 }
-
 
 
 /* =====================================
@@ -365,7 +404,6 @@ function escapeAttribute(value) {
     return escapeHTML(value);
 
 }
-
 
 
 /* =====================================
@@ -380,21 +418,15 @@ function handleGifError(image) {
         );
 
 
-    wrapper.innerHTML = `
+    if (!wrapper) {
+        return;
+    }
 
-        <div class="no-gif">
 
-            <div class="no-gif-icon">
-                🏋️
-            </div>
-
-            <span>
-                گیف این حرکت در دسترس نیست
-            </span>
-
-        </div>
-
-    `;
+    wrapper.innerHTML =
+        '<div class="no-gif">' +
+            '<div class="no-gif-icon">🏋️</div>' +
+            '<span>گیف این حرکت در دسترس نیست</span>' +
+        '</div>';
 
 }
-```
