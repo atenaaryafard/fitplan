@@ -160,6 +160,12 @@ function createExerciseCard(exercise) {
         image.loading =
             "lazy";
 
+       image.style.cursor = "pointer";
+
+       image.addEventListener("click", function () {
+          openGifFullscreen(this.src, name);
+         });
+
         image.addEventListener(
             "error",
             function () {
@@ -428,5 +434,116 @@ function handleGifError(image) {
             '<div class="no-gif-icon">🏋️</div>' +
             '<span>گیف این حرکت در دسترس نیست</span>' +
         '</div>';
+
+}
+
+function openGifFullscreen(src, name) {
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.className =
+        "gif-fullscreen";
+
+
+    const closeButton =
+        document.createElement("button");
+
+    closeButton.className =
+        "gif-fullscreen-close";
+
+    closeButton.type =
+        "button";
+
+    closeButton.textContent =
+        "×";
+
+    closeButton.setAttribute(
+        "aria-label",
+        "بستن"
+    );
+
+
+    const title =
+        document.createElement("div");
+
+    title.className =
+        "gif-fullscreen-title";
+
+    title.textContent =
+        name;
+
+
+    const image =
+        document.createElement("img");
+
+    image.src =
+        src;
+
+    image.alt =
+        name;
+
+    image.className =
+        "gif-fullscreen-image";
+
+
+    overlay.appendChild(closeButton);
+
+    overlay.appendChild(title);
+
+    overlay.appendChild(image);
+
+
+    document.body.appendChild(overlay);
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    function closeFullscreen() {
+
+        overlay.remove();
+
+        document.body.style.overflow =
+            "";
+
+    }
+
+
+    closeButton.addEventListener(
+        "click",
+        closeFullscreen
+    );
+
+
+    overlay.addEventListener(
+        "click",
+        function (event) {
+
+            if (event.target === overlay) {
+                closeFullscreen();
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        function escapeHandler(event) {
+
+            if (event.key === "Escape") {
+
+                closeFullscreen();
+
+                document.removeEventListener(
+                    "keydown",
+                    escapeHandler
+                );
+
+            }
+
+        }
+    );
 
 }
