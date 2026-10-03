@@ -1,4 +1,4 @@
-```css
+
 /* =========================================================
    FIT PLAN — STUDENT PANEL
 ========================================================= */
@@ -435,4 +435,21 @@
     }
 
 }
-```
+
+.student-exercises-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 10px;
+    background: #f3f4f6;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.student-exercises-button:hover {
+    background: #e5e7eb;
+}
