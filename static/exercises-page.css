@@ -1,4 +1,4 @@
-```css
+
 /* =====================================
    FONT
 ===================================== */
@@ -379,7 +379,7 @@ button {
     display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(4, minmax(0, 1fr));
 
     gap: 16px;
 
@@ -764,4 +764,78 @@ button {
     }
 
 }
-```
+
+.gif-fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    background: rgba(0, 0, 0, 0.95);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    cursor: zoom-out;
+}
+
+
+.gif-fullscreen-image {
+    max-width: 95vw;
+    max-height: 90vh;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+    cursor: default;
+}
+
+
+.gif-fullscreen-close {
+    position: absolute;
+
+    top: 20px;
+    right: 25px;
+
+    width: 45px;
+    height: 45px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: white;
+
+    font-size: 32px;
+    line-height: 40px;
+
+    cursor: pointer;
+
+    z-index: 2;
+}
+
+
+.gif-fullscreen-title {
+    position: absolute;
+
+    top: 25px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    color: white;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    text-align: center;
+
+    max-width: 70vw;
+}
