@@ -1,0 +1,148 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>لیست حرکات | FIT PLAN</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='exercises-page.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="exercises-header">
+
+    <div class="exercises-header-inner">
+
+        <div class="brand">
+            FIT PLAN
+        </div>
+
+        <a
+            href="/planner"
+            class="back-button"
+        >
+            بازگشت به برنامه
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<main class="exercises-page">
+
+    <section class="exercises-card">
+
+
+        <div class="page-title">
+
+            <h1>
+                کتابخانه حرکات
+            </h1>
+
+            <p>
+                حرکت مورد نظر خود را جستجو کنید و نحوه اجرای آن را ببینید.
+            </p>
+
+        </div>
+
+
+
+        <div class="exercise-search-box">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                type="text"
+                id="exerciseSearch"
+                placeholder="نام حرکت را جستجو کنید..."
+                autocomplete="off"
+            >
+
+            <button
+                type="button"
+                id="clearSearch"
+                class="clear-search hidden"
+                aria-label="پاک کردن جستجو"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <div class="exercise-result-info">
+
+            <span id="resultCount">
+                در حال بارگذاری حرکات...
+            </span>
+
+        </div>
+
+
+
+        <div
+            id="exerciseGrid"
+            class="exercise-grid"
+        ></div>
+
+
+
+        <div
+            id="emptyResult"
+            class="empty-result hidden"
+        >
+
+            <div class="empty-icon">
+                🔎
+            </div>
+
+            <h3>
+                حرکتی پیدا نشد
+            </h3>
+
+            <p>
+                نام حرکت را بررسی کنید یا عبارت دیگری جستجو کنید.
+            </p>
+
+        </div>
+
+
+    </section>
+
+</main>
+
+
+
+<script
+    src="{{ url_for('static', filename='exercises.js') }}"
+></script>
+
+<script
+    src="{{ url_for('static', filename='exercises-page.js') }}"
+></script>
+
+
+</body>
+
+</html>
+```
