@@ -8,7 +8,8 @@ const exercises = [
 
 
       { name: "پرس سینه هالتر", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0045.gif" },
-      { name: "پرس سینه باربل", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0045.gif" },
+      { name: "کراس اور سیمکش از بالا", muscle: "سینه", gif: "https://fitliferegime.com/wp-content/uploads/2023/06/High-To-Low-Cable-fly.gif" },
+      { name: "شنا", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0662.gif" },
       { name: "پرس بالا سینه هالتر", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0033.gif" },
       { name: "پرس بالا سینه اسمیت", muscle: "سینه", gif: "https://static.exercisedb.dev/media/5v7KYld.gif" },
       { name: "پرس سینه دمبل", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0289.gif" },
@@ -16,11 +17,10 @@ const exercises = [
       { name: "پرس زیر سینه", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0033.gif" },
       { name: "فلای دمبل", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0319.gif" },
       { name: "فلای سیم‌کش", muscle: "سینه", gif: "https://static.exercisedb.dev/media/xLYSdtg.gif" },
-      { name: "شنا", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0662.gif" },
+      { name: "پرس سینه باربل", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/0045.gif" },
       { name: "شنا دست جمع", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/2398.gif" },
       { name: "قفسه سینه دمبل", muscle: "سینه", gif: "https://morabihamrah.com/wp-content/uploads/2023/07/Dumbbell-Fly123.gif" },
       { name: "پرس سینه دستگاه", muscle: "سینه", gif: "https://fitnessvolt.com/wp-content/plugins/fv-app-core/exercises/360/1300.gif" },
-      { name: "کراس اور سیمکش از بالا", muscle: "سینه", gif: "https://fitliferegime.com/wp-content/uploads/2023/06/High-To-Low-Cable-fly.gif" },
       { name: "کراس اور سینکش از پایین", muscle: "سینه", gif: "https://burnfit.io/en/wp-content/uploads/sites/3/2026/01/LP_CABLE_FLY.gif" },
       { name: "کراس اور سیمکش از بغل", muscle: "سینه", gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif" },
       { name: "فلای سینه دستگاه", muscle: "سینه", gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Pec-Deck-Fly.gif" },
