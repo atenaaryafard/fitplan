@@ -1934,6 +1934,10 @@ def planner():
         subscription_active=subscription_active
     )
 
+
+@app.route("/exercises")
+def exercises_page():
+    return render_template("exercises.html")
 # =========================================================
 # GET PROGRAM HISTORY
 # =========================================================
