@@ -159,6 +159,7 @@ const exercises = [
       { name: "لانج کراس", muscle: "چهارسر ران", gif: "https://liftmanual.com/wp-content/uploads/2023/04/crossover-reverse-lunge.gif" },
       { name: "بغل پا دستگاه", muscle: "سرینی", gif: "https://gymfitclub.ir/public/images/articles/upload/hip-abduction-machine.gif" },
       { name: "اسکات صفحه", muscle: "چهارسر ران", gif: "https://fa.pelank.com/wp-content/uploads/2026/07/Dumbbell-Goblet-Squat.gif" },
+      { name: "داخل پا دستگاه", muscle: "همسترینگ", gif: "https://newlife.com.cy/wp-content/uploads/2019/11/05981301-Lever-Seated-Hip-Adduction_Thighs_360-360x200.gif" },
 
    
       { name: "کرانچ", muscle: "شکم", gif: "https://fitnessprogramer.com/wp-content/uploads/2022/07/Full-Crunch-Machine.gif" },
