@@ -639,9 +639,8 @@ def register():
             return render_template("register.html", error=error)
 
         if not re.match(r"^09\d{9}$", phone):
-           error = "شماره تماس باید ۱۱ رقم باشد و با 09 شروع شود (مثل 09123456789)."
-           return render_template("register.html", error=error)
-            
+            error = "شماره تماس باید ۱۱ رقم باشد و با 09 شروع شود (مثل 09123456789)."
+            return render_template("register.html", error=error)
 
         if len(password) < 8:
             error = "رمز عبور باید حداقل ۸ کاراکتر باشد."
@@ -651,16 +650,48 @@ def register():
 
         try:
 
+            # =====================================================
+            # ساخت کد کاملاً اختصاصی برای مربی
+            # =====================================================
+
+            while True:
+
+                coach_code = secrets.token_urlsafe(8)
+
+                existing_code = conn.execute("""
+                    SELECT id
+                    FROM coaches
+                    WHERE coach_code = ?
+                """, (coach_code,)).fetchone()
+
+                if not existing_code:
+                    break
+
+            # =====================================================
+            # ثبت مربی + کد اختصاصی
+            # =====================================================
+
             cursor = conn.execute("""
                 INSERT INTO coaches
-                (name, email, phone, password, monthly_limit, monthly_used, usage_month, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (
+                    name,
+                    email,
+                    phone,
+                    password,
+                    coach_code,
+                    monthly_limit,
+                    monthly_used,
+                    usage_month,
+                    created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 RETURNING id
             """, (
                 name,
                 email,
                 phone,
                 generate_password_hash(password),
+                coach_code,
                 0,
                 0,
                 datetime.now().strftime("%Y-%m"),
@@ -671,14 +702,22 @@ def register():
 
             conn.commit()
 
-        except Exception:
+        except Exception as e:
 
             conn.rollback()
+            print("COACH REGISTER ERROR:", repr(e))
+
             conn.close()
+
             error = "این ایمیل یا شماره قبلاً ثبت شده است."
             return render_template("register.html", error=error)
 
+        # =====================================================
+        # ورود خودکار مربی
+        # =====================================================
+
         session["coach_id"] = new_coach_id
+        session["coach_name"] = name
 
         conn.close()
 
