@@ -32,9 +32,10 @@
         <div class="qr-box" style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
 
             <img
-                src="{{ url_for('coach_qrcode') }}"
-                alt="QR ثبت‌نام"
-                style="width:160px; height:160px; border-radius:8px; border:1px solid #eee;">
+                <img
+                    src="{{ url_for('coach_qrcode') }}?coach={{ session['coach_id'] }}"
+                    alt="QR ثبت‌نام"
+                    style="width:160px; height:160px; border-radius:8px; border:1px solid #eee;">
 
             <div style="flex:1; min-width:220px;">
                 <input
