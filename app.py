@@ -1516,6 +1516,122 @@ def coach_program_data(program_id):
 
 
 # =========================================================
+# خروجی PDF (برای همه مربی‌ها)
+# =========================================================
+
+@app.route("/api/coach/program/<int:program_id>/pdf", methods=["POST"])
+@login_required
+def export_program_pdf(program_id):
+
+    data = request.get_json(silent=True)
+
+    if not data or not data.get("html"):
+        return jsonify({"success": False, "message": "محتوایی ارسال نشده است."}), 400
+
+    # محدودیت حجم ورودی (جلوگیری از سوءاستفاده)
+    if len(data["html"]) > 2_000_000:
+        return jsonify({"success": False, "message": "حجم محتوا بیش از حد مجاز است."}), 413
+
+    conn = get_db()
+
+    program = conn.execute(
+        "SELECT * FROM programs WHERE id = ? AND coach_id = ?",
+        (program_id, session["coach_id"])
+    ).fetchone()
+
+    coach = conn.execute(
+        "SELECT * FROM coaches WHERE id = ?",
+        (session["coach_id"],)
+    ).fetchone()
+
+    conn.close()
+
+    if not program:
+        return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
+
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        font_path = os.path.join(base_dir, "static", "font", "Vazirmatn-Regular.ttf")
+        css_path = os.path.join(base_dir, "static", get_pdf_style_filename(coach))
+
+        with open(font_path, "rb") as f:
+            font_base64 = base64.b64encode(f.read()).decode("utf-8")
+
+        with open(css_path, "r", encoding="utf-8") as f:
+            css_content = f.read()
+
+        full_html = f"""
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @font-face {{
+            font-family: "Vazirmatn";
+            src: url("data:font/ttf;base64,{font_base64}") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+            font-display: block;
+        }}
+        html {{ direction: rtl; }}
+        body {{ direction: rtl; font-family: "Vazirmatn", sans-serif; }}
+        {css_content}
+    </style>
+</head>
+<body>
+    {data["html"]}
+</body>
+</html>
+"""
+
+        with sync_playwright() as p:
+
+            browser = p.chromium.launch(
+                channel="chromium",
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage"]
+            )
+
+            context = browser.new_context()
+
+            # هیچ درخواست شبکه‌ای (به جز data:) از داخل HTML مجاز نیست
+            context.route(
+                "**/*",
+                lambda route: route.continue_()
+                if route.request.url.startswith("data:")
+                else route.abort()
+            )
+
+            page = context.new_page()
+            page.set_default_timeout(30000)
+            page.set_content(full_html, wait_until="load")
+            page.evaluate("async () => { await document.fonts.ready; }")
+
+            pdf_bytes = page.pdf(
+                format="A4",
+                print_background=True,
+                margin={"top": "12mm", "right": "12mm", "bottom": "12mm", "left": "12mm"}
+            )
+
+            browser.close()
+
+        buffer = BytesIO(pdf_bytes)
+        buffer.seek(0)
+
+        return send_file(
+            buffer,
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name="program.pdf"
+        )
+
+    except Exception as e:
+        print("PDF ERROR:", repr(e))
+        return jsonify({"success": False, "message": f"خطا در ساخت PDF: {str(e)}"}), 500
+
+
+# =========================================================
 # LOGO UPLOAD
 # =========================================================
 
