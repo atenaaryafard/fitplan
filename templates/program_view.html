@@ -1,84 +1,136 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <title>برنامه تمرینی | FIT PLAN</title>
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}">
-
-    <!-- CSS مربوط به پلن مربی بعد از دریافت اطلاعات برنامه اینجا قرار می‌گیرد -->
-    <link
-        id="programPlanStyle"
-        rel="stylesheet">
-
-    <!-- فقط برای ریسپانسیو صفحه آنلاین -->
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='program-responsive.css') }}">
-
-</head>
-
-<body>
-
-<header class="mobile-header">
-
-    <div class="brand">
-        FIT PLAN
-    </div>
-   
-</header>
-
-    
-{% if is_coach %}
-<div id="coachToolbar"
-     style="display:flex !important;
-            align-items:center !important;
-            justify-content:space-between !important;
-            gap:10px !important;
-            padding:10px 16px !important;
-            background:#ffffff !important;
-            border-bottom:1px solid #eeeeee !important;
-            direction:rtl !important;
-            visibility:visible !important;
-            opacity:1 !important;">
-
-    <a href="{{ url_for('planner') }}"
-       style="display:inline-flex !important;
-              padding:9px 14px !important;
-              border-radius:9px !important;
-              background:#f4f5f6 !important;
-              color:#374151 !important;
-              text-decoration:none !important;
-              font-size:12px !important;
-              font-family:inherit !important;">
-        → بازگشت به پنل
-    </a>
-
-    <button id="screenshotBtn"
-            type="button"
-            onclick="downloadProgramImage()"
-            style="display:inline-flex !important;
-                   padding:10px 16px !important;
-                   border:none !important;
-                   border-radius:9px !important;
-                   background:#111827 !important;
-                   color:#ffffff !important;
-                   font-size:13px !important;
-                   font-family:inherit !important;
-                   cursor:pointer !important;">
-        🖼️ دریافت تصویر برنامه
-    </button>
-
-    🖼️ دریافت تصویر برنامه
+diff --git a/app.py b/app.py
+index 1230104..234b4e0 100644
+--- a/app.py
++++ b/app.py
+@@ -1515,6 +1515,122 @@ def coach_program_data(program_id):
+     return jsonify({"success": True, "program": build_program_payload(row)})
+ 
+ 
++# =========================================================
++# خروجی PDF (برای همه مربی‌ها)
++# =========================================================
++
++@app.route("/api/coach/program/<int:program_id>/pdf", methods=["POST"])
++@login_required
++def export_program_pdf(program_id):
++
++    data = request.get_json(silent=True)
++
++    if not data or not data.get("html"):
++        return jsonify({"success": False, "message": "محتوایی ارسال نشده است."}), 400
++
++    # محدودیت حجم ورودی (جلوگیری از سوءاستفاده)
++    if len(data["html"]) > 2_000_000:
++        return jsonify({"success": False, "message": "حجم محتوا بیش از حد مجاز است."}), 413
++
++    conn = get_db()
++
++    program = conn.execute(
++        "SELECT * FROM programs WHERE id = ? AND coach_id = ?",
++        (program_id, session["coach_id"])
++    ).fetchone()
++
++    coach = conn.execute(
++        "SELECT * FROM coaches WHERE id = ?",
++        (session["coach_id"],)
++    ).fetchone()
++
++    conn.close()
++
++    if not program:
++        return jsonify({"success": False, "message": "برنامه پیدا نشد."}), 404
++
++    try:
++        base_dir = os.path.dirname(os.path.abspath(__file__))
++
++        font_path = os.path.join(base_dir, "static", "font", "Vazirmatn-Regular.ttf")
++        css_path = os.path.join(base_dir, "static", get_pdf_style_filename(coach))
++
++        with open(font_path, "rb") as f:
++            font_base64 = base64.b64encode(f.read()).decode("utf-8")
++
++        with open(css_path, "r", encoding="utf-8") as f:
++            css_content = f.read()
++
++        full_html = f"""
++<!DOCTYPE html>
++<html lang="fa" dir="rtl">
++<head>
++    <meta charset="UTF-8">
++    <style>
++        @font-face {{
++            font-family: "Vazirmatn";
++            src: url("data:font/ttf;base64,{font_base64}") format("truetype");
++            font-weight: 400;
++            font-style: normal;
++            font-display: block;
++        }}
++        html {{ direction: rtl; }}
++        body {{ direction: rtl; font-family: "Vazirmatn", sans-serif; }}
++        {css_content}
++    </style>
++</head>
++<body>
++    {data["html"]}
++</body>
++</html>
++"""
++
++        with sync_playwright() as p:
++
++            browser = p.chromium.launch(
++                channel="chromium",
++                headless=True,
++                args=["--no-sandbox", "--disable-dev-shm-usage"]
++            )
++
++            context = browser.new_context()
++
++            # هیچ درخواست شبکه‌ای (به جز data:) از داخل HTML مجاز نیست
++            context.route(
++                "**/*",
++                lambda route: route.continue_()
++                if route.request.url.startswith("data:")
++                else route.abort()
++            )
++
++            page = context.new_page()
++            page.set_default_timeout(30000)
++            page.set_content(full_html, wait_until="load")
++            page.evaluate("async () => { await document.fonts.ready; }")
++
++            pdf_bytes = page.pdf(
++                format="A4",
++                print_background=True,
++                margin={"top": "12mm", "right": "12mm", "bottom": "12mm", "left": "12mm"}
++            )
++
++            browser.close()
++
++        buffer = BytesIO(pdf_bytes)
++        buffer.seek(0)
++
++        return send_file(
++            buffer,
++            mimetype="application/pdf",
++            as_attachment=True,
++            download_name="program.pdf"
++        )
++
++    except Exception as e:
++        print("PDF ERROR:", repr(e))
++        return jsonify({"success": False, "message": f"خطا در ساخت PDF: {str(e)}"}), 500
++
++
+ # =========================================================
+ # LOGO UPLOAD
+ # =========================================================
+diff --git a/templates/program_view.html b/templates/program_view.html
+index 4b5aa5b..bcc0162 100644
+--- a/templates/program_view.html
++++ b/templates/program_view.html
+@@ -78,6 +78,21 @@
+         🖼️ دریافت تصویر برنامه
      </button>
  
 +    <button id="pdfBtn"
@@ -95,284 +147,61 @@
 +                   cursor:pointer !important;">
 +        📄 خروجی PDF
 +    </button>
-
-</div>
-{% endif %}
-
-<main class="planner">
-
-    <section class="section-card">
-
-        <div class="section-title">
-
-            <div>
-                <h2>برنامه تمرینی شما</h2>
-            </div>
-
-        </div>
-
-        <div id="programBody">
-            در حال بارگذاری برنامه...
-        </div>
-
-    </section>
-
-</main>
-
-
-<script>
-
-    /* مقدار اولیه؛ بعد از دریافت برنامه با اطلاعات واقعی مربی جایگزین می‌شود */
-
-    let COACH_BRAND = {
-        hasCustomLogo: false,
-        planKey: "basic",
-        jobTitle: "",
-        socialAddress: "",
-        phoneNumber: "",
-        footerText: "",
-        coachName: ""
-    };
-
-    /* آدرس دریافت داده:
-       شاگرد -> /api/program/shared/<token>
-       مربی  -> /api/coach/program/<id>/data */
-    const DATA_URL = {{ data_url | tojson }};
-
-</script>
-
-
-<script src="{{ url_for('static', filename='logo-data.js') }}"></script>
-
-<script src="{{ url_for('static', filename='exercises.js') }}"></script>
-
-<script src="{{ url_for('static', filename='program-render.js') }}"></script>
-
-
-<script>
-
-    /* =====================================================
-       انتخاب CSS بر اساس پلن مربی
-    ===================================================== */
-
-    function loadPlanStyle(planKey) {
-
-        const styleElement =
-            document.getElementById("programPlanStyle");
-
-        const styleMap = {
-
-            basic:
-                "{{ url_for('static', filename='pdf_style_basic.css') }}",
-
-            branded:
-                "{{ url_for('static', filename='pdf_style_branded.css') }}",
-
-            premium:
-                "{{ url_for('static', filename='pdf_style_premium.css') }}"
-
-        };
-
-        styleElement.href =
-            styleMap[planKey] || styleMap.basic;
-
-    }
-
-
-    /* =====================================================
-       دریافت و نمایش برنامه
-    ===================================================== */
-
-    async function loadSharedProgram() {
-
-        const body =
-            document.getElementById("programBody");
-
-        try {
-
-            const response =
-                await fetch(DATA_URL);
-
-            const result =
-                await response.json();
-
-            if (!response.ok || !result.success) {
-
-                body.innerHTML =
-                    "این برنامه پیدا نشد یا هنوز ارسال نشده است.";
-
-                return;
-
-            }
-
-            const program =
-                result.program;
-
-            const planKey =
-                program.plan_key || "basic";
-
-            loadPlanStyle(planKey);
-
-            COACH_BRAND = {
-
-                hasCustomLogo:
-                    planKey !== "basic"
-                    ? true
-                    : Boolean(program.has_custom_logo),
-
-                planKey:
-                    planKey,
-
-                jobTitle:
-                    program.job_title || "",
-
-                socialAddress:
-                    program.social_address || "",
-
-                phoneNumber:
-                    program.phone_number || "",
-
-                footerText:
-                    program.footer_text || "",
-
-                coachName:
-                    program.coach_name || ""
-
-            };
-
-            const previewData = {
-
-                athlete_name:
-                    program.athlete_name,
-
-                athlete_age:
-                    program.athlete_age,
-
-                athlete_height:
-                    program.athlete_height,
-
-                athlete_weight:
-                    program.athlete_weight,
-
-                athlete_goal:
-                    program.athlete_goal,
-
-                athlete_gender:
-                    program.athlete_gender,
-
-                sizes:
-                    program.sizes,
-
-                notes:
-                    program.notes,
-
-                days:
-                    program.program_data
-
-            };
-
-            body.innerHTML =
-                buildBrandHeaderHTML()
-                +
-                buildProgramPreviewHTML(previewData)
-                +
-                buildBrandFooterHTML();
-
-        } catch (error) {
-
-            console.error(error);
-
-            body.innerHTML =
-                "خطا در دریافت برنامه.";
-
-        }
-
-    }
-
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        loadSharedProgram
-    );
-
-</script>
-
-
-{% if is_coach %}
-<!-- فقط برای مربی: این کد اصلاً به مرورگر شاگرد ارسال نمی‌شود -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script>
-
-    async function downloadProgramImage() {
-
-        const target =
-            document.getElementById("programBody");
-
-        const button =
-            document.getElementById("screenshotBtn");
-
-        if (typeof html2canvas === "undefined") {
-            alert("سیستم ساخت تصویر بارگذاری نشده است.");
-            return;
-        }
-
-        try {
-
-            button.disabled = true;
-            button.textContent = "در حال ساخت تصویر...";
-
-            const canvas = await html2canvas(target, {
-
-                scale: 1.5,
-
-                useCORS: true,
-                allowTaint: false,
-
-                backgroundColor: "#ffffff",
-
-                logging: false,
-
-                imageTimeout: 15000,
-
-                width: target.scrollWidth,
-                height: target.scrollHeight,
-
-                windowWidth: target.scrollWidth,
-                windowHeight: target.scrollHeight,
-
-                scrollX: 0,
-                scrollY: 0
-
-            });
-
-            const link = document.createElement("a");
-
-            link.href = canvas.toDataURL("image/jpeg", 0.90);
-            link.download = "FIT-PLAN-program.jpg";
-
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-
-        } catch (error) {
-
-            console.error("FIT PLAN image error:", error);
-
-            alert("ساخت تصویر با مشکل مواجه شد.");
-
-        } finally {
-
-            button.disabled = false;
-            button.textContent = "🖼️ دریافت تصویر برنامه";
-
-        }
-
-    }
-
-</script>
-{% endif %}
-
-</body>
-
-</html>
++
+ </div>
+ {% endif %}
+ 
+@@ -286,6 +301,53 @@
+ 
+ <script>
+ 
++    async function exportProgramPDF() {
++
++        const body = document.getElementById("programBody");
++        const button = document.getElementById("pdfBtn");
++
++        const oldText = button.textContent;
++        button.disabled = true;
++        button.textContent = "در حال ساخت PDF...";
++
++        try {
++
++            const response = await fetch(
++                "/api/coach/program/{{ program.id }}/pdf",
++                {
++                    method: "POST",
++                    headers: { "Content-Type": "application/json" },
++                    body: JSON.stringify({ html: body.innerHTML })
++                }
++            );
++
++            if (!response.ok) {
++                const error = await response.json();
++                throw new Error(error.message || "خطا در ساخت PDF");
++            }
++
++            const blob = await response.blob();
++            const url = window.URL.createObjectURL(blob);
++
++            const link = document.createElement("a");
++            link.href = url;
++            link.download = "FIT_PLAN.pdf";
++            document.body.appendChild(link);
++            link.click();
++            link.remove();
++
++            window.URL.revokeObjectURL(url);
++
++        } catch (error) {
++            console.error("PDF ERROR:", error);
++            alert("خطا در ساخت PDF: " + error.message);
++        } finally {
++            button.disabled = false;
++            button.textContent = oldText;
++        }
++    }
++
++
+     async function downloadProgramImage() {
+ 
+         const target =
