@@ -1455,3 +1455,49 @@ function closeSubscriptionModal() {
 
     }, 180);
 }
+
+    async function exportProgramPDF() {
+
+        const body = document.getElementById("programBody");
+        const button = document.getElementById("pdfBtn");
+
+        const oldText = button.textContent;
+        button.disabled = true;
+        button.textContent = "در حال ساخت PDF...";
+
+        try {
+
+            const response = await fetch(
+                "/api/coach/program/{{ program.id }}/pdf",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ html: body.innerHTML })
+                }
+            );
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || "خطا در ساخت PDF");
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "FIT_PLAN.pdf";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error("PDF ERROR:", error);
+            alert("خطا در ساخت PDF: " + error.message);
+        } finally {
+            button.disabled = false;
+            button.textContent = oldText;
+        }
+    }
