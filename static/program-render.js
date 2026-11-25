@@ -117,120 +117,50 @@ function buildProgramPreviewHTML(program) {
                         </tr>
                     </thead>
 
-                    <tbody>
+                                        <tbody>
 
                         ${
-                        
-                                (day.exercises || [])
-                                    .map((exercise, index) => {
-                                
-                                       
-                                
-                                        const exerciseName =
-                                            exercise.exercise ||
-                                            exercise.name ||
-                                            "";
-                                
-                                
-                                
-                                        const exerciseInfo =
-                                            exercises.find(item =>
-                                                item.name === exerciseName
-                                            );
-                                
-                                        const gifUrl =
-                                            exerciseInfo && exerciseInfo.gif
-                                                ? exerciseInfo.gif
-                                                : "";
-                                
-                                        return `
-                                                <tr>
-                                    
-                                                    <td>
-                                                        ${escapeHTML(exerciseName) || "-"}
-                                                    </td>
-                                    
-                                                    <td>
-                                                        ${escapeHTML(exercise.muscle) || "-"}
-                                                    </td>
-                                    
-                                                    <td>
-                                                        ${escapeHTML(exercise.sets) || "-"}
-                                                    </td>
-                                    
-                                                    <td>
-                                                        ${escapeHTML(exercise.reps) || "-"}
-                                                    </td>
-                                    
-                                                    <td>
-                                                        ${escapeHTML(exercise.rest) || "-"}
-                                                    </td>
-                                    
-                                                    <td>
-                                                        ${escapeHTML(exercise.weight) || "-"}
-                                                    </td>
-                                    
-                                                    ${
-                                                        COACH_BRAND.hasCustomLogo
-                                                        ? `
-                                                            <td class="guide-col">
-                                    
-                                                                ${
-                                                                    gifUrl
-                                                                    ? `
-                                                                        <a
-                                                                            href="${escapeHTML(gifUrl)}"
-                                                                            target="_blank"
-                                                                            class="exercise-guide-link"
-                                                                        >
-                                                                            اجرا حرکت
-                                                                        </a>
-                                                                    `
-                                                                    : `
-                                                                        <span
-                                                                            class="exercise-guide-disabled"
-                                                                        >
-                                                                            اجرا حرکت
-                                                                        </span>
-                                                                    `
-                                                                }
-                                    
-                                                            </td>
-                                                        `
-                                                        : ""
-                                                    }
-                                    
-                                                </tr>
-                                            `;
-                                        })
-                                        .join("")
+                            (day.exercises || [])
+                                .map(exercise => {
 
+                                    const exerciseName =
+                                        exercise.exercise ||
+                                        exercise.name ||
+                                        "";
+
+                                    const exerciseInfo =
+                                        exercises.find(item =>
+                                            item.name === exerciseName
+                                        );
+
+                                    const gifUrl =
+                                        exerciseInfo && exerciseInfo.gif
+                                            ? exerciseInfo.gif
+                                            : "";
+
+                                    return `
                                         <tr>
-                                            <td>${escapeHTML(exercise.exercise) || "-"}</td>
+                                            <td>${escapeHTML(exerciseName) || "-"}</td>
                                             <td>${escapeHTML(exercise.muscle) || "-"}</td>
                                             <td>${escapeHTML(exercise.sets) || "-"}</td>
                                             <td>${escapeHTML(exercise.reps) || "-"}</td>
                                             <td>${escapeHTML(exercise.rest) || "-"}</td>
                                             <td>${escapeHTML(exercise.weight) || "-"}</td>
-                                            ${COACH_BRAND.hasCustomLogo ? `
-                                            <td class="guide-col">
-                                                ${
-                                                    gifUrl
-                                                    ? `
-                                                        <a href="${gifUrl}" target="_blank" class="exercise-guide-link">
-                                                             اجرا حرکت
-                                                        </a>
-                                                    `
-                                                    : `
-                                                        <span class="exercise-guide-disabled">
-                                                             اجرا حرکت
-                                                        </span>
-                                                    `
-                                                }
-                                            </td>
-                                            ` : ""}
+                                            ${
+                                                COACH_BRAND.hasCustomLogo
+                                                ? `
+                                                    <td class="guide-col">
+                                                        ${
+                                                            gifUrl
+                                                            ? `<a href="${escapeHTML(gifUrl)}" target="_blank" class="exercise-guide-link">اجرا حرکت</a>`
+                                                            : `<span class="exercise-guide-disabled">اجرا حرکت</span>`
+                                                        }
+                                                    </td>
+                                                `
+                                                : ""
+                                            }
+                                        </tr>
                                     `;
-
                                 })
                                 .join("")
                         }
